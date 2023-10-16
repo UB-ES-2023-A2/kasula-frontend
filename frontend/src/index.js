@@ -3,11 +3,13 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import Logout from "./components/Logout";
 import reportWebVitals from "./reportWebVitals";
+import RecipeDetail from "./components/RecipeDetail";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Logout />
+    {/* <Logout /> */}
+    <RecipeDetail />
   </React.StrictMode>
 );
 
