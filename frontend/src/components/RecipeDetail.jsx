@@ -17,11 +17,33 @@ function RecipeDetail() {
         {/* Contenido de detalle de receta */}
         <div className="recipe-content">
           {/* Imagen de la receta (a la izquierda) */}
-          <img
-            src={comida}
-            alt="Imagen de la receta"
-            className="recipe-image"
-          />
+          <div className="image-info-container">
+            <img
+              src={comida}
+              alt="Imagen de la receta"
+              className="recipe-image"
+            />
+
+            {/* Caja de información */}
+            <div className="info-box">
+              <h2>Más información</h2>
+              <div className="info-section">
+                <h3>Difficulty:</h3>
+                <div className="difficulty-stars">
+                  {/* Agrega las estrellas (1 a 5) según la dificultad */}
+                  <span className="star">&#9733;</span>
+                  <span className="star">&#9733;</span>
+                  <span className="star">&#9733;</span>
+                  <span className="star">&#9733;</span>
+                </div>
+              </div>
+              <div className="info-section">
+                <h3>Time:</h3>
+                <p id="time">30 minutos</p>
+                {/* Agrega el tiempo que tarda en hacerse la receta */}
+              </div>
+            </div>
+          </div>
 
           {/* Detalles de la receta (ingredientes y pasos) */}
           <div className="recipe-details">

@@ -14,13 +14,14 @@
 /* Encabezado fijo en la parte superior */
 .header {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
-  background-color: #333; /* Color de fondo del encabezado */
-  padding: 10px 0;
+  background-color: #8b1818; /* Color de fondo del encabezado */
   text-align: center;
   z-index: 1; /* Asegura que el encabezado esté por encima del contenido */
+  height: 100px; /* Reducir la altura del encabezado */
+  padding: 5px 0; /* Ajustar el espaciado interior para centrar el contenido */
+  color: #fff; /* Color del texto del encabezado */
+  top: 0;
 }
 
 .logo {
@@ -53,9 +54,11 @@ h1 {
 /* Mensaje de cierre de sesión */
 .logout-message {
   font-size: 20px;
+  font-family: monospace;
+  font-weight: bold;
   margin-bottom: 20px;
   color: #fff; /* Color del texto del mensaje */
-  background-color: #e83232; /* Color de fondo rojo */
+  background-color: #ee9494; /* Color de fondo rojo */
   display: inline-block; /* Hace que el fondo se ajuste al contenido */
   padding: 1px; /* Espacio alrededor del texto */
   border-radius: 8px;

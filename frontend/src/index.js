@@ -4,12 +4,14 @@ import "./index.css";
 import Logout from "./components/Logout";
 import reportWebVitals from "./reportWebVitals";
 import RecipeDetail from "./components/RecipeDetail";
+import UserFeed from "./components/UserFeed";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     {/* <Logout /> */}
-    <RecipeDetail />
+    {/* <RecipeDetail /> */}
+    <UserFeed />
   </React.StrictMode>
 );
 

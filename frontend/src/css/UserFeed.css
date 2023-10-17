@@ -1,0 +1,74 @@
+/* Estilos para la pantalla de User Feed en React */
+
+/* Contenedor principal */
+.user-feed-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Encabezado (mismo que el de App) */
+.header {
+  position: fixed;
+  width: 100%;
+  background-color: #8b1818; /* Color de fondo del encabezado */
+  text-align: center;
+  z-index: 1; /* Asegura que el encabezado esté por encima del contenido */
+  height: 100px; /* Reducir la altura del encabezado */
+  padding: 5px 0; /* Ajustar el espaciado interior para centrar el contenido */
+  color: #fff; /* Color del texto del encabezado */
+}
+
+h1 {
+  font-size: 36px;
+  margin-top: -70px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  margin-right: 10000px;
+}
+
+/* Contenedor de todas las recetas */
+.recipe-container {
+  display: flex;
+  flex-direction: column; /* Recetas alargadas una debajo de la otra */
+  align-items: center;
+  margin-top: 70px;
+}
+
+/* Estilos para las recetas alargadas y contenedor de imagen y texto */
+.recipe {
+  display: flex; /* Usar flexbox para organizar los elementos horizontalmente */
+  background-color: #ee9494;
+  border: 1px solid #4d1d1d;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
+  border-radius: 8px;
+  width: 1000px; /* Ancho de la receta alargada */
+  margin: 10px 0; /* Espacio entre recetas */
+  padding: 10px;
+  text-align: center;
+  align-items: center; /* Centrar verticalmente los elementos */
+  justify-content: space-between; /* Colocar elementos en los extremos */
+  overflow: hidden; /* Evitar que la imagen sobresalga por encima */
+}
+
+/* Imagen de la receta */
+.recipe-image {
+  width: 20%; /* Ancho de la imagen (puedes ajustarlo según tus necesidades) */
+  height: auto;
+  border-radius: 4px;
+  margin-left: auto; /* Mover la imagen hacia la derecha */
+  max-height: 100%; /* Ajustar la altura máxima de la imagen */
+  margin-top: 10px; /* Agregar un margen superior para mover la imagen hacia abajo */
+  margin-bottom: -3px;
+}
+
+/* Nombre de la comida */
+.recipe-name {
+  margin: 0;
+  font-weight: bold;
+  font-size: 28px;
+  flex-grow: 1; /* Hacer que el nombre ocupe el espacio restante */
+}

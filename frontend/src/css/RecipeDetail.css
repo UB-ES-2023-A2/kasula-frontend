@@ -11,7 +11,7 @@
 .header {
   position: fixed;
   width: 100%;
-  background-color: #333; /* Color de fondo del encabezado */
+  background-color: #8b1818; /* Color de fondo del encabezado */
   text-align: center;
   z-index: 1; /* Asegura que el encabezado esté por encima del contenido */
   height: 100px; /* Reducir la altura del encabezado */
@@ -30,9 +30,10 @@ h1 {
   height: 80px;
   margin-right: 10000px;
 }
+
 /* Cuadrado para el contenido de receta */
 .recipe-square {
-  background-color: #7fffa367; /* Color de fondo del cuadrado */
+  background-color: #ee9494; /* Color de fondo del cuadrado */
   width: 80%; /* Ancho del cuadrado */
   margin: 160px auto; /* Márgenes para centrar el cuadrado */
   border-radius: 8px;
@@ -46,20 +47,22 @@ h1 {
   align-items: flex-start;
 }
 
-/* Imagen de la receta (a la izquierda) */
-.recipe-image {
-  width: 300px; /* Tamaño de la imagen */
-  height: auto;
-  margin-right: 20px;
-  margin-top: -35px;
-}
-
 /* Detalles de la receta (ingredientes y pasos) */
 .recipe-details {
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%; /* Ancho del cuadrado */
+}
+
+/* Imagen de la receta (a la izquierda) */
+.recipe-image {
+  width: 300px; /* Tamaño de la imagen */
+  height: auto;
+  margin-right: 20px;
+  margin-top: -35px;
+  margin: -35px 20px 50px 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.478); /* Sombra */
 }
 
 /* Caja de ingredientes */
@@ -82,6 +85,15 @@ h1 {
   width: 85%; /* Ancho del cuadrado */
 }
 
+/* Caja de información */
+.info-box {
+  background-color: #4fd367; /* Color de fondo azul claro */
+  height: auto;
+  border-radius: 8px;
+  text-align: center;
+  width: 85%; /* Ancho del cuadrado */
+}
+
 h2 {
   font-size: 24px;
   margin-bottom: 10px;
@@ -98,4 +110,44 @@ ol {
 li {
   margin-bottom: 5px;
   color: #333; /* Color del texto de ingredientes y pasos */
+}
+
+/* Estilos para el contenedor de la imagen y la caja de información */
+.image-info-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos para la sección de Difficulty y Time */
+.info-section {
+  display: flex;
+  align-items: center;
+  margin: 10px 20px;
+  font-size: 14px;
+}
+
+.info-content {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.difficulty-stars {
+  display: flex;
+  margin-left: 10px;
+}
+
+.star {
+  font-size: 24px;
+  color: #ffcc00; /* Color de las estrellas (puedes ajustarlo) */
+}
+
+p {
+  font-size: 18px;
+  color: #333; /* Color del texto de tiempo */
+  margin-left: 10px;
+}
+
+#time {
+  font-size: 16px;
 }
