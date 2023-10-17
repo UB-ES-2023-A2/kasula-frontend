@@ -12,9 +12,11 @@ form {
   padding: 20px;
   border-radius: 8px;
   width: 300px;
+  height: 450px; /* Establece una altura fija */
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between; /* Distribuye el espacio entre los elementos */
 }
 
 .logo {
@@ -38,7 +40,6 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-bottom: 15px;
   width: 100%;
 }
 
@@ -51,14 +52,11 @@ a:hover {
   text-decoration: underline;
 }
 
-.input-container {
-  position: relative;
-  margin-bottom: 10px; /* Añade un margen si es necesario */
-}
-
+.input-container,
 .password-container {
   position: relative;
-  margin-bottom: 10px; /* Añade un margen si es necesario */
+  margin-bottom: 10px;
+  height: 45px; /* Altura fija para los contenedores de entrada */
 }
 
 .password-container span {
@@ -67,13 +65,21 @@ a:hover {
   top: 30%;
   transform: translateY(-50%);
   cursor: pointer;
-  font-size: 18px; /* Ajusta el tamaño del icono según prefieras */
-  background-color: #f0f0f000; /* Fondo para que el icono se destaque */
-  border-radius: 5px; /* Hace que el fondo del icono sea redondo */
+  font-size: 18px;
+  background-color: #f0f0f000;
+  border-radius: 5px;
 }
 
 .password-container input[type="text"],
 .password-container input[type="password"] {
-  padding-right: 20px; /* Espacio reservado para el icono */
+  padding-right: 40px;
   width: 100%;
+}
+
+.error-message {
+  height: 20px; /* Reserva espacio para el mensaje de error */
+  color: red;
+  width: 30%;
+  text-align: center;
+  margin-bottom: 10px; /* Añade un margen si es necesario */
 }
