@@ -1,19 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import Logout from "./components/Logout";
+import PostRecipe from "./components/PostRecipe";
 import reportWebVitals from "./reportWebVitals";
 import RecipeDetail from "./components/RecipeDetail";
 import UserFeed from "./components/UserFeed";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     {/* <Logout /> */}
     {/* <RecipeDetail /> */}
-    <UserFeed />
+    {/* <UserFeed /> */}
+    <Router>
+      <Routes>
+        <Route path="/" element={<PostRecipe />} />
+      </Routes>
+    </Router>
   </React.StrictMode>
-);
+); 
 
 reportWebVitals();
 
