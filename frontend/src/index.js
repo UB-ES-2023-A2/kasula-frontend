@@ -5,6 +5,9 @@ import PostRecipe from "./components/PostRecipe";
 import reportWebVitals from "./reportWebVitals";
 import RecipeDetail from "./components/RecipeDetail";
 import UserFeed from "./components/UserFeed";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
+import Logout from "./components/Logout";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -14,9 +17,14 @@ root.render(
     {/* <RecipeDetail /> */}
     {/* <UserFeed /> */}
     <Router>
-      <Routes>
-        <Route path="/" element={<PostRecipe />} />
-      </Routes>
+          <Routes>
+            <Route path="/" element={<Signup />} />
+            <Route path="/recipeDetail" element={<RecipeDetail />} />
+            <Route path="/postRecipe" element={<PostRecipe />} />
+            <Route path="/logout" element={<Logout />} /> {/* Asegúrate de haber importado el componente Logout si planeas usarlo */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+        </Routes>
     </Router>
   </React.StrictMode>
 ); 

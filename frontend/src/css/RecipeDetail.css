@@ -1,11 +1,5 @@
 /* RecipeDetail.css */
 
-/* Contenedor principal del detalle de receta */
-.recipe-detail-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 /* Aplica el filtro de desenfoque al fondo de imagen */
 .background-image {
   position: fixed;
@@ -78,37 +72,6 @@ h1 {
   margin-top: -35px;
   margin: -35px 20px 50px 0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.478); /* Sombra */
-}
-
-/* Caja de ingredientes */
-.ingredient-box {
-  background-color: #ffc107; /* Color de fondo amarillo */
-  height: auto;
-  border-radius: 8px;
-  text-align: center;
-  margin-bottom: 20px; /* Espacio entre cajas */
-  margin-top: -40px;
-  width: 85%; /* Ancho del cuadrado */
-}
-
-/* Caja de pasos */
-.step-box {
-  background-color: #00bcd4; /* Color de fondo azul claro */
-  height: auto;
-  border-radius: 8px;
-  text-align: center;
-  width: 85%; /* Ancho del cuadrado */
-}
-
-/* Caja de información */
-.info-box {
-  background-color: #4fd367; /* Color de fondo azul claro */
-  height: auto;
-  border-radius: 8px;
-  text-align: center;
-  width: 89%; /* Ancho del cuadrado */
-  margin: 0 0 0 -3px;
-  padding: 10px;
 }
 
 h2 {
