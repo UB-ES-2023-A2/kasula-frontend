@@ -1,6 +1,6 @@
 import React from "react";
 import "../css/RecipeDetail.css";
-import logo from "../assets/logo.svg";
+import logo from "../assets/logo.png";
 import comida from "../assets/comida1.jpg";
 
 function RecipeDetail() {
@@ -11,7 +11,7 @@ function RecipeDetail() {
         <img src={logo} alt="Kasula" className="logo" />
         <h1>Kasula</h1>
       </header>
-
+      <div className="background-image"></div>
       {/* Cuadrado para el contenido de receta */}
       <div className="recipe-square">
         {/* Contenido de detalle de receta */}
@@ -21,7 +21,7 @@ function RecipeDetail() {
             <img
               src={comida}
               alt="Imagen de la receta"
-              className="recipe-image"
+              className="recipe-image2"
             />
 
             {/* Caja de información */}

@@ -1,6 +1,7 @@
 import React from "react";
 import "../css/Logout.css";
-import logo from "../assets/logo.svg";
+import logo from "../assets/logo.png";
+import background_image from "../assets/background.png";
 
 function Logout() {
   return (
@@ -9,7 +10,10 @@ function Logout() {
         <img src={logo} alt="Kasula" className="logo" />
         <h1>Kasula</h1>
       </div>
+      <div className="background-image"></div>
+
       <div className="logout-box">
+        <img src={logo} alt="Kasula" id="logo2" />
         <div className="logout-message">
           <p>¿Desea cerrar sesión?</p>
         </div>

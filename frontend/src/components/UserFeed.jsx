@@ -1,6 +1,6 @@
 import React from "react";
 import "../css/UserFeed.css";
-import logo from "../assets/logo.svg";
+import logo from "../assets/logo.png";
 import comida from "../assets/comida1.jpg";
 import { Link } from "react-router-dom"; // Importa Link de react-router-dom
 
@@ -47,6 +47,7 @@ function UserFeed() {
           Logout
         </Link> */}
       </header>
+      <div className="background-image"></div>
 
       {/* Contenedor de recetas */}
       <div className="recipe-container">

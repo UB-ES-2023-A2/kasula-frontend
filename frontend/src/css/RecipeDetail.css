@@ -6,6 +6,21 @@
   flex-direction: column;
   align-items: center;
 }
+/* Aplica el filtro de desenfoque al fondo de imagen */
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("../assets/background.png"); /* Ruta de la imagen de fondo */
+  background-size: cover; /* Ajusta el tamaño de la imagen para cubrir todo el contenedor */
+  background-attachment: fixed; /* Fija la imagen en su lugar mientras se desplaza */
+  filter: blur(
+    3px
+  ); /* Aplica un filtro de desenfoque (ajusta el valor según tus preferencias) */
+  z-index: -1; /* Coloca el pseudo-elemento detrás del contenido */
+}
 
 /* Encabezado (mismo que el de App) */
 .header {
@@ -28,12 +43,12 @@ h1 {
 .logo {
   width: 80px;
   height: 80px;
-  margin-right: 10000px;
+  margin-right: 1550px;
 }
 
 /* Cuadrado para el contenido de receta */
 .recipe-square {
-  background-color: #ee9494; /* Color de fondo del cuadrado */
+  background-color: #ffe8e8; /* Color de fondo del cuadrado */
   width: 80%; /* Ancho del cuadrado */
   margin: 160px auto; /* Márgenes para centrar el cuadrado */
   border-radius: 8px;
@@ -56,7 +71,7 @@ h1 {
 }
 
 /* Imagen de la receta (a la izquierda) */
-.recipe-image {
+.recipe-image2 {
   width: 300px; /* Tamaño de la imagen */
   height: auto;
   margin-right: 20px;
@@ -91,7 +106,9 @@ h1 {
   height: auto;
   border-radius: 8px;
   text-align: center;
-  width: 85%; /* Ancho del cuadrado */
+  width: 89%; /* Ancho del cuadrado */
+  margin: 0 0 0 -3px;
+  padding: 10px;
 }
 
 h2 {
