@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Logout from "./components/Logout";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './components/AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -16,16 +17,19 @@ root.render(
     {/* <Logout /> */}
     {/* <RecipeDetail /> */}
     {/* <UserFeed /> */}
-    <Router>
-          <Routes>
-            <Route path="/" element={<Signup />} />
-            <Route path="/recipeDetail" element={<RecipeDetail />} />
-            <Route path="/postRecipe" element={<PostRecipe />} />
-            <Route path="/logout" element={<Logout />} /> {/* Asegúrate de haber importado el componente Logout si planeas usarlo */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/recipeDetail" element={<RecipeDetail />} />
+          <Route path="/postRecipe" element={<PostRecipe />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/userfeed" element={<UserFeed />} />
         </Routes>
-    </Router>
+      </Router>
+    </AuthProvider>
   </React.StrictMode>
 ); 
 

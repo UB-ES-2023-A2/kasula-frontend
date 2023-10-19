@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import "../css/Login.css";
+import "../css/Signup.css";
 import logo from '../assets/logo.png';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
     const [username, setUsername] = useState('');
@@ -12,6 +13,8 @@ function Signup() {
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatedPassword, setShowRepeatedPassword] = useState(false);
     const [generalMessage, setGeneralMessage] = useState('');
+    const navigate = useNavigate();
+
 
     const isPasswordSecure = (pwd) => {
         // Aquí debería ir tu lógica para verificar la seguridad de la contraseña si es necesario.
@@ -54,7 +57,6 @@ function Signup() {
                     profile_picture: "imgurl",
                 }),
             });
-
             if (!response.ok) {
                 const data = await response.json();
                 if (data && data.detail) {
@@ -65,9 +67,10 @@ function Signup() {
             } else {
                 const data = await response.json();
                 setGeneralMessage("Usuari registrat amb èxit!");
+                navigate("/login");
             }
         } catch (error) {
-            setGeneralMessage("Hi ha hagut un error al connectar amb el servidor. Si us plau, intenta-ho de nou.");
+            setGeneralMessage(error.JSON.stringify);
         }
     };
 

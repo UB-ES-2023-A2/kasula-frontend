@@ -1,22 +1,18 @@
-/* Estilos para la pantalla de User Feed en React */
-
-/* Contenedor principal */
 .user-feed-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Encabezado (mismo que el de App) */
 .header {
   position: fixed;
   width: 100%;
-  background-color: #8b1818; /* Color de fondo del encabezado */
+  background-color: #8b1818;
   text-align: center;
-  z-index: 1; /* Asegura que el encabezado esté por encima del contenido */
-  height: 100px; /* Reducir la altura del encabezado */
-  padding: 5px 0; /* Ajustar el espaciado interior para centrar el contenido */
-  color: #fff; /* Color del texto del encabezado */
+  z-index: 1;
+  height: 100px;
+  padding: 5px 0;
+  color: #fff;
 }
 
 .background-image {
@@ -25,13 +21,11 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("../assets/background.png"); /* Ruta de la imagen de fondo */
-  background-size: cover; /* Ajusta el tamaño de la imagen para cubrir todo el contenedor */
-  background-attachment: fixed; /* Fija la imagen en su lugar mientras se desplaza */
-  filter: blur(
-    3px
-  ); /* Aplica un filtro de desenfoque (ajusta el valor según tus preferencias) */
-  z-index: -1; /* Coloca el pseudo-elemento detrás del contenido */
+  background-image: url("../assets/background.png");
+  background-size: cover;
+  background-attachment: fixed;
+  filter: blur(3px);
+  z-index: -1;
 }
 
 h1 {
@@ -45,45 +39,60 @@ h1 {
   margin-right: 1550px;
 }
 
-/* Contenedor de todas las recetas */
 .recipe-container {
   display: flex;
-  flex-direction: column; /* Recetas alargadas una debajo de la otra */
+  flex-direction: column;
   align-items: center;
   margin-top: 70px;
 }
 
-/* Estilos para las recetas alargadas y contenedor de imagen y texto */
 .recipe {
-  display: flex; /* Usar flexbox para organizar los elementos horizontalmente */
+  display: flex;
   background-color: #ee9494;
   border: 1px solid #4d1d1d;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39);
   border-radius: 8px;
-  width: 1000px; /* Ancho de la receta alargada */
-  margin: 10px 0; /* Espacio entre recetas */
+  width: 1000px;
+  margin: 10px 0;
   padding: 10px;
   text-align: center;
-  align-items: center; /* Centrar verticalmente los elementos */
-  justify-content: space-between; /* Colocar elementos en los extremos */
-  overflow: hidden; /* Evitar que la imagen sobresalga por encima */
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
 }
 
-/* Imagen de la receta */
 .recipe-image {
-  width: 20%; /* Ancho de la imagen (puedes ajustarlo según tus necesidades) */
+  width: 20%;
   height: auto;
   border-radius: 4px;
-  margin-left: auto; /* Mover la imagen hacia la derecha */
-  max-height: 100%; /* Ajustar la altura máxima de la imagen */
-  margin-top: 10px; /* Agregar un margen superior para mover la imagen hacia abajo */
+  margin-left: auto;
+  max-height: 100%;
+  margin-top: 10px;
   margin-bottom: -3px;
 }
 
-/* Nombre de la comida */
 .recipe-name {
   margin: 0;
   font-weight: bold;
   font-size: 28px;
-  flex-grow: 1; /* Hacer que el nombre ocupe el espacio restante */
+  flex-grow: 1;
+}
+
+.post-recipe-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #8b1818;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 2;
+}
+
+.post-recipe-button:hover {
+  background-color: #6a1212;
 }

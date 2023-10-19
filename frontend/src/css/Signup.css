@@ -100,3 +100,30 @@ li {
   color: #333; /* Color del texto de ingredientes y pasos */
 }
 
+
+.logo {
+  width: 150px;        /* Tamaño del logo. Puedes ajustar según tus necesidades */
+  margin-bottom: 2em;  /* Espacio entre el logo y el primer campo */
+}
+
+.input-container, 
+.password-container {
+  width: 100%;         /* Asegura que todos los contenedores de campos tengan el mismo ancho */
+  position: relative;  /* Para que los íconos de contraseña estén posicionados correctamente */
+  margin-bottom: 1em;  /* Espacio entre campos */
+}
+
+input, textarea {
+  width: 100%;         /* Asegura que todos los campos tengan el mismo ancho */
+  padding: 0.5em;      /* Añade algo de padding para un mejor aspecto */
+  box-sizing: border-box; /* Asegura que el padding no aumente el tamaño total del input */
+}
+
+/* Estilo para los íconos de mostrar/ocultar contraseña */
+.password-container span {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
