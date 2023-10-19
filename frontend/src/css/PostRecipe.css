@@ -38,7 +38,7 @@
 
 .recipe-form {
   width: 90%; /* Ajuste al tamaño del formulario */
-  max-width: 800px;
+  max-width: 900px;
   padding: 20px;
   background-color: rgba(250, 250, 250, 0.9);
   border-radius: 10px;
@@ -195,4 +195,39 @@ textarea {
 
 .post-button:hover {
   background-color: #ff4d4d;
+}
+
+.form-content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.ingredients-section, .preparation-section {
+  width: 30%; /* Adjust based on your design preference */
+  overflow-y: auto; /* Enables scrolling */
+  max-height: 400px; /* Adjust based on your design preference */
+}
+
+.ingredient-list, .preparation-list {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+  max-height: 75px;
+  overflow-y: auto;
+}
+
+.ingredient-unit-select {
+  margin-bottom: 10px; /* Adjust this value according to your design needs */
+}
+
+.ingredient-item, .preparation-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+  border-bottom: 1px solid #eee;
+}
+
+.ingredient-input-group, .instruction-input-group {
+  margin-top: 1px;
 }

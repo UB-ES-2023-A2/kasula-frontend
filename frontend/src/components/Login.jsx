@@ -80,7 +80,7 @@ function Login() {
                 {passwordError && <p style={{color: 'red'}}>{passwordError}</p>}
 
                 <button type="submit">ENTRAR</button>
-                <a href="/register">Clica aqui per registrar-te</a>
+                <a href="/signup">Clica aqui per registrar-te</a>
             </form>
         </div>
     );
