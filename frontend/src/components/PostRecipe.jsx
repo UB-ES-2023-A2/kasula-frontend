@@ -3,6 +3,7 @@ import "../css/PostRecipe.css";
 import logo from '../assets/logo.png';
 import uploadIcon from '../assets/upload_icon.png';
 import { useAuth } from './AuthContext'; // Asegúrate de actualizar esta ruta
+import { useNavigate } from 'react-router-dom';
 
 const RecipePost = () => {
     const { token } = useAuth();
@@ -33,6 +34,7 @@ const RecipePost = () => {
     const ingredientQuantityRef = useRef(null);
     const instructionRef = useRef(null);
     const ingredientUnitRef = useRef(null);
+    const navigate = useNavigate();
 
     const renderStars = (amount) => {
         let stars = [];
@@ -105,8 +107,19 @@ const RecipePost = () => {
             inst.step_number = idx + 1;
         });
         setPreparation(newInstructions);
-    }
+    };
 
+    const validateRecipeData = (data) => {
+        if (!data.name) return "Name is required!";
+        if (!data.cooking_time) return "Cooking time is required!";
+        if (!data.difficulty) return "Difficulty is required!";
+        if (!data.energy) return "Energy is required!";
+        if (!data.ingredients) return "Ingredients are required!";
+        if (!data.instructions) return "Instructions are required!";
+        
+        return null;
+    };
+    
     const handleSubmit = async () => {
         const recipeData = {
             name: recipeName,
@@ -117,6 +130,12 @@ const RecipePost = () => {
             ingredients: ingredients,
             instructions: preparation
         };
+
+        const errorMessage = validateRecipeData(recipeData);
+        if (errorMessage) {
+            alert(errorMessage);
+            return;
+        }
     
         try {
             const response = await fetch('http://127.0.0.1:8000/recipe/', {
@@ -132,6 +151,7 @@ const RecipePost = () => {
     
             if (response.ok) {
                 console.log("Recipe posted successfully:", data);
+                navigate("/userfeed");
             } else {
                 console.error("Error posting recipe:", data);
             }
