@@ -77,7 +77,7 @@ function Signup() {
     return (
         <div className="login-container">
             <form onSubmit={handleSubmit}>
-                <img src={logo} alt="Logo" className="logo" />
+                <img src={logo} alt="Logo" class="logo" />
                 
                 <div className="input-container">
                     <input 
@@ -107,11 +107,11 @@ function Signup() {
                         onChange={e => setPassword(e.target.value)}
                         required
                     />
-                    <span onClick={() => setShowPassword(!showPassword)}>
+                    <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
                         {showPassword ? '👁️' : '🙈'}
                     </span>
                 </div>
-                
+
                 <div className="password-container">
                     <input 
                         type={showRepeatedPassword ? "text" : "password"} 
@@ -120,7 +120,7 @@ function Signup() {
                         onChange={e => setRepeatedPassword(e.target.value)}
                         required
                     />
-                    <span onClick={() => setShowRepeatedPassword(!showRepeatedPassword)}>
+                    <span className="toggle-password" onClick={() => setShowRepeatedPassword(!showRepeatedPassword)}>
                         {showRepeatedPassword ? '👁️' : '🙈'}
                     </span>
                 </div>
@@ -136,8 +136,8 @@ function Signup() {
                 {passwordError && <p style={{color: 'red'}}>{passwordError}</p>}
                 {generalMessage && <p style={{color: generalMessage.includes("èxit") ? 'green' : 'red'}}>{generalMessage}</p>}
 
-                <button type="submit">REGISTRAR-TE</button>
-                <a href="/login">Et trobes ja registrat?</a>
+                <button style={{marginTop: '10px'}} type="submit">REGISTRAR-TE</button>
+                <a style={{marginBottom: '5px'}} href="/login">Et trobes ja registrat?</a>
             </form>
         </div>
     );
