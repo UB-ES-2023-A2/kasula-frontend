@@ -1,9 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import "../css/PostRecipe.css";
 import logo from '../assets/logo.png';
 import uploadIcon from '../assets/upload_icon.png';
+import { useAuth } from './AuthContext'; // Asegúrate de actualizar esta ruta
 
 const RecipePost = () => {
+    const { token } = useAuth();
+
     const Unit = {
         cup: "cup",
         tbsp: "tbsp",
@@ -18,8 +21,8 @@ const RecipePost = () => {
         qt: "qt",
         gal: "gal",
         count: "count"
-    }
-    
+    };
+
     const [recipeName, setRecipeName] = useState('');
     const [ingredients, setIngredients] = useState([]);
     const [preparation, setPreparation] = useState([]);
@@ -49,7 +52,6 @@ const RecipePost = () => {
         setIngredients(newIngredients);
     };
 
-    // Convert time (HH:MM) to total minutes as an integer
     const convertTimeToMinutes = (timeStr) => {
         const [hours, minutes] = timeStr.split(':').map(Number);
         return hours * 60 + minutes;
@@ -70,7 +72,7 @@ const RecipePost = () => {
         const newIngredient = {
             name: ingredientNameRef.current.value,
             quantity: ingredientQuantityRef.current.value,
-            unit: ingredientUnitRef.current.value // Get the selected unit from the ref
+            unit: ingredientUnitRef.current.value
         };
         setIngredients([...ingredients, newIngredient]);
         ingredientNameRef.current.value = "";
@@ -95,11 +97,10 @@ const RecipePost = () => {
         setPreparation([...preparation, newInstruction]);
         instructionRef.current.value = "";
     };      
-    
+
     const handleInstructionDelete = (index) => {
         const newInstructions = [...preparation];
         newInstructions.splice(index, 1);
-        // Adjust step numbers after deletion
         newInstructions.forEach((inst, idx) => {
             inst.step_number = idx + 1;
         });
@@ -107,7 +108,6 @@ const RecipePost = () => {
     }
 
     const handleSubmit = async () => {
-        // The recipe object that we will send to the server
         const recipeData = {
             name: recipeName,
             cooking_time: convertTimeToMinutes(time),
@@ -123,7 +123,7 @@ const RecipePost = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Add any other headers, like authorization headers, if necessary
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(recipeData)
             });
@@ -131,10 +131,8 @@ const RecipePost = () => {
             const data = await response.json();
     
             if (response.ok) {
-                // Handle success, maybe notify the user or redirect them
                 console.log("Recipe posted successfully:", data);
             } else {
-                // Handle errors
                 console.error("Error posting recipe:", data);
             }
         } catch (error) {

@@ -27,6 +27,7 @@ root.render(
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/userfeed" element={<UserFeed />} />
+          <Route path="/RecipeDetail/:id" element={<RecipeDetail />} />
         </Routes>
       </Router>
     </AuthProvider>

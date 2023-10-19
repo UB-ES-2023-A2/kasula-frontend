@@ -26,7 +26,7 @@ function UserFeed() {
       <div className="background-image"></div>
       <div className="recipe-container">
         {recipes.map((recipe) => (
-          <Link key={recipe._id} to={`/detalleReceta/${recipe._id}`} className="recipe-link">
+          <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="recipe-link">
             <div className="recipe">
               <p className="recipe-name">{recipe.name}</p>
               <img
