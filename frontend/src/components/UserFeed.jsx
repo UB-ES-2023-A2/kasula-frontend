@@ -19,9 +19,15 @@ function UserFeed() {
 
   return (
     <div className="user-feed-container">
-      <header className="header">
-        <img src={logo} alt="Kasula" className="logo" />
-        <h1>Kasula</h1>
+      <header class="header_user_feed">
+        <img src={logo} alt="Kasula" className="logo_user_feed" />
+        <h1 class="h1_user_feed">Kasula</h1>
+        <button class="post-recipe-button" onClick={() => navigate("/postRecipe")}>
+          Post Recipe
+        </button>
+        <button class="logout_button_user_feed" onClick={() => navigate("/logout")}>
+          Log Out
+        </button>
       </header>
       <div className="background-image"></div>
       <div className="recipe-container">
@@ -38,9 +44,6 @@ function UserFeed() {
           </Link>
         ))}
       </div>
-      <button className="post-recipe-button" onClick={() => navigate("/postRecipe")}>
-        Post Recipe
-      </button>
     </div>
   );
 }

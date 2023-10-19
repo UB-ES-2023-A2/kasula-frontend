@@ -29,15 +29,16 @@
 }
 
 /* Ajustar el color del texto para que el nombre sea visible en el encabezado oscuro */
-h1 {
+.h1_recipe_detail {
   font-size: 36px;
-  margin-top: -70px;
+  margin-top: 30px;
+  margin-right: 750px;
+  place-content: center;
 }
 
-.logo {
+.logo_recipe_detail {
   width: 80px;
   height: 80px;
-  margin-right: 1550px;
 }
 
 /* Cuadrado para el contenido de receta */

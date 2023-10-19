@@ -4,22 +4,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
-  padding-top: 60px; /* Ajusta el espacio superior para evitar que se solape con el encabezado */
 }
 
 /* Encabezado fijo en la parte superior */
-.header {
+.header_logout {
   position: fixed;
   width: 100%;
-  background-color: #8b1818; /* Color de fondo del encabezado */
+  background-color: #8b1818;
   text-align: center;
-  z-index: 1; /* Asegura que el encabezado esté por encima del contenido */
-  height: 100px; /* Reducir la altura del encabezado */
-  padding: 5px 0; /* Ajustar el espaciado interior para centrar el contenido */
-  color: #fff; /* Color del texto del encabezado */
-  top: 0;
+  z-index: 1;
+  height: 100px;
+  padding: 5px 0;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .background-image {
@@ -37,21 +36,26 @@
   z-index: -1; /* Coloca el pseudo-elemento detrás del contenido */
 }
 
-.logo {
-  width: 80px;
-  height: 80px;
-}
-
-#logo2 {
-  width: 120px;
-  height: 120px;
-  margin: -50px 0 50px 75px;
-}
-
-h1 {
+.h1_logout {
   font-size: 36px;
-  color: #fff; /* Color del texto del encabezado */
+  margin-top: 25px;
+  margin-right: auto;
 }
+
+.logo_logout {
+  width: 90px;
+  height: 90px;
+  margin-right: auto;
+}
+
+#logo_logout_2 {
+  width: 140px;
+  height: 130px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: auto;
+}
+
 
 /* Caja de inicio de sesión más alargada */
 .logout-box {
@@ -67,6 +71,7 @@ h1 {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-top: 340px;
 }
 
 /* Mensaje de cierre de sesión */

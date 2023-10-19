@@ -4,7 +4,7 @@
   align-items: center;
 }
 
-.header {
+.header_user_feed {
   position: fixed;
   width: 100%;
   background-color: #8b1818;
@@ -13,6 +13,9 @@
   height: 100px;
   padding: 5px 0;
   color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .background-image {
@@ -28,22 +31,38 @@
   z-index: -1;
 }
 
-h1 {
+.h1_user_feed {
   font-size: 36px;
-  margin-top: -70px;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: 500px;
 }
 
-.logo {
+.logo_user_feed {
   width: 80px;
   height: 80px;
-  margin-right: 1550px;
+  margin-right: auto;
 }
 
 .recipe-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 70px;
+  margin-top: 180px;
+  clear: both;
+}
+
+.logout_button_user_feed {
+  margin-right: 20px;
+  background-color: #8b1818;
+  width: 100px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 2;
 }
 
 .recipe {
@@ -79,11 +98,9 @@ h1 {
 }
 
 .post-recipe-button {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 20px;
+  margin-right: 60px;
   background-color: #8b1818;
+  width: 100px;
   color: #fff;
   border: none;
   border-radius: 5px;

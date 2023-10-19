@@ -20,8 +20,8 @@ function RecipeDetail() {
   return (
     <div className="recipe-detail-container">
       <header className="header">
-        <img src={logo} alt="Kasula" className="logo" />
-        <h1>Kasula</h1>
+        <img src={logo} alt="Kasula" className="logo_recipe_detail" />
+        <h1 class="h1_recipe_detail">Kasula</h1>
       </header>
       <div className="background-image"></div>
       <div className="recipe-square">

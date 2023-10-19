@@ -77,7 +77,7 @@ function Signup() {
     return (
         <div className="login-container">
             <form onSubmit={handleSubmit}>
-                <img src={logo} alt="Logo" class="logo" />
+                <img src={logo} alt="Logo" class="logo_logut" />
                 
                 <div className="input-container">
                     <input 

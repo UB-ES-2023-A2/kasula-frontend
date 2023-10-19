@@ -54,7 +54,7 @@ function Login() {
     return (
         <div className="login-container">
             <form onSubmit={handleSubmit}>
-                <img src={logo} alt="Logo" className="logo" />
+                <img src={logo} alt="Logo" className="logo_login" />
                 
                 <div className="password-container">
                       <input 
