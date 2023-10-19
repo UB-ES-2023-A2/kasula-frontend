@@ -2,10 +2,23 @@ import React, { useState, useEffect } from "react";
 import "../css/RecipeDetail.css";
 import logo from "../assets/logo.png";
 import { useParams } from "react-router-dom";
+import spaghettiCarbonaraCover from '../assets/spaghetti_carbonara_cover.jpg';
+import vegetableStirFryCover from '../assets/vegetable_stir_fry_cover.jpg';
+import chickenAlfredoCover from '../assets/chicken_alfredo_cover.jpg';
 
 function RecipeDetail() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState({});
+
+  const imageMap = {
+    '../assets/spaghetti_carbonara_cover.jpg': spaghettiCarbonaraCover,
+    '../assets/vegetable_stir_fry_cover.jpg': vegetableStirFryCover,
+    '../assets/chicken_alfredo_cover.jpg': chickenAlfredoCover
+  };
+  
+  function getImage(filename) {
+    return imageMap[filename] || 'default_image_link_if_needed.jpg';
+  }  
 
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/recipe/${id}`)
@@ -13,22 +26,25 @@ function RecipeDetail() {
       .then((data) => {
         console.log(data);
         setRecipe(data);
+
+        // Log the value of recipe.image
+        console.log("recipe.image:", data.image);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
   }, [id]);
 
   return (
     <div className="recipe-detail-container">
-      <header className="header">
+      <header className="header_recipe_detail">
         <img src={logo} alt="Kasula" className="logo_recipe_detail" />
         <h1 class="h1_recipe_detail">Kasula</h1>
       </header>
-      <div className="background-image"></div>
-      <div className="recipe-square">
+      <div className="background-image-detail"></div>
+      <div className="recipe-square-detail">
         <div className="recipe-content">
           <div className="image-info-container">
             <img
-              src={recipe.image || "default_image_link_if_needed.jpg"}
+              src={getImage(recipe.image)}
               alt={recipe.name}
               className="recipe-image2"
             />

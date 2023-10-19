@@ -1,7 +1,7 @@
 /* RecipeDetail.css */
 
 /* Aplica el filtro de desenfoque al fondo de imagen */
-.background-image {
+.background-image-detail {
   position: fixed;
   top: 0;
   left: 0;
@@ -17,33 +17,37 @@
 }
 
 /* Encabezado (mismo que el de App) */
-.header {
+.header_recipe_detail {
   position: fixed;
   width: 100%;
-  background-color: #8b1818; /* Color de fondo del encabezado */
+  background-color: #8b1818;
   text-align: center;
-  z-index: 1; /* Asegura que el encabezado esté por encima del contenido */
-  height: 100px; /* Reducir la altura del encabezado */
-  padding: 5px 0; /* Ajustar el espaciado interior para centrar el contenido */
-  color: #fff; /* Color del texto del encabezado */
+  z-index: 1;
+  height: 100px;
+  padding: 5px 0;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Ajustar el color del texto para que el nombre sea visible en el encabezado oscuro */
 .h1_recipe_detail {
   font-size: 36px;
   margin-top: 30px;
-  margin-right: 750px;
+  margin-right: auto;
   place-content: center;
 }
 
 .logo_recipe_detail {
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 100px;
+  margin-right: auto;
 }
 
 /* Cuadrado para el contenido de receta */
-.recipe-square {
-  background-color: #ffe8e8; /* Color de fondo del cuadrado */
+.recipe-square-detail {
+  background-color: #7fff87c9; /* Color de fondo del cuadrado */
   width: 80%; /* Ancho del cuadrado */
   margin: 160px auto; /* Márgenes para centrar el cuadrado */
   border-radius: 8px;

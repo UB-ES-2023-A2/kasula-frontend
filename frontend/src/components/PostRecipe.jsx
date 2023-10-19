@@ -161,15 +161,19 @@ const RecipePost = () => {
     };
 
     return (
-        <div className="recipe-container">
-            <div className="header">
-                <img src={logo} alt="Logo" className="logo"/>
-                <h1>KASULÁ</h1>
+        <div className="post-detail-container">
+            <header class="header-post-recipe">
+                <img src={logo} alt="Logo" className="logo-post-recipe"/>
+                <h1 class="h1_post_recipe">KASULÀ</h1>
                 <div className="lang-user">
                     <span>EN</span>
                     <span>Username_tst</span>
                 </div>
-            </div>
+            </header>
+
+            <div className="background-image-post-recipe"></div>
+            
+            <div className="recipe-container-post-recipe">
             <div className="recipe-form">
                 <h2>Post recipe</h2>
 
@@ -277,6 +281,7 @@ const RecipePost = () => {
 
                 <button className="post-button" onClick={handleSubmit}>POST RECIPE</button>
             </div>
+        </div>
         </div>
     );
 }

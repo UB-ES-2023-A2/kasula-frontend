@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import "../css/UserFeed.css";
 import logo from "../assets/logo.png";
 import { Link, useHistory, useNavigate } from "react-router-dom";
+import spaghettiCarbonaraCover from '../assets/spaghetti_carbonara_cover.jpg';
+import vegetableStirFryCover from '../assets/vegetable_stir_fry_cover.jpg';
+import chickenAlfredoCover from '../assets/chicken_alfredo_cover.jpg';
 
 function UserFeed() {
   const [recipes, setRecipes] = useState([]);
@@ -17,6 +20,16 @@ function UserFeed() {
       .catch((error) => console.error("Error al obtener recetas:", error));
   }, []);
 
+  const imageMap = {
+    '../assets/spaghetti_carbonara_cover.jpg': spaghettiCarbonaraCover,
+    '../assets/vegetable_stir_fry_cover.jpg': vegetableStirFryCover,
+    '../assets/chicken_alfredo_cover.jpg': chickenAlfredoCover
+  };
+  
+  function getImage(filename) {
+    return imageMap[filename] || 'default_image_link_if_needed.jpg';
+  }
+
   return (
     <div className="user-feed-container">
       <header class="header_user_feed">
@@ -30,15 +43,15 @@ function UserFeed() {
         </button>
       </header>
       <div className="background-image"></div>
-      <div className="recipe-container">
+      <div className="recipe-container-user-feed_1">
         {recipes.map((recipe) => (
           <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="recipe-link">
-            <div className="recipe">
+            <div className="recipe-container-user-feed">
               <p className="recipe-name">{recipe.name}</p>
               <img
-                src={recipe.image || "default_image_link_if_needed.jpg"}
+                src={getImage(recipe.image)}
                 alt={recipe.name}
-                className="recipe-image"
+                className="recipe-image-user-feed"
               />
             </div>
           </Link>
