@@ -62,15 +62,15 @@ function Signup() {
                 if (data && data.detail) {
                     setGeneralMessage(data.detail);
                 } else {
-                    setGeneralMessage("Hi ha hagut un error inesperat. Si us plau, intenta-ho de nou.");
+                    window.alert("Hi ha hagut un error inesperat. Si us plau, intenta-ho de nou.");
                 }
             } else {
                 const data = await response.json();
-                setGeneralMessage("Usuari registrat amb èxit!");
+                window.alert("Usuari registrat amb èxit!");
                 navigate("/login");
             }
         } catch (error) {
-            setGeneralMessage(error.JSON.stringify);
+            window.alert(error.JSON.stringify);
         }
     };
 

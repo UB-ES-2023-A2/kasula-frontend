@@ -44,10 +44,10 @@ function Login() {
                 
             } else {
                 const errorData = await response.json();
-                setPasswordError(errorData.detail || "Error al iniciar sesión.");
+                window.alert(errorData.detail || "Error al iniciar sesión.");
             }
         } catch (error) {
-            setPasswordError("Hubo un problema al conectar con el servidor.");
+            window.alert("Hubo un problema al conectar con el servidor.");
         }
     };
 
