@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import spaghettiCarbonaraCover from '../assets/spaghetti_carbonara_cover.jpg';
 import vegetableStirFryCover from '../assets/vegetable_stir_fry_cover.jpg';
 import chickenAlfredoCover from '../assets/chicken_alfredo_cover.jpg';
+import { CSSTransition } from "react-transition-group";
 
 function RecipeDetail() {
   const { id } = useParams();
@@ -40,6 +41,12 @@ function RecipeDetail() {
         <h1 class="h1_recipe_detail">KASULÀ</h1>
       </header>
       <div className="background-image-detail"></div>
+      <CSSTransition
+        in={true} 
+        timeout={500} 
+        classNames="slideUp"
+        appear
+        >
       <div className="recipe-square-detail">
         <div className="recipe-content">
           <div className="image-info-container">
@@ -88,6 +95,7 @@ function RecipeDetail() {
           </div>
         </div>
       </div>
+      </CSSTransition>
     </div>
   );
 }
