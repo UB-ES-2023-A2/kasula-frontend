@@ -71,11 +71,12 @@
 }
 
 .recipe-container-user-feed {
+  position: relative;
   display: flex;
-  background-color: #ffb79fe0;
+  background-color: #fff;  
   height: 150px;
-  border: 1px solid #4d1d1d;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39);
+  border: none;            
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);   
   border-radius: 8px;
   width: 1000px;
   margin: 10px 0;
@@ -84,12 +85,24 @@
   align-items: center;
   justify-content: space-between;
   overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;  
 }
 
 .recipe-image-user-feed {
   width: auto;
   height: 200px;
   margin-right: 20px;
+  border-radius: 8px;    
+  transition: transform 0.5s;  
+}
+
+.recipe-container-user-feed:hover {
+  transform: translateY(-10px);  
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);   
+}
+
+.recipe-container-user-feed:hover .recipe-image-user-feed {
+  transform: scale(1.05);   
 }
 
 .recipe-name {
@@ -97,6 +110,7 @@
   font-weight: bold;
   font-size: 28px;
   flex-grow: 1;
+  color: #333; 
 }
 
 .post-recipe-button {
@@ -115,4 +129,20 @@
 
 .post-recipe-button:hover {
   background-color: #6a1212;
+}
+
+.recipe-link {
+  text-decoration: none;  /* Elimina el subrayado del enlace */
+}
+
+.recipe-link:hover, .recipe-link:active, .recipe-link:focus {
+  text-decoration: none;  /* Asegura que el subrayado se mantiene eliminado incluso al pasar el cursor, hacer clic o enfocar el enlace */
+}
+
+.recipe-name {
+  color: #333;  /* Define un color para el texto del nombre de la receta */
+}
+
+.recipe-link:hover .recipe-name {
+  color: #555;  /* Define un color para el texto del nombre de la receta al pasar el cursor */
 }
