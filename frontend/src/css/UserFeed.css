@@ -7,7 +7,7 @@
 .header_user_feed {
   position: fixed;
   width: 100%;
-  background-color: #8b1818;
+  background-color: #9e0000;
   text-align: center;
   z-index: 1;
   height: 100px;
@@ -39,8 +39,8 @@
 }
 
 .logo_user_feed {
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 100px;
   margin-right: auto;
 }
 
@@ -52,10 +52,15 @@
   clear: both;
 }
 
+.recipe-container-user-feed:hover {
+  background-color: #ffb9b9;
+}
+
 .logout_button_user_feed {
   margin-right: 20px;
   background-color: #8b1818;
   width: 100px;
+  font-weight: bold;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -67,7 +72,8 @@
 
 .recipe-container-user-feed {
   display: flex;
-  background-color: #ee9494;
+  background-color: #ffb79fe0;
+  height: 150px;
   border: 1px solid #4d1d1d;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.39);
   border-radius: 8px;
@@ -96,6 +102,7 @@
 .post-recipe-button {
   margin-right: 60px;
   background-color: #8b1818;
+  font-weight: bold;
   width: 100px;
   color: #fff;
   border: none;

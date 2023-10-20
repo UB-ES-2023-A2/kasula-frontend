@@ -33,8 +33,8 @@ function UserFeed() {
   return (
     <div className="user-feed-container">
       <header class="header_user_feed">
-        <img src={logo} alt="Kasula" className="logo_user_feed" />
-        <h1 class="h1_user_feed">Kasula</h1>
+        <img src={logo} alt="KASULÀ" className="logo_user_feed" />
+        <h1 class="h1_user_feed">KASULÀ</h1>
         <button class="post-recipe-button" onClick={() => navigate("/postRecipe")}>
           Post Recipe
         </button>

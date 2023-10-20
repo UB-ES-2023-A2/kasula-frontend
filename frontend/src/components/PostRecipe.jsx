@@ -175,83 +175,86 @@ const RecipePost = () => {
             
             <div className="recipe-container-post-recipe">
             <div className="recipe-form">
-                <h2>Post recipe</h2>
+                <h2 id='title'>Post recipe</h2>
 
                 <div className="input-section">
-                    <label>Recipe Name</label>
-                    <input 
+                    <label id='subtitle'>Recipe Name</label>
+                    <input id='input_postRecipe' 
                         type="text" 
                         value={recipeName} 
                         onChange={(e) => setRecipeName(e.target.value)} 
                         placeholder="Enter Recipe Name" 
                     />
                 </div>
-
-                <div className="input-section ingredients-section">
-                    <label>INGREDIENTS</label>
-                    <div className="ingredient-list">
-                        {ingredients.map((ingredient, index) => (
-                            <div key={index} className="ingredient-item">
-                                <span>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</span>
-                                <button onClick={() => handleIngredientDelete(index)}>X</button>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="ingredient-input-group">
-                        <input 
-                            type="text" 
-                            ref={ingredientNameRef}
-                            placeholder="Ingredient Name"
-                        />
-
-                        <input 
-                            type="number" 
-                            ref={ingredientQuantityRef}
-                            placeholder="Quantity"
-                        />
-                        <select className="ingredient-unit-select"
-                            ref={ingredientUnitRef}
-                        >
-                            {Object.values(Unit).map(unit => (
-                                <option key={unit} value={unit}>{unit}</option>
+                
+                <div className="input-subsection">
+                    <div className="ingredients-section">
+                        <label>INGREDIENTS</label>
+                        <div className="ingredient-list">
+                            {ingredients.map((ingredient, index) => (
+                                <div key={index} className="ingredient-item">
+                                    <span>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</span>
+                                    <button id='buttons_postRecipe'  onClick={() => handleIngredientDelete(index)}>X</button >
+                                </div>
                             ))}
-                        </select>
-                    </div>
-                    <button onClick={addIngredientField}>Add ingredient</button>
-                </div>
+                        </div>
+                        <div className="ingredient-input-group">
+                            <input id='input_postRecipe-ingredient' 
+                                type="text" 
+                                ref={ingredientNameRef}
+                                placeholder="Ingredient Name"
+                            />
 
-                <div className="input-section preparation-section">
-                    <label>PREPARATION</label>
-                    <div className="preparation-list">
-                        {preparation.map((step, index) => (
-                            <div key={index} className="preparation-item">
-                                <span>Step {step.step_number}: {step.body}</span>
-                                <button onClick={() => handleInstructionDelete(index)}>X</button>
-                            </div>
-                        ))}
+                            <input id='input_postRecipe' 
+                                type="number" 
+                                ref={ingredientQuantityRef}
+                                placeholder="Quantity"
+                            />
+                            <select className="ingredient-unit-select"
+                                ref={ingredientUnitRef}
+                            >
+                                {Object.values(Unit).map(unit => (
+                                    <option key={unit} value={unit}>{unit}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <button id='buttons_postRecipe' onClick={addIngredientField}>Add ingredient</button >
                     </div>
-                    <div className="instruction-input-group">
-                        <textarea 
-                            ref={instructionRef}
-                            placeholder={`Step ${preparation.length > 0 ? preparation.length + 1 : 1}`}
-                            maxLength={2000}
-                        />
+
+                    <div className=" preparation-section">
+                        <label>PREPARATION</label>
+                        <div className="preparation-list">
+                            {preparation.map((step, index) => (
+                                <div key={index} className="preparation-item">
+                                    <span>Step {step.step_number}: {step.body}</span>
+                                    <button id='buttons_postRecipe' onClick={() => handleInstructionDelete(index)}>X</button >
+                                </div>
+                            ))}
+                        </div>
+                        <div className="instruction-input-group">
+                            <textarea 
+                                id= 'textArea_postRecipe' 
+                                ref={instructionRef}
+                                placeholder={`Step ${preparation.length > 0 ? preparation.length + 1 : 1}`}
+                                maxLength={2000}
+                            />
+                        </div>
+                        <button id='buttons_postRecipe' style={{marginTop: '10px'}} onClick={addInstructionField}>Add step</button >
                     </div>
-                    <button style={{marginTop: '10px'}} onClick={addInstructionField}>Add step</button>
                 </div>
 
                 <div className="recipe-details">
                     <div className="upload-btn-wrapper">
-                        <button className="upload-button">
+                        <button id='buttons_postRecipe' className="upload-button id='buttons_postRecipe'">
                             <img src={uploadIcon} alt="Upload Icon" className="upload-icon" /> Upload Image
-                        </button>
-                        <input type="file" />
+                        </button >
+                        <input id='input_postRecipe' type="file" />
                     </div>
 
                     <div className="detail-item">
                         <label>Time of Cook</label>
                         <div className="time-input">
-                            <input 
+                            <input id='input_postRecipe' 
                                 type="time" 
                                 value={time}
                                 onChange={(e) => setTime(e.target.value)} 
@@ -269,7 +272,7 @@ const RecipePost = () => {
                     <div className="detail-item">
                         <label>Energy (kcal)</label>
                         <div className="energy-input">
-                            <input 
+                            <input id='input_postRecipe' 
                                 type="number" 
                                 value={energy} 
                                 onChange={(e) => setEnergy(e.target.value)} 
@@ -279,7 +282,7 @@ const RecipePost = () => {
                     </div>
                 </div>
 
-                <button className="post-button" onClick={handleSubmit}>POST RECIPE</button>
+                <button id='buttons_postRecipe' className="post-button id='buttons_postRecipe'" onClick={handleSubmit}>POST RECIPE</button >
             </div>
         </div>
         </div>

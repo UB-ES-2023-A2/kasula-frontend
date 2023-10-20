@@ -36,8 +36,8 @@ function RecipeDetail() {
   return (
     <div className="recipe-detail-container">
       <header className="header_recipe_detail">
-        <img src={logo} alt="Kasula" className="logo_recipe_detail" />
-        <h1 class="h1_recipe_detail">Kasula</h1>
+        <img src={logo} alt="KASULÀ" className="logo_recipe_detail" />
+        <h1 class="h1_recipe_detail">KASULÀ</h1>
       </header>
       <div className="background-image-detail"></div>
       <div className="recipe-square-detail">
@@ -46,7 +46,7 @@ function RecipeDetail() {
             <img
               src={getImage(recipe.image)}
               alt={recipe.name}
-              className="recipe-image2"
+              className="recipe-image-recipeDetail"
             />
 
             <div className="info-box">

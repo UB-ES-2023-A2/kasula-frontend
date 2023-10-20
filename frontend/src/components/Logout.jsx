@@ -25,13 +25,13 @@ function Logout() {
   return (
     <div className="logout-container">
       <div className="header_logout">
-        <img src={logo} alt="Kasula" class="logo_logout" />
-        <h1 class="h1_logout">Kasula</h1>
+        <img src={logo} alt="KASULÀ" class="logo_logout" />
+        <h1 class="h1_logout">KASULÀ</h1>
       </div>
       <div className="background-image"></div>
 
       <div className="logout-box">
-        <img src={logo} alt="Kasula" id="logo_logout_2" />
+        <img src={logo} alt="KASULÀ" id="logo_logout_2" />
         <div className="logout-message">
           <p>¿Desea cerrar sesión?</p>
         </div>

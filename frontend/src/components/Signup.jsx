@@ -76,7 +76,7 @@ function Signup() {
 
     return (
         <div className="login-container">
-            <form onSubmit={handleSubmit}>
+            <form id='form-singup' onSubmit={handleSubmit}>
                 <img src={logo} alt="Logo" class="logo_logut" />
                 
                 <div className="input-container">
@@ -99,7 +99,7 @@ function Signup() {
                     />
                 </div>
 
-                <div className="password-container">
+                <div className="password-container password-container-signup">
                     <input 
                         type={showPassword ? "text" : "password"} 
                         placeholder="Contrasenya" 
@@ -112,7 +112,7 @@ function Signup() {
                     </span>
                 </div>
 
-                <div className="password-container">
+                <div className="password-container password-container-signup">
                     <input 
                         type={showRepeatedPassword ? "text" : "password"} 
                         placeholder="Repeteix la contrassenya" 

@@ -11,7 +11,7 @@
 .header {
   position: fixed;
   width: 100%;
-  background-color: #333; /* Color de fondo del encabezado */
+  background-color: #9e0000; /* Color de fondo del encabezado */
   text-align: center;
   z-index: 1; /* Asegura que el encabezado esté por encima del contenido */
   height: 100px; /* Reducir la altura del encabezado */
@@ -39,74 +39,16 @@ h1 {
   margin-bottom: 5px;
 }
 
-/* Cuadrado para el contenido de receta */
-.recipe-square {
-  background-color: #7fffa367; /* Color de fondo del cuadrado */
-  width: 80%; /* Ancho del cuadrado */
-  margin: 160px auto; /* Márgenes para centrar el cuadrado */
+#form-singup {
+  background-color: #ffb79fe0;
+  padding: 20px;
   border-radius: 8px;
-  padding: 110px 80px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
-}
-
-/* Contenido de detalle de receta */
-.recipe-content {
-  display: flex;
-  align-items: flex-start;
-}
-
-/* Imagen de la receta (a la izquierda) */
-.recipe-image {
-  width: 300px; /* Tamaño de la imagen */
-  height: auto;
-  margin-right: 20px;
-  margin-top: -35px;
-}
-
-/* Detalles de la receta (ingredientes y pasos) */
-.recipe-details {
+  width: 335px;
+  height: 550px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%; /* Ancho del cuadrado */
-}
-
-/* Caja de ingredientes */
-.ingredient-box {
-  background-color: #ffc107; /* Color de fondo amarillo */
-  height: auto;
-  border-radius: 8px;
-  text-align: center;
-  margin-bottom: 20px; /* Espacio entre cajas */
-  margin-top: -40px;
-  width: 85%; /* Ancho del cuadrado */
-}
-
-/* Caja de pasos */
-.step-box {
-  background-color: #00bcd4; /* Color de fondo azul claro */
-  height: auto;
-  border-radius: 8px;
-  text-align: center;
-  width: 85%; /* Ancho del cuadrado */
-}
-
-h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
-  color: #333; /* Color del título */
-}
-
-ul,
-ol {
-  text-align: left;
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  margin-bottom: 5px;
-  color: #333; /* Color del texto de ingredientes y pasos */
+  justify-content: space-between; /* Distribuye el espacio entre los elementos */
 }
 
 .input-container, .password-container {
@@ -114,7 +56,7 @@ li {
 }
 
 input, textarea, button {
-  width: 100%;
+  width: 295px;
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -123,7 +65,7 @@ input, textarea, button {
 }
 
 button {
-  background: linear-gradient(90deg, rgba(235, 66, 53, 1) 0%, rgba(245, 116, 97, 1) 100%);
+  background: linear-gradient(90deg, rgb(245 36 20) 0%, rgb(240 109 90) 100%);
   border: none;
   color: white;
   cursor: pointer;
@@ -131,9 +73,16 @@ button {
 }
 
 input[type="text"], input[type="password"], input[type="email"] {
-  width: 100%;
+  width: 295px;
   box-sizing: border-box; /* This ensures padding and border are included in width */
 }
+
+.password-container-signup input[type="text"],
+.password-container-signup input[type="password"] {
+  width: 295px;
+  padding-right: 40px;
+}
+
 
 button:hover {
   background: linear-gradient(90deg, rgba(245, 116, 97, 1) 0%, rgba(235, 66, 53, 1) 100%);
