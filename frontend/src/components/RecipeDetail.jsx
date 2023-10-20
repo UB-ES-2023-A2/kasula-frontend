@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/RecipeDetail.css";
+import "../css/Transitions.css";
 import logo from "../assets/logo.png";
 import { useParams } from "react-router-dom";
 import spaghettiCarbonaraCover from '../assets/spaghetti_carbonara_cover.jpg';

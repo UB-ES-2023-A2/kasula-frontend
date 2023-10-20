@@ -132,17 +132,17 @@
 }
 
 .recipe-link {
-  text-decoration: none;  /* Elimina el subrayado del enlace */
+  text-decoration: none; 
 }
 
 .recipe-link:hover, .recipe-link:active, .recipe-link:focus {
-  text-decoration: none;  /* Asegura que el subrayado se mantiene eliminado incluso al pasar el cursor, hacer clic o enfocar el enlace */
+  text-decoration: none; 
 }
 
 .recipe-name {
-  color: #333;  /* Define un color para el texto del nombre de la receta */
+  color: #333; 
 }
 
 .recipe-link:hover .recipe-name {
-  color: #555;  /* Define un color para el texto del nombre de la receta al pasar el cursor */
+  color: #555;  
 }

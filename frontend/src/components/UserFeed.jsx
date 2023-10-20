@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/UserFeed.css";
+import "../css/Transitions.css";
+import { CSSTransition } from "react-transition-group";
 import logo from "../assets/logo.png";
 import { Link, useHistory, useNavigate } from "react-router-dom";
 import spaghettiCarbonaraCover from '../assets/spaghetti_carbonara_cover.jpg';
@@ -43,6 +45,12 @@ function UserFeed() {
         </button>
       </header>
       <div className="background-image"></div>
+      <CSSTransition
+        in={true} 
+        timeout={500} 
+        classNames="slideUp"
+        appear
+        >
       <div className="recipe-container-user-feed_1">
         {recipes.map((recipe) => (
           <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="recipe-link">
@@ -57,6 +65,7 @@ function UserFeed() {
           </Link>
         ))}
       </div>
+      </CSSTransition>
     </div>
   );
 }
