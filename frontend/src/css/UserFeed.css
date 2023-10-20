@@ -1,89 +1,148 @@
-/* Estilos para la pantalla de User Feed en React */
-
-/* Contenedor principal */
 .user-feed-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Encabezado (mismo que el de App) */
-.header {
+.header_user_feed {
   position: fixed;
   width: 100%;
-  background-color: #8b1818; /* Color de fondo del encabezado */
+  background-color: #9e0000;
   text-align: center;
-  z-index: 1; /* Asegura que el encabezado esté por encima del contenido */
-  height: 100px; /* Reducir la altura del encabezado */
-  padding: 5px 0; /* Ajustar el espaciado interior para centrar el contenido */
-  color: #fff; /* Color del texto del encabezado */
+  z-index: 1;
+  height: 100px;
+  padding: 5px 0;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.background-image {
+.background-image-user-feed {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("../assets/background.png"); /* Ruta de la imagen de fondo */
-  background-size: cover; /* Ajusta el tamaño de la imagen para cubrir todo el contenedor */
-  background-attachment: fixed; /* Fija la imagen en su lugar mientras se desplaza */
-  filter: blur(
-    3px
-  ); /* Aplica un filtro de desenfoque (ajusta el valor según tus preferencias) */
-  z-index: -1; /* Coloca el pseudo-elemento detrás del contenido */
+  background-image: url("../assets/background.png");
+  background-size: cover;
+  background-attachment: fixed;
+  filter: blur(3px);
+  z-index: -1;
 }
 
-h1 {
+.h1_user_feed {
   font-size: 36px;
-  margin-top: -70px;
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: 500px;
 }
 
-.logo {
-  width: 80px;
-  height: 80px;
-  margin-right: 1550px;
+.logo_user_feed {
+  width: 120px;
+  height: 100px;
+  margin-right: auto;
 }
 
-/* Contenedor de todas las recetas */
-.recipe-container {
+.recipe-container-user-feed_1 {
   display: flex;
-  flex-direction: column; /* Recetas alargadas una debajo de la otra */
+  flex-direction: column;
   align-items: center;
-  margin-top: 70px;
+  margin-top: 140px;
+  clear: both;
 }
 
-/* Estilos para las recetas alargadas y contenedor de imagen y texto */
-.recipe {
-  display: flex; /* Usar flexbox para organizar los elementos horizontalmente */
-  background-color: #ee9494;
-  border: 1px solid #4d1d1d;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
+.recipe-container-user-feed:hover {
+  background-color: #ffb9b9;
+}
+
+.logout_button_user_feed {
+  margin-right: 20px;
+  background-color: #8b1818;
+  width: 100px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 2;
+}
+
+.recipe-container-user-feed {
+  position: relative;
+  display: flex;
+  background-color: #fff;  
+  height: 150px;
+  border: none;            
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);   
   border-radius: 8px;
-  width: 1000px; /* Ancho de la receta alargada */
-  margin: 10px 0; /* Espacio entre recetas */
+  width: 1000px;
+  margin: 10px 0;
   padding: 10px;
   text-align: center;
-  align-items: center; /* Centrar verticalmente los elementos */
-  justify-content: space-between; /* Colocar elementos en los extremos */
-  overflow: hidden; /* Evitar que la imagen sobresalga por encima */
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;  
 }
 
-/* Imagen de la receta */
-.recipe-image {
-  width: 20%; /* Ancho de la imagen (puedes ajustarlo según tus necesidades) */
-  height: auto;
-  border-radius: 4px;
-  margin-left: auto; /* Mover la imagen hacia la derecha */
-  max-height: 100%; /* Ajustar la altura máxima de la imagen */
-  margin-top: 10px; /* Agregar un margen superior para mover la imagen hacia abajo */
-  margin-bottom: -3px;
+.recipe-image-user-feed {
+  width: auto;
+  height: 200px;
+  margin-right: 20px;
+  border-radius: 8px;    
+  transition: transform 0.5s;  
 }
 
-/* Nombre de la comida */
+.recipe-container-user-feed:hover {
+  transform: translateY(-10px);  
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);   
+}
+
+.recipe-container-user-feed:hover .recipe-image-user-feed {
+  transform: scale(1.05);   
+}
+
 .recipe-name {
   margin: 0;
   font-weight: bold;
   font-size: 28px;
-  flex-grow: 1; /* Hacer que el nombre ocupe el espacio restante */
+  flex-grow: 1;
+  color: #333; 
+}
+
+.post-recipe-button {
+  margin-right: 60px;
+  background-color: #8b1818;
+  font-weight: bold;
+  width: 100px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 2;
+}
+
+.post-recipe-button:hover {
+  background-color: #6a1212;
+}
+
+.recipe-link {
+  text-decoration: none; 
+}
+
+.recipe-link:hover, .recipe-link:active, .recipe-link:focus {
+  text-decoration: none; 
+}
+
+.recipe-name {
+  color: #333; 
+}
+
+.recipe-link:hover .recipe-name {
+  color: #555;  
 }

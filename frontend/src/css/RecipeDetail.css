@@ -1,13 +1,7 @@
 /* RecipeDetail.css */
 
-/* Contenedor principal del detalle de receta */
-.recipe-detail-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 /* Aplica el filtro de desenfoque al fondo de imagen */
-.background-image {
+.background-image-detail {
   position: fixed;
   top: 0;
   left: 0;
@@ -23,32 +17,37 @@
 }
 
 /* Encabezado (mismo que el de App) */
-.header {
+.header_recipe_detail {
   position: fixed;
   width: 100%;
-  background-color: #8b1818; /* Color de fondo del encabezado */
+  background-color: #9e0000;
   text-align: center;
-  z-index: 1; /* Asegura que el encabezado esté por encima del contenido */
-  height: 100px; /* Reducir la altura del encabezado */
-  padding: 5px 0; /* Ajustar el espaciado interior para centrar el contenido */
-  color: #fff; /* Color del texto del encabezado */
+  z-index: 1;
+  height: 100px;
+  padding: 5px 0;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Ajustar el color del texto para que el nombre sea visible en el encabezado oscuro */
-h1 {
+.h1_recipe_detail {
   font-size: 36px;
-  margin-top: -70px;
+  margin-top: 30px;
+  margin-right: 760px;
+  place-content: center;
 }
 
-.logo {
-  width: 80px;
-  height: 80px;
-  margin-right: 1550px;
+.logo_recipe_detail {
+  width: 120px;
+  height: 100px;
+  margin-right: auto;
 }
 
 /* Cuadrado para el contenido de receta */
-.recipe-square {
-  background-color: #ffe8e8; /* Color de fondo del cuadrado */
+.recipe-square-detail {
+  background-color: #ffb79fe0; /* Color de fondo del cuadrado */
   width: 80%; /* Ancho del cuadrado */
   margin: 160px auto; /* Márgenes para centrar el cuadrado */
   border-radius: 8px;
@@ -70,19 +69,20 @@ h1 {
   width: 100%; /* Ancho del cuadrado */
 }
 
-/* Imagen de la receta (a la izquierda) */
-.recipe-image2 {
-  width: 300px; /* Tamaño de la imagen */
+/* Caja de pasos */
+.step-box {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
+  background-color: #ffb9b9; /* Color de fondo azul claro */
   height: auto;
-  margin-right: 20px;
-  margin-top: -35px;
-  margin: -35px 20px 50px 0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.478); /* Sombra */
+  border-radius: 8px;
+  text-align: center;
+  width: 85%; /* Ancho del cuadrado */
 }
 
 /* Caja de ingredientes */
 .ingredient-box {
-  background-color: #ffc107; /* Color de fondo amarillo */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
+  background-color: #ffb9b9; /* Color de fondo amarillo */
   height: auto;
   border-radius: 8px;
   text-align: center;
@@ -91,29 +91,29 @@ h1 {
   width: 85%; /* Ancho del cuadrado */
 }
 
-/* Caja de pasos */
-.step-box {
-  background-color: #00bcd4; /* Color de fondo azul claro */
+/* Caja de ingredientes */
+.info-box {
+  background-color: #ffb9b9; /* Color de fondo amarillo */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
   height: auto;
   border-radius: 8px;
   text-align: center;
-  width: 85%; /* Ancho del cuadrado */
+  width: 95%; /* Ancho del cuadrado */
 }
 
-/* Caja de información */
-.info-box {
-  background-color: #4fd367; /* Color de fondo azul claro */
+/* Imagen de la receta (a la izquierda) */
+.recipe-image-recipeDetail {
+  width: 300px; /* Tamaño de la imagen */
   height: auto;
-  border-radius: 8px;
-  text-align: center;
-  width: 89%; /* Ancho del cuadrado */
-  margin: 0 0 0 -3px;
-  padding: 10px;
+  margin-right: 20px;
+  margin-top: -35px;
+  margin: -10px 20px 30px 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
 }
 
 h2 {
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 26px;
+  margin-bottom: 20px;
   color: #333; /* Color del título */
 }
 
@@ -125,7 +125,9 @@ ol {
 }
 
 li {
-  margin-bottom: 5px;
+  margin: 0 0 15px 20px;
+  font-size: 17px;
+  font-weight: bold;
   color: #333; /* Color del texto de ingredientes y pasos */
 }
 
@@ -140,7 +142,7 @@ li {
   display: flex;
   align-items: center;
   margin: 10px 20px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .info-content {
@@ -156,7 +158,7 @@ li {
 
 .star {
   font-size: 24px;
-  color: #ffcc00; /* Color de las estrellas (puedes ajustarlo) */
+  color: black; /* Color de las estrellas */
 }
 
 p {
@@ -166,5 +168,6 @@ p {
 }
 
 #time {
-  font-size: 16px;
+  font-size: 20px;
+  font-weight: bold;
 }

@@ -1,80 +1,104 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../css/RecipeDetail.css";
+import "../css/Transitions.css";
 import logo from "../assets/logo.png";
-import comida from "../assets/comida1.jpg";
+import { useParams } from "react-router-dom";
+import spaghettiCarbonaraCover from '../assets/spaghetti_carbonara_cover.jpg';
+import vegetableStirFryCover from '../assets/vegetable_stir_fry_cover.jpg';
+import chickenAlfredoCover from '../assets/chicken_alfredo_cover.jpg';
+import { CSSTransition } from "react-transition-group";
+import gyozas from '../assets/gyozas.jpg';
 
 function RecipeDetail() {
+  const { id } = useParams();
+  const [recipe, setRecipe] = useState({});
+
+  const imageMap = {
+    '../assets/spaghetti_carbonara_cover.jpg': spaghettiCarbonaraCover,
+    '../assets/vegetable_stir_fry_cover.jpg': vegetableStirFryCover,
+    '../assets/chicken_alfredo_cover.jpg': chickenAlfredoCover,
+    '../assets/gyozas.jpg': gyozas
+  };
+  
+  function getImage(filename) {
+    return imageMap[filename] || gyozas;
+  }  
+
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/recipe/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setRecipe(data);
+
+        // Log the value of recipe.image
+        console.log("recipe.image:", data.image);
+      })
+      .catch((error) => console.error("Error al obtener receta:", error));
+  }, [id]);
+
   return (
     <div className="recipe-detail-container">
-      {/* Encabezado (mismo que el de App) */}
-      <header className="header">
-        <img src={logo} alt="Kasula" className="logo" />
-        <h1>Kasula</h1>
+      <header className="header_recipe_detail">
+        <img src={logo} alt="KASULÀ" className="logo_recipe_detail" />
+        <h1 class="h1_recipe_detail">KASULÀ</h1>
       </header>
-      <div className="background-image"></div>
-      {/* Cuadrado para el contenido de receta */}
-      <div className="recipe-square">
-        {/* Contenido de detalle de receta */}
+      <div className="background-image-detail"></div>
+      <CSSTransition
+        in={true} 
+        timeout={500} 
+        classNames="slideUp"
+        appear
+        >
+      <div className="recipe-square-detail">
         <div className="recipe-content">
-          {/* Imagen de la receta (a la izquierda) */}
           <div className="image-info-container">
             <img
-              src={comida}
-              alt="Imagen de la receta"
-              className="recipe-image2"
+              src={getImage(recipe.image)}
+              alt={recipe.name}
+              className="recipe-image-recipeDetail"
             />
 
-            {/* Caja de información */}
             <div className="info-box">
               <h2>Más información</h2>
               <div className="info-section">
                 <h3>Difficulty:</h3>
                 <div className="difficulty-stars">
-                  {/* Agrega las estrellas (1 a 5) según la dificultad */}
-                  <span className="star">&#9733;</span>
-                  <span className="star">&#9733;</span>
-                  <span className="star">&#9733;</span>
-                  <span className="star">&#9733;</span>
+                  {/* Suponiendo que difficulty es un número del 1 al 5, renderizamos las estrellas */}
+                  {Array(recipe.difficulty || 0).fill().map((_, index) => (
+                    <span key={index} className="star">&#9733;</span>
+                  ))}
                 </div>
               </div>
               <div className="info-section">
                 <h3>Time:</h3>
-                <p id="time">30 minutos</p>
-                {/* Agrega el tiempo que tarda en hacerse la receta */}
+                <p id="time">{recipe.cooking_time}</p>
               </div>
             </div>
           </div>
 
-          {/* Detalles de la receta (ingredientes y pasos) */}
           <div className="recipe-details">
-            {/* Caja de ingredientes */}
             <div className="ingredient-box">
               <h2>Ingredientes</h2>
               <ul>
-                <li>Ingrediente 1</li>
-                <li>Ingrediente 2</li>
-                <li>Ingrediente 2</li>
-                <li>Ingrediente 2</li>
-                <li>Ingrediente 2</li>
-                {/* Agrega más ingredientes según sea necesario */}
+              {recipe.ingredients && recipe.ingredients.map((ingredient, index) => <li key={index}>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</li>)}
               </ul>
             </div>
 
-            {/* Caja de pasos */}
             <div className="step-box">
               <h2>Pasos</h2>
               <ol>
-                <li>Paso 1: Realiza esta acción.</li>
-                <li>Paso 2: Realiza otra acción.</li>
-                <li>Paso 2: Realiza otra acción.</li>
-                <li>Paso 2: Realiza otra acción.</li>
-                <li>Paso 2: Realiza otra acción.</li>
-                {/* Agrega más pasos según sea necesario */}
+                  {recipe.instructions && recipe.instructions.map((instruction, index) => (
+                      <li key={index}>
+                          Step {instruction.step_number + 1}: {instruction.body}
+                      </li>
+                  ))}
               </ol>
             </div>
           </div>
         </div>
       </div>
+      </CSSTransition>
     </div>
   );
 }
