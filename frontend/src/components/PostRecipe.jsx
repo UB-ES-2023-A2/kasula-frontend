@@ -121,6 +121,15 @@ const RecipePost = () => {
         
         return null;
     };
+
+    const isFormComplete = () => {
+        return recipeName &&
+               ingredients.length > 0 &&
+               preparation.length > 0 &&
+               time &&
+               energy &&
+               difficulty;
+    };    
     
     const handleSubmit = async () => {
         const recipeData = {
@@ -291,7 +300,15 @@ const RecipePost = () => {
                             </div>
                         </div>
                         
-                        <button id='buttons_postRecipe' className="post-button" onClick={handleSubmit}>POST RECIPE</button>
+                        <button 
+                            id='buttons_postRecipe' 
+                            className="post-button" 
+                            onClick={handleSubmit}
+                            disabled={!isFormComplete()}
+                            style={{cursor: isFormComplete() ? 'pointer' : 'not-allowed'}}
+                        >
+                            POST RECIPE
+                        </button>
                     </div>
                 </div>
             </CSSTransition>
