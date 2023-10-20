@@ -7,6 +7,7 @@ import { Link, useHistory, useNavigate } from "react-router-dom";
 import spaghettiCarbonaraCover from '../assets/spaghetti_carbonara_cover.jpg';
 import vegetableStirFryCover from '../assets/vegetable_stir_fry_cover.jpg';
 import chickenAlfredoCover from '../assets/chicken_alfredo_cover.jpg';
+import gyozas from '../assets/gyozas.jpg';
 
 function UserFeed() {
   const [recipes, setRecipes] = useState([]);
@@ -25,11 +26,12 @@ function UserFeed() {
   const imageMap = {
     '../assets/spaghetti_carbonara_cover.jpg': spaghettiCarbonaraCover,
     '../assets/vegetable_stir_fry_cover.jpg': vegetableStirFryCover,
-    '../assets/chicken_alfredo_cover.jpg': chickenAlfredoCover
+    '../assets/chicken_alfredo_cover.jpg': chickenAlfredoCover,
+    '../assets/gyozas.jpg': gyozas
   };
   
   function getImage(filename) {
-    return imageMap[filename] || 'default_image_link_if_needed.jpg';
+    return imageMap[filename] || gyozas;
   }
 
   return (

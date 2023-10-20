@@ -7,6 +7,7 @@ import spaghettiCarbonaraCover from '../assets/spaghetti_carbonara_cover.jpg';
 import vegetableStirFryCover from '../assets/vegetable_stir_fry_cover.jpg';
 import chickenAlfredoCover from '../assets/chicken_alfredo_cover.jpg';
 import { CSSTransition } from "react-transition-group";
+import gyozas from '../assets/gyozas.jpg';
 
 function RecipeDetail() {
   const { id } = useParams();
@@ -15,11 +16,12 @@ function RecipeDetail() {
   const imageMap = {
     '../assets/spaghetti_carbonara_cover.jpg': spaghettiCarbonaraCover,
     '../assets/vegetable_stir_fry_cover.jpg': vegetableStirFryCover,
-    '../assets/chicken_alfredo_cover.jpg': chickenAlfredoCover
+    '../assets/chicken_alfredo_cover.jpg': chickenAlfredoCover,
+    '../assets/gyozas.jpg': gyozas
   };
   
   function getImage(filename) {
-    return imageMap[filename] || 'default_image_link_if_needed.jpg';
+    return imageMap[filename] || gyozas;
   }  
 
   useEffect(() => {
