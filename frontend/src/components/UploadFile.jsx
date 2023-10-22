@@ -11,7 +11,7 @@ const UploadFile = () => {
    const handleUpload = () => {
      const formData = new FormData();
      formData.append('file', selectedFile);
-     axios.post('http://127.0.0.1:8000/user/uploadfile', formData)
+     axios.post('http://127.0.0.1:8000/recipe/uploadfile', formData)
        .then((response) => {
          console.log(response.data);
        })
