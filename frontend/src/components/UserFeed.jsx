@@ -3,11 +3,8 @@ import "../css/UserFeed.css";
 import "../css/Transitions.css";
 import { CSSTransition } from "react-transition-group";
 import logo from "../assets/logo.png";
+import gyozas from "../assets/gyozas.jpg";
 import { Link, useHistory, useNavigate } from "react-router-dom";
-import spaghettiCarbonaraCover from '../assets/spaghetti_carbonara_cover.jpg';
-import vegetableStirFryCover from '../assets/vegetable_stir_fry_cover.jpg';
-import chickenAlfredoCover from '../assets/chicken_alfredo_cover.jpg';
-import gyozas from '../assets/gyozas.jpg';
 
 function UserFeed() {
   const [recipes, setRecipes] = useState([]);
@@ -22,17 +19,6 @@ function UserFeed() {
       })
       .catch((error) => console.error("Error al obtener recetas:", error));
   }, []);
-
-  const imageMap = {
-    '../assets/spaghetti_carbonara_cover.jpg': spaghettiCarbonaraCover,
-    '../assets/vegetable_stir_fry_cover.jpg': vegetableStirFryCover,
-    '../assets/chicken_alfredo_cover.jpg': chickenAlfredoCover,
-    '../assets/gyozas.jpg': gyozas
-  };
-  
-  function getImage(filename) {
-    return imageMap[filename] || gyozas;
-  }
 
   return (
     <div className="user-feed-container">
@@ -59,7 +45,7 @@ function UserFeed() {
             <div className="recipe-container-user-feed">
               <p className="recipe-name">{recipe.name}</p>
               <img
-                src={getImage(recipe.image)}
+                src={recipe.image ? recipe.image : gyozas}
                 alt={recipe.name}
                 className="recipe-image-user-feed"
               />

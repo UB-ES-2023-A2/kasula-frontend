@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const UploadFile = () => {
+const UploadFile = ({myParentCallback}) => {
    const [selectedFile, setSelectedFile] = useState(null);
 
    const handleFileUpload = (event) => {
@@ -13,13 +13,12 @@ const UploadFile = () => {
      formData.append('file', selectedFile);
      axios.post('http://127.0.0.1:8000/recipe/uploadfile', formData)
        .then((response) => {
-         console.log(response.data);
+         myParentCallback(response.data.file_url);
        })
        .catch((error) => {
          console.log(error);
        });
    };
-
    return(
      <div>
        <h3>Upload File</h3>
