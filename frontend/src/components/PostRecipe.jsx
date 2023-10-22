@@ -6,6 +6,7 @@ import logo from '../assets/logo.png';
 import uploadIcon from '../assets/upload_icon.png';
 import { useAuth } from './AuthContext'; // Asegúrate de actualizar esta ruta
 import { useNavigate } from 'react-router-dom';
+import UploadFile from './UploadFile';
 
 const RecipePost = () => {
     const { token } = useAuth();
@@ -252,12 +253,13 @@ const RecipePost = () => {
                         </div>
     
                         <div className="recipe-details">
-                            <div className="upload-btn-wrapper">
+                            <UploadFile/>
+                            {/*<div className="upload-btn-wrapper">
                                 <button id='buttons_postRecipe' className="upload-button">
                                     <img src={uploadIcon} alt="Upload Icon" className="upload-icon" /> Upload Image
                                 </button>
                                 <input id='input_postRecipe' type="file" />
-                            </div>
+                                    </div>*/}
     
                             <div className="detail-item">
                                 <label>Time of Cook</label>
