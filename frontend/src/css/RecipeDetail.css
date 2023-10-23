@@ -16,33 +16,24 @@
   z-index: -1; /* Coloca el pseudo-elemento detrás del contenido */
 }
 
-/* Encabezado (mismo que el de App) */
-.header_recipe_detail {
-  position: fixed;
-  width: 100%;
-  background-color: #9e0000;
-  text-align: center;
-  z-index: 1;
-  height: 100px;
-  padding: 5px 0;
-  color: #fff;
+/* .header_recipe_detail {
+  background-color: #9e0000; 
+  color: #fff; 
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
+} */
 
-/* Ajustar el color del texto para que el nombre sea visible en el encabezado oscuro */
-.h1_recipe_detail {
+/* Ajusta el tamaño del título para que sea visible */
+/* .h1_recipe_detail {
   font-size: 36px;
-  margin-top: 30px;
-  margin-right: 760px;
-  place-content: center;
-}
+  margin-right: 20px; 
+} */
 
 .logo_recipe_detail {
   width: 120px;
   height: 100px;
-  margin-right: auto;
+  margin-right: 10px; /* Ajusta el margen derecho según sea necesario */
 }
 
 /* Cuadrado para el contenido de receta */

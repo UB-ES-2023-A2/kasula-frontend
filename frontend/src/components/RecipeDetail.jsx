@@ -8,6 +8,7 @@ import vegetableStirFryCover from '../assets/vegetable_stir_fry_cover.jpg';
 import chickenAlfredoCover from '../assets/chicken_alfredo_cover.jpg';
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
+import "bootstrap/dist/css/bootstrap.min.css"; 
 
 function RecipeDetail() {
   const { id } = useParams();
@@ -38,20 +39,14 @@ function RecipeDetail() {
   }, [id]);
 
   return (
-    <div className="recipe-detail-container">
-      <header className="header_recipe_detail">
+    <div className="container mt-5">
+      <header className="header_recipe_detail bg-danger text-white w-100 fixed-top d-flex justify-content-between align-items-center py-2">
         <img src={logo} alt="KASULÀ" className="logo_recipe_detail" />
-        <h1 class="h1_recipe_detail">KASULÀ</h1>
+        <h1 className="h1_recipe_detail mx-auto">KASULÀ</h1>
       </header>
-      <div className="background-image-detail"></div>
-      <CSSTransition
-        in={true} 
-        timeout={500} 
-        classNames="slideUp"
-        appear
-        >
-      <div className="recipe-square-detail">
-        <div className="recipe-content">
+      <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+        <div className="recipe-square-detail mt-8 p-3">
+          <div className="recipe-content">
           <div className="image-info-container">
             <img
               src={getImage(recipe.image)}
