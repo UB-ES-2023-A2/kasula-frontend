@@ -40,10 +40,14 @@ function RecipeDetail() {
 
   return (
     <div className="container mt-5">
-      <header className="header_recipe_detail bg-danger text-white w-100 fixed-top d-flex justify-content-between align-items-center py-2">
-        <img src={logo} alt="KASULÀ" className="logo_recipe_detail" />
-        <h1 className="h1_recipe_detail mx-auto">KASULÀ</h1>
-      </header>
+     <header className="bg-danger text-white w-100 fixed-top d-flex justify-content-between align-items-center py-0">
+      <img src={logo} alt="KASULÀ" className="img-fluid logo_recipe_detail" />
+        <h1 className="h1_recipe_detail mx-auto my-auto" >
+          KASULÀ
+        </h1> 
+    </header> 
+
+
       <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
         <div className="recipe-square-detail mt-8 p-3">
           <div className="recipe-content">
