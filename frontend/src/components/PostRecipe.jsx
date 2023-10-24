@@ -6,6 +6,8 @@ import logo from '../assets/logo.png';
 import uploadIcon from '../assets/upload_icon.png';
 import { useAuth } from './AuthContext'; // Asegúrate de actualizar esta ruta
 import { useNavigate } from 'react-router-dom';
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Card } from "react-bootstrap";
 
 const RecipePost = () => {
     const { token } = useAuth();
@@ -163,17 +165,19 @@ const RecipePost = () => {
     };
 
     return (
-        <div className="post-detail-container">
-            <header className="header-post-recipe">
-                <img src={logo} alt="Logo" className="logo-post-recipe"/>
-                <h1 className="h1_post_recipe">KASULÀ</h1>
-                <div className="lang-user">
-                    <span>EN</span>
-                    <span>Username_tst</span>
-                </div>
-            </header>
+        <div className="container mt-5">
+            
+            <Card className="text-center fixed-top border-0">
+            <Card.Header className="bg-danger text-white d-flex align-items-center rounded-0">
+                <h1 className="h1_post_recipe mx-auto my-auto" >	            
+                <img src={logo} alt="Logo" className="img-fluid" />
+                KASULÀ	            
+                <h1 className="mx-auto my-auto">KASULÀ</h1>
+                </h1> 	          
+            </Card.Header>
+            </Card>
     
-            <div className="background-image-post-recipe"></div>
+            <div className="bg-image">
             
             <CSSTransition
                 in={true} 
@@ -294,6 +298,7 @@ const RecipePost = () => {
                     </div>
                 </div>
             </CSSTransition>
+            </div>
         </div>
     );
 }
