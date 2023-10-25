@@ -9,7 +9,7 @@ import chickenAlfredoCover from '../assets/chicken_alfredo_cover.jpg';
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css"; 
-import { Card } from "react-bootstrap";
+import {Container, Row, Col, Card } from "react-bootstrap";
 
 function RecipeDetail() {
   const { id } = useParams();
@@ -47,57 +47,65 @@ function RecipeDetail() {
             <h1 className="h1_recipe_detail mx-auto my-auto">KASULÀ</h1>
           </Card.Header>
         </Card>
-      <div className="bg-image">
-        <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-          <div className="recipe-square-detail mt-8 p-3">
-            <div className="recipe-content">
-            <div className="image-info-container">
-              <img
-                src={getImage(recipe.image)}
-                alt={recipe.name}
-                className="recipe-image-recipeDetail"
-              />
-              <div className="info-box">
-                <h2>Más información</h2>
-                <div className="info-section">
-                  <h3>Difficulty:</h3>
-                  <div className="difficulty-stars">
-                    {/* Suponiendo que difficulty es un número del 1 al 5, renderizamos las estrellas */}
-                    {Array(recipe.difficulty || 0).fill().map((_, index) => (
-                      <span key={index} className="star">&#9733;</span>
-                    ))}
+
+        <div className="bg-image">
+          <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+            <Container className="my-auto mt-5 text-center rounded shadow" style={{ backgroundColor: '#ffb79fe0' }}>
+              <Row>
+                <Col xs={12} md={6} lg={6}>
+                <img
+                  src={getImage(recipe.image)}
+                  alt={recipe.name}
+                  className="img-fluid mx-3 my-5 shadow"
+                  style={{ maxWidth: '300px', height: 'auto' }}
+                />
+                  <h2>{recipe.name}</h2>
+                  <div className="info-box">
+                    <h3>Más información</h3>
+                    <div className="info-section">
+                      <h4>Difficulty:</h4>
+                      <div className="difficulty-stars">
+                        {Array(recipe.difficulty || 0).fill().map((_, index) => (
+                          <span key={index} className="star">&#9733;</span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="info-section">
+                      <h4>Time:</h4>
+                      <p id="time">{recipe.cooking_time}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="info-section">
-                  <h3>Time:</h3>
-                  <p id="time">{recipe.cooking_time}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="recipe-details">
-              <div className="ingredient-box">
-                <h2>Ingredientes</h2>
-                <ul>
-                {recipe.ingredients && recipe.ingredients.map((ingredient, index) => <li key={index}>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</li>)}
-                </ul>
-              </div>
-
-              <div className="step-box">
-                <h2>Pasos</h2>
-                <ol>
-                    {recipe.instructions && recipe.instructions.map((instruction, index) => (
-                        <li key={index}>
-                            Step {instruction.step_number + 1}: {instruction.body}
-                        </li>
-                    ))}
-                </ol>
-              </div>
-            </div>
-          </div>
+                </Col>
+                <Col xs={12} md={6} lg={6}>
+                  <Row>
+                    <Col xs={12}>
+                      <div className="mb-3">
+                        <h3>Ingredientes</h3>
+                        <ul>
+                          {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
+                            <li key={index}>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </Col>
+                    <Col xs={12}>
+                      <div className="mb-3">
+                        <h3>Pasos</h3>
+                        <ol>
+                          {recipe.instructions && recipe.instructions.map((instruction, index) => (
+                            <li key={index}>
+                              Step {instruction.step_number + 1}: {instruction.body}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Container>
+          </CSSTransition>
         </div>
-        </CSSTransition>
-      </div>
     </div>
   );
 }
