@@ -15,102 +15,16 @@
   background-attachment: fixed; /* Fija la imagen en su lugar mientras se desplaza */
 }
 
-
-/* Contenido de detalle de receta */
-.recipe-content {
-  display: flex;
-  align-items: flex-start;
-  width: 80%; /* Ancho del cuadrado */
-  padding: 110px 80px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
-}
-
-/* Detalles de la receta (ingredientes y pasos) */
-.recipe-details {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%; /* Ancho del cuadrado */
-}
-
-/* Caja de pasos */
-.step-box {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
-  background-color: #ffb9b9; /* Color de fondo azul claro */
-  height: auto;
-  border-radius: 8px;
-  text-align: center;
-  width: 85%; /* Ancho del cuadrado */
-}
-
-/* Caja de ingredientes */
-.ingredient-box {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
-  background-color: #ffb9b9; /* Color de fondo amarillo */
-  height: auto;
-  border-radius: 8px;
-  text-align: center;
-  margin-bottom: 20px; /* Espacio entre cajas */
-  margin-top: -40px;
-  width: 85%; /* Ancho del cuadrado */
-}
-
-/* Caja de ingredientes */
-.info-box {
-  background-color: #ffb9b9; /* Color de fondo amarillo */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.39); /* Sombra */
-  height: auto;
-  border-radius: 8px;
-  text-align: center;
-  width: 95%; /* Ancho del cuadrado */
-}
-
 /* Imagen de la receta (a la izquierda) */
 
+#text-in-left {
+  text-align: left;}
 
-h2 {
-  font-size: 26px;
-  margin-bottom: 20px;
-  color: #333; /* Color del título */
-}
-
-ul,
-ol {
-  text-align: left;
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  margin: 0 0 15px 20px;
+#orderList{
+  margin-bottom: 10px;
   font-size: 17px;
   font-weight: bold;
   color: #333; /* Color del texto de ingredientes y pasos */
-}
-
-/* Estilos para el contenedor de la imagen y la caja de información */
-.image-info-container {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Estilos para la sección de Difficulty y Time */
-.info-section {
-  display: flex;
-  align-items: center;
-  margin: 10px 20px;
-  font-size: 16px;
-}
-
-.info-content {
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-}
-
-.difficulty-stars {
-  display: flex;
-  margin-left: 10px;
 }
 
 .star {
@@ -122,9 +36,4 @@ p {
   font-size: 18px;
   color: #333; /* Color del texto de tiempo */
   margin-left: 10px;
-}
-
-#time {
-  font-size: 20px;
-  font-weight: bold;
 }

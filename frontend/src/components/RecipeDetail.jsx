@@ -9,7 +9,7 @@ import chickenAlfredoCover from '../assets/chicken_alfredo_cover.jpg';
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css"; 
-import {Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 
 function RecipeDetail() {
   const { id } = useParams();
@@ -40,73 +40,76 @@ function RecipeDetail() {
   }, [id]);
 
   return (
-    <div className="container mt-5">
-        <Card className="text-center fixed-top border-0">
-          <Card.Header className="bg-danger text-white d-flex align-items-center rounded-0">
-            <img src={logo} alt="KASULÀ" className="img-fluid logo_recipe_detail" />
-            <h1 className="h1_recipe_detail mx-auto my-auto">KASULÀ</h1>
-          </Card.Header>
-        </Card>
-
-        <div className="bg-image">
-          <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-            <Container className="my-auto mt-5 text-center rounded shadow" style={{ backgroundColor: '#ffb79fe0' }}>
-              <Row>
-                <Col xs={12} md={6} lg={6}>
+    <Container fluid>
+      <Row>
+        <Col xs={12}>
+          <Card className="text-center fixed-top border-0">
+            <Card.Header className="bg-danger text-white d-flex align-items-center rounded-0">
+              <img src={logo} alt="KASULÀ" className="img-fluid logo_recipe_detail" />
+              <h1 className="h1_recipe_detail mx-auto my-auto">KASULÀ</h1>
+            </Card.Header>
+          </Card>
+        </Col>
+      </Row>
+      <Row className="bg-image">
+        <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+          <Container id='recipe-container' className="my-auto text-center rounded shadow" style={{ backgroundColor: '#ffb79fe0', width: '80%'}}>
+            <Row>
+              <Col xs={12} md={6} lg={6}>
                 <img
                   src={getImage(recipe.image)}
                   alt={recipe.name}
-                  className="img-fluid mx-3 my-5 shadow"
+                  className="img-fluid mx-3 my-4 shadow"
                   style={{ maxWidth: '300px', height: 'auto' }}
                 />
-                  <h2>{recipe.name}</h2>
-                  <div className="info-box">
-                    <h3>Más información</h3>
-                    <div className="info-section">
-                      <h4>Difficulty:</h4>
-                      <div className="difficulty-stars">
-                        {Array(recipe.difficulty || 0).fill().map((_, index) => (
-                          <span key={index} className="star">&#9733;</span>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="info-section">
-                      <h4>Time:</h4>
-                      <p id="time">{recipe.cooking_time}</p>
+                <h2 style={{ marginBottom: '1rem' }}>{recipe.name}</h2>
+                <div id='info-box' className="mt-5 bg-light">
+                  <h3>Más información</h3>
+                  <div id='difficultyStars' className="d-flex align-items-center my-2 mx-3">
+                    <h4>Difficulty:</h4>
+                    <div id='allStars' className="d-flex ms-2 mb-1">
+                      {Array(recipe.difficulty || 0).fill().map((_, index) => (
+                        <span key={index} className="star">&#9733;</span>
+                      ))}
                     </div>
                   </div>
-                </Col>
-                <Col xs={12} md={6} lg={6}>
-                  <Row>
-                    <Col xs={12}>
-                      <div className="mb-3">
-                        <h3>Ingredientes</h3>
-                        <ul>
-                          {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
-                            <li key={index}>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </Col>
-                    <Col xs={12}>
-                      <div className="mb-3">
-                        <h3>Pasos</h3>
-                        <ol>
-                          {recipe.instructions && recipe.instructions.map((instruction, index) => (
-                            <li key={index}>
-                              Step {instruction.step_number + 1}: {instruction.body}
-                            </li>
-                          ))}
-                        </ol>
-                      </div>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-            </Container>
-          </CSSTransition>
-        </div>
-    </div>
+                  <div id='timeCooking' className="d-flex align-items-center my-2 mx-3">
+                    <h4>Time:</h4>
+                    <p id="time" className="fs-5 fw-bold mt-2">{recipe.cooking_time}</p>
+                  </div>
+                </div>
+              </Col>
+              <Col xs={12} md={6} lg={6}>
+                <Row>
+                  <Col xs={12}>
+                    <div id='ingredient-box' className="mb-3 mt-3 bg-light">
+                      <h3>Ingredientes</h3>
+                      <ul id='text-in-left'>
+                        {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
+                          <li id='orderList' key={index}>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </Col>
+                  <Col xs={12}>
+                    <div id='step-box' className="mb-3 bg-danger text-white">
+                      <h3>Pasos</h3>
+                      <ol id='text-in-left'>
+                        {recipe.instructions && recipe.instructions.map((instruction, index) => (
+                          <li id='orderList' className='text-white' key={index}>
+                            Step {instruction.step_number + 1}: {instruction.body}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Container>
+        </CSSTransition>
+      </Row>
+    </Container>
   );
 }
 
