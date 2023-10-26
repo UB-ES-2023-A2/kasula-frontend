@@ -1,146 +1,242 @@
-import React, { useState } from 'react';
+//Logic packages
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+//React Components
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Form,
+  Image,
+  InputGroup,
+} from "react-bootstrap";
+import { Eye, EyeSlash } from "react-bootstrap-icons";
+
+//Styles
 import "../css/Signup.css";
-import logo from '../assets/logo.png';
-import { useNavigate } from 'react-router-dom';
+
+//Assets
+import logo from "../assets/logo.png";
 
 function Signup() {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [RepeatedPassword, setRepeatedPassword] = useState('');
-    const [bio, setBio] = useState('');
-    const [passwordError, setPasswordError] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [showRepeatedPassword, setShowRepeatedPassword] = useState(false);
-    const [generalMessage, setGeneralMessage] = useState('');
-    const navigate = useNavigate();
+  /* Variables */
 
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [bio, setBio] = useState("");
 
-    const isPasswordSecure = (pwd) => {
-        // Aquí debería ir tu lógica para verificar la seguridad de la contraseña si es necesario.
-        return "";
-    };
+  const [passwordValid, setPasswordValid] = useState(false);
+  const [passwordValidated, setPasswordValidated] = useState(false);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [generalMessage, setGeneralMessage] = useState("");
 
-        // Validaciones:
-        if (!username || !email || !password || !RepeatedPassword) {
-            setGeneralMessage("Tots els camps són obligatoris, excepte la bio.");
-            return;
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const navigate = useNavigate();
+
+  /* Functions */
+
+  const isPasswordSecure = (pwd = "") => {
+    setPasswordValid(false);
+
+    if (pwd.length === 0) {
+      setPasswordError("This field is required");
+    } else if (pwd.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
+    } else if (pwd.search(/[a-z]/i) < 0) {
+      setPasswordError("Password must contain at least one letter");
+    } else if (pwd.search(/[A-Z]/) < 0) {
+      setPasswordError("Password must contain at least one capital letter");
+    } else if (pwd.search(/[0-9]/) < 0) {
+      setPasswordError("Password must contain at least one number");
+    } else if (pwd.search(/[ !@#$%^&\*-\._,;ºª\\/()~?¿¡:="·<>{}[\]+]/) < 0) {
+      setPasswordError("Password must contain at least one special character");
+    } else {
+      setPasswordError("");
+      setPasswordValid(true);
+    }
+
+    setPasswordValidated(true);
+  };
+
+  /* Events */
+
+  const onPasswordChange = ({ target: { value } }) => {
+    isPasswordSecure(value);
+    if (value.length === 0) {
+      setPasswordValidated(false);
+    }
+    setPassword(value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    isPasswordSecure(password);
+
+    // Validaciones:
+
+    /*
+    const passwordValidationMsg = isPasswordSecure(password);
+    if (passwordValidationMsg) {
+      setPasswordError(passwordValidationMsg);
+      return;
+    }
+    setPasswordError("");
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/user/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          password: password,
+          bio: bio || "This is a short bio",
+          profile_picture: "imgurl",
+        }),
+      });
+      if (!response.ok) {
+        const data = await response.json();
+        if (data && data.detail) {
+          setGeneralMessage(data.detail);
+        } else {
+          setGeneralMessage(
+            "Hi ha hagut un error inesperat. Si us plau, intenta-ho de nou."
+          );
         }
+      } else {
+        const data = await response.json();
+        setGeneralMessage("Usuari registrat amb èxit!");
+        navigate("/login");
+      }
+    } catch (error) {
+      setGeneralMessage(error.JSON.stringify);
+    }*/
+  };
 
-        const passwordValidationMsg = isPasswordSecure(password);
-        if (passwordValidationMsg) {
-            setPasswordError(passwordValidationMsg);
-            return;
-        }
+  /* Render */
 
-        if (password !== RepeatedPassword) {
-            setPasswordError("Les contrassenyes no coincideixen!");
-            return;
-        }
-
-        setPasswordError('');
-
-        try {
-            const response = await fetch('http://127.0.0.1:8000/user/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username,
-                    email: email,
-                    password: password,
-                    bio: bio || "This is a short bio",
-                    profile_picture: "imgurl",
-                }),
-            });
-            if (!response.ok) {
-                const data = await response.json();
-                if (data && data.detail) {
-                    setGeneralMessage(data.detail);
-                } else {
-                    setGeneralMessage("Hi ha hagut un error inesperat. Si us plau, intenta-ho de nou.");
-                }
-            } else {
-                const data = await response.json();
-                setGeneralMessage("Usuari registrat amb èxit!");
-                navigate("/login");
-            }
-        } catch (error) {
-            setGeneralMessage(error.JSON.stringify);
-        }
-    };
-
-    return (
-        <div className="login-container">
-            <form id='form-singup' onSubmit={handleSubmit}>
-                <img src={logo} alt="Logo" class="logo_logut" />
-                
-                <div className="input-container">
-                    <input 
-                        type="text" 
-                        placeholder="Usuari" 
-                        value={username} 
-                        onChange={e => setUsername(e.target.value)}
-                        required
+  return (
+    <div className="register">
+      <Container className="pt-5 pb-5">
+        <Row>
+          <Col sm={3}></Col>
+          <Col sm={6} className="register-container rounded">
+            <Row>
+              <Col sm={4}></Col>
+              <Col sm={4}>
+                <Image className="mt-4 mb-4" src={logo} fluid />
+              </Col>
+              <Col sm={4}></Col>
+            </Row>
+            <Row className="mb-4">
+              <Col>
+                <h1 className="register-title">Register</h1>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <p className="register-description mb-4">
+                  Register and enjoy the benefits of Posting your own recipes
+                  and providing feedback to others! You will also be able to
+                  save your favourite recipes!
+                </p>
+              </Col>
+            </Row>
+            <Row className="register-form">
+              <Form noValidate onSubmit={handleSubmit}>
+                <Form.Group className="mb-4" controlId="formUsername">
+                  <Form.Label>User</Form.Label>
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="Type your username"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-4" controlId="formEmail">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    required
+                    type="email"
+                    placeholder="Type your email"
+                  />
+                </Form.Group>
+                <Form.Group
+                  passwordValidated={passwordValidated}
+                  className="mb-4"
+                  controlId="formPassword"
+                >
+                  <Form.Label>Password</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      required
+                      className={
+                        passwordValidated
+                          ? passwordValid
+                            ? "is-valid"
+                            : "is-invalid"
+                          : ""
+                      }
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Type your password"
+                      onChange={onPasswordChange}
+                      value={password}
                     />
-                </div>
-
-                <div className="input-container">
-                    <input 
-                        type="email" 
-                        placeholder="Email" 
-                        value={email} 
-                        onChange={e => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-
-                <div className="password-container password-container-signup">
-                    <input 
-                        type={showPassword ? "text" : "password"} 
-                        placeholder="Contrasenya" 
-                        value={password} 
-                        onChange={e => setPassword(e.target.value)}
-                        required
-                    />
-                    <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
-                        {showPassword ? '👁️' : '🙈'}
-                    </span>
-                </div>
-
-                <div className="password-container password-container-signup">
-                    <input 
-                        type={showRepeatedPassword ? "text" : "password"} 
-                        placeholder="Repeteix la contrassenya" 
-                        value={RepeatedPassword} 
-                        onChange={e => setRepeatedPassword(e.target.value)}
-                        required
-                    />
-                    <span className="toggle-password" onClick={() => setShowRepeatedPassword(!showRepeatedPassword)}>
-                        {showRepeatedPassword ? '👁️' : '🙈'}
-                    </span>
-                </div>
-
-                <div className="input-container">
-                    <textarea 
-                        placeholder="Bio (opcional)" 
-                        value={bio} 
-                        onChange={e => setBio(e.target.value)}
-                    ></textarea>
-                </div>
-
-                {passwordError && <p style={{color: 'red'}}>{passwordError}</p>}
-                {generalMessage && <p style={{color: generalMessage.includes("èxit") ? 'green' : 'red'}}>{generalMessage}</p>}
-
-                <button style={{marginTop: '10px'}} type="submit">REGISTRAR-TE</button>
-                <a style={{marginBottom: '5px'}} href="/login">Et trobes ja registrat?</a>
-            </form>
-        </div>
-    );
+                    <InputGroup.Text
+                      className="password-icon"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeSlash /> : <Eye />}
+                    </InputGroup.Text>
+                    <Form.Control.Feedback type="invalid">
+                      {passwordError}
+                    </Form.Control.Feedback>
+                  </InputGroup>
+                </Form.Group>
+                <Form.Group className="mb-4" controlId="formConfirmPassword">
+                  <Form.Label>Confirm Password</Form.Label>
+                  <Form.Control
+                    required
+                    type="password"
+                    placeholder="Type your password again"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-4" controlId="formBio">
+                  <Form.Label>Bio</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    placeholder="Describe yourself (optional)"
+                  />
+                </Form.Group>
+                <Form.Group className="mb-5" controlId="formAcceptTerms">
+                  <Form.Check
+                    type="checkbox"
+                    label="I accept the Terms of Use and Privacy Policy"
+                  />
+                </Form.Group>
+                <Button variant="primary" type="submit" id="formButtonRegister">
+                  REGISTER NOW
+                </Button>
+              </Form>
+            </Row>
+          </Col>
+          <Col sm={3}></Col>
+        </Row>
+      </Container>
+    </div>
+  );
 }
 
 export default Signup;
