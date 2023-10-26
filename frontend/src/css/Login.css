@@ -7,7 +7,7 @@
   align-items: center;
 }
 
-form {
+.form-login {
   background-color: #ffb79fe0;
   padding: 20px;
   border-radius: 8px;
