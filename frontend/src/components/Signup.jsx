@@ -3,12 +3,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 //React Components
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Image from "react-bootstrap/Image";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Form,
+  Image,
+  InputGroup,
+} from "react-bootstrap";
+import { Eye, EyeSlash } from "react-bootstrap-icons";
 
 //Styles
 import "../css/Signup.css";
@@ -17,42 +21,76 @@ import "../css/Signup.css";
 import logo from "../assets/logo.png";
 
 function Signup() {
+  /* Variables */
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [RepeatedPassword, setRepeatedPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [bio, setBio] = useState("");
+
+  const [passwordValid, setPasswordValid] = useState(false);
+  const [passwordValidated, setPasswordValidated] = useState(false);
+
+  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showRepeatedPassword, setShowRepeatedPassword] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [generalMessage, setGeneralMessage] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const navigate = useNavigate();
 
-  const isPasswordSecure = (pwd) => {
-    // Aquí debería ir tu lógica para verificar la seguridad de la contraseña si es necesario.
-    return "";
+  /* Functions */
+
+  const isPasswordSecure = (pwd = "") => {
+    setPasswordValid(false);
+
+    if (pwd.length === 0) {
+      setPasswordError("This field is required");
+    } else if (pwd.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
+    } else if (pwd.search(/[a-z]/i) < 0) {
+      setPasswordError("Password must contain at least one letter");
+    } else if (pwd.search(/[A-Z]/) < 0) {
+      setPasswordError("Password must contain at least one capital letter");
+    } else if (pwd.search(/[0-9]/) < 0) {
+      setPasswordError("Password must contain at least one number");
+    } else if (pwd.search(/[ !@#$%^&\*-\._,;ºª\\/()~?¿¡:="·<>{}[\]+]/) < 0) {
+      setPasswordError("Password must contain at least one special character");
+    } else {
+      setPasswordError("");
+      setPasswordValid(true);
+    }
+
+    setPasswordValidated(true);
+  };
+
+  /* Events */
+
+  const onPasswordChange = ({ target: { value } }) => {
+    isPasswordSecure(value);
+    if (value.length === 0) {
+      setPasswordValidated(false);
+    }
+    setPassword(value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validaciones:
-    if (!username || !email || !password || !RepeatedPassword) {
-      setGeneralMessage("Tots els camps són obligatoris, excepte la bio.");
-      return;
-    }
+    isPasswordSecure(password);
 
+    // Validaciones:
+
+    /*
     const passwordValidationMsg = isPasswordSecure(password);
     if (passwordValidationMsg) {
       setPasswordError(passwordValidationMsg);
       return;
     }
-
-    if (password !== RepeatedPassword) {
-      setPasswordError("Les contrassenyes no coincideixen!");
-      return;
-    }
-
     setPasswordError("");
 
     try {
@@ -85,8 +123,10 @@ function Signup() {
       }
     } catch (error) {
       setGeneralMessage(error.JSON.stringify);
-    }
+    }*/
   };
+
+  /* Render */
 
   return (
     <div className="register">
@@ -116,25 +156,59 @@ function Signup() {
               </Col>
             </Row>
             <Row className="register-form">
-              <Form>
+              <Form noValidate onSubmit={handleSubmit}>
                 <Form.Group className="mb-4" controlId="formUsername">
                   <Form.Label>User</Form.Label>
-                  <Form.Control placeholder="Type your username" />
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="Type your username"
+                  />
                 </Form.Group>
                 <Form.Group className="mb-4" controlId="formEmail">
                   <Form.Label>Email</Form.Label>
-                  <Form.Control type="email" placeholder="Type your email" />
-                </Form.Group>
-                <Form.Group className="mb-4" controlId="formPassword">
-                  <Form.Label>Password</Form.Label>
                   <Form.Control
-                    type="password"
-                    placeholder="Type your password"
+                    required
+                    type="email"
+                    placeholder="Type your email"
                   />
+                </Form.Group>
+                <Form.Group
+                  passwordValidated={passwordValidated}
+                  className="mb-4"
+                  controlId="formPassword"
+                >
+                  <Form.Label>Password</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      required
+                      className={
+                        passwordValidated
+                          ? passwordValid
+                            ? "is-valid"
+                            : "is-invalid"
+                          : ""
+                      }
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Type your password"
+                      onChange={onPasswordChange}
+                      value={password}
+                    />
+                    <InputGroup.Text
+                      className="password-icon"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeSlash /> : <Eye />}
+                    </InputGroup.Text>
+                    <Form.Control.Feedback type="invalid">
+                      {passwordError}
+                    </Form.Control.Feedback>
+                  </InputGroup>
                 </Form.Group>
                 <Form.Group className="mb-4" controlId="formConfirmPassword">
                   <Form.Label>Confirm Password</Form.Label>
                   <Form.Control
+                    required
                     type="password"
                     placeholder="Type your password again"
                   />
