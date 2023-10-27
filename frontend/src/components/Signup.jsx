@@ -28,12 +28,14 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [bio, setBio] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   const [passwordValid, setPasswordValid] = useState(false);
   const [passwordValidated, setPasswordValidated] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(false);
   const [confirmPasswordValidated, setConfirmPasswordValidated] =
     useState(false);
+  const [acceptTermsValidated, setAcceptTermsValidated] = useState(false);
 
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -105,9 +107,10 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(acceptTerms);
     isPasswordSecure(password);
     checkPasswordsMatch(password, confirmPassword);
+    setAcceptTermsValidated(true);
 
     // Validaciones:
 
@@ -163,7 +166,7 @@ function Signup() {
             <Row>
               <Col sm={4}></Col>
               <Col sm={4}>
-                <Image className="mt-4 mb-4" src={logo} fluid />
+                <Image className="my-4" src={logo} fluid />
               </Col>
               <Col sm={4}></Col>
             </Row>
@@ -265,10 +268,23 @@ function Signup() {
                   />
                 </Form.Group>
                 <Form.Group className="mb-5" controlId="formAcceptTerms">
-                  <Form.Check
-                    type="checkbox"
-                    label="I accept the Terms of Use and Privacy Policy"
-                  />
+                  <Form.Check type="checkbox">
+                    <Form.Check.Input
+                      type="checkbox"
+                      isInvalid={acceptTermsValidated && !acceptTerms}
+                      isValid={acceptTermsValidated && acceptTerms}
+                      onChange={() => {
+                        setAcceptTerms(!acceptTerms);
+                        setAcceptTermsValidated(false);
+                      }}
+                    />
+                    <Form.Check.Label>
+                      I accept the Terms of Use and Privacy Policy
+                    </Form.Check.Label>
+                    <Form.Control.Feedback type="invalid">
+                      You must accept the Terms of Use and Privacy Policy
+                    </Form.Control.Feedback>
+                  </Form.Check>
                 </Form.Group>
                 <Button variant="primary" type="submit" id="formButtonRegister">
                   REGISTER NOW
