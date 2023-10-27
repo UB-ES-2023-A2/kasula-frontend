@@ -31,6 +31,9 @@ function Signup() {
 
   const [passwordValid, setPasswordValid] = useState(false);
   const [passwordValidated, setPasswordValidated] = useState(false);
+  const [passwordsMatch, setPasswordsMatch] = useState(false);
+  const [confirmPasswordValidated, setConfirmPasswordValidated] =
+    useState(false);
 
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -68,6 +71,20 @@ function Signup() {
     setPasswordValidated(true);
   };
 
+  const checkPasswordsMatch = (pwd = "", confirmPwd = "") => {
+    setPasswordsMatch(false);
+    if (pwd.length === 0) {
+      setConfirmPasswordError("This field is required");
+    } else if (pwd !== confirmPwd) {
+      setConfirmPasswordError("Passwords do not match");
+    } else {
+      setConfirmPasswordError("");
+      setPasswordsMatch(true);
+    }
+
+    setConfirmPasswordValidated(true);
+  };
+
   /* Events */
 
   const onPasswordChange = ({ target: { value } }) => {
@@ -78,10 +95,19 @@ function Signup() {
     setPassword(value);
   };
 
+  const onConfirmPasswordChange = ({ target: { value } }) => {
+    checkPasswordsMatch(password, value);
+    if (value.length === 0) {
+      setConfirmPasswordValidated(false);
+    }
+    setConfirmPassword(value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     isPasswordSecure(password);
+    checkPasswordsMatch(password, confirmPassword);
 
     // Validaciones:
 
@@ -129,7 +155,7 @@ function Signup() {
   /* Render */
 
   return (
-    <div className="register">
+    <div className="register min-vh-10">
       <Container className="pt-5 pb-5">
         <Row>
           <Col sm={3}></Col>
@@ -173,11 +199,7 @@ function Signup() {
                     placeholder="Type your email"
                   />
                 </Form.Group>
-                <Form.Group
-                  passwordValidated={passwordValidated}
-                  className="mb-4"
-                  controlId="formPassword"
-                >
+                <Form.Group className="mb-4" controlId="formPassword">
                   <Form.Label>Password</Form.Label>
                   <InputGroup>
                     <Form.Control
@@ -207,11 +229,33 @@ function Signup() {
                 </Form.Group>
                 <Form.Group className="mb-4" controlId="formConfirmPassword">
                   <Form.Label>Confirm Password</Form.Label>
-                  <Form.Control
-                    required
-                    type="password"
-                    placeholder="Type your password again"
-                  />
+                  <InputGroup>
+                    <Form.Control
+                      required
+                      className={
+                        confirmPasswordValidated
+                          ? passwordsMatch
+                            ? "is-valid"
+                            : "is-invalid"
+                          : ""
+                      }
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Type your password again"
+                      onChange={onConfirmPasswordChange}
+                      value={confirmPassword}
+                    />
+                    <InputGroup.Text
+                      className="password-icon"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? <EyeSlash /> : <Eye />}
+                    </InputGroup.Text>
+                    <Form.Control.Feedback type="invalid">
+                      {confirmPasswordError}
+                    </Form.Control.Feedback>
+                  </InputGroup>
                 </Form.Group>
                 <Form.Group className="mb-4" controlId="formBio">
                   <Form.Label>Bio</Form.Label>
