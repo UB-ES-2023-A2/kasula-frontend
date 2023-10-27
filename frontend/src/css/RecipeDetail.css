@@ -5,7 +5,9 @@
   background-size: cover; /* Ajusta el tamaño de la imagen para cubrir todo el contenedor */
 }
 
-/* Imagen de la receta (a la izquierda) */
+.box-shadow{
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Puedes ajustar estos valores */
+}
 
 #text-in-left {
   text-align: left;}

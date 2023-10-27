@@ -49,37 +49,45 @@ function RecipeDetail() {
         </Row>
       <Container>
         <Row>
+          <Col sm={2}></Col>
+          <Col sm={8}>
           <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-            <Container id='recipe-container' className="my-auto mt-4 text-center rounded shadow" style={{ backgroundColor: '#ffb79fe0', width: '80%'}}>
+            <Container id='recipe-container' className="mt-5 text-center rounded box-shadow" style={{ backgroundColor: '#ffb79fe0'}}>
               <Row>
                 <Col xs={12} md={6} lg={6}>
-                  <img
-                    src={getImage(recipe.image)}
-                    alt={recipe.name}
-                    className="img-fluid mx-3 my-4 shadow"
-                    style={{ maxWidth: '300px', height: 'auto' }}
-                  />
-                  <h2 style={{ marginBottom: '1rem' }}>{recipe.name}</h2>
-                  <div id='info-box' className="mt-5 bg-light">
-                    <h3>Más información</h3>
-                    <div id='difficultyStars' className="d-flex align-items-center my-2 mx-3">
-                      <h4>Difficulty:</h4>
-                      <div id='allStars' className="d-flex ms-2 mb-1">
-                        {Array(recipe.difficulty || 0).fill().map((_, index) => (
-                          <span key={index} className="star">&#9733;</span>
-                        ))}
+                  <Col xs={10}>
+                    <img
+                      src={getImage(recipe.image)}
+                      alt={recipe.name}
+                      className="img-fluid mx-3 my-4 box-shadow"
+                      style={{ height: 'auto' }}
+                    />
+                    </Col>
+                  <Col xs={12}>
+                    <h2 style={{ marginBottom: '1rem' }}>{recipe.name}</h2>
+                  </Col>
+                  <Col md={10}>
+                    <div id='info-box' className="mt-5 pt-2 bg-light box-shadow">
+                      <h4>Más información</h4>
+                      <div id='difficultyStars' className="d-flex align-items-center my-2 mx-3">
+                        <h5>Difficulty:</h5>
+                        <div id='allStars' className="d-flex ms-2 mb-1">
+                          {Array(recipe.difficulty || 0).fill().map((_, index) => (
+                            <span key={index} className="star">&#9733;</span>
+                          ))}
+                        </div>
+                      </div>
+                      <div id='timeCooking' className="d-flex align-items-center my-2 mx-3">
+                        <h5>Time:</h5>
+                        <p id="time" className="fs-5 fw-bold mt-2">{recipe.cooking_time}</p>
                       </div>
                     </div>
-                    <div id='timeCooking' className="d-flex align-items-center my-2 mx-3">
-                      <h4>Time:</h4>
-                      <p id="time" className="fs-5 fw-bold mt-2">{recipe.cooking_time}</p>
-                    </div>
-                  </div>
+                  </Col>
                 </Col>
                 <Col xs={12} md={6} lg={6}>
                   <Row>
                     <Col xs={12}>
-                      <div id='ingredient-box' className="mb-3 mt-3 bg-light">
+                      <div id='ingredient-box' className="mb-3 mt-3 py-2 bg-light box-shadow">
                         <h3>Ingredientes</h3>
                         <ul id='text-in-left'>
                           {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
@@ -89,7 +97,7 @@ function RecipeDetail() {
                       </div>
                     </Col>
                     <Col xs={12}>
-                      <div id='step-box' className="mb-3 bg-danger text-white">
+                      <div id='step-box' className="mb-3 bg-danger py-2 text-white box-shadow">
                         <h3>Pasos</h3>
                         <ol id='text-in-left'>
                           {recipe.instructions && recipe.instructions.map((instruction, index) => (
@@ -105,6 +113,8 @@ function RecipeDetail() {
               </Row>
             </Container>
           </CSSTransition>
+          </Col>
+          <Col sm={1}></Col>
         </Row>
       </Container>
       </Container>
