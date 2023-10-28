@@ -13,7 +13,7 @@ import {
   InputGroup,
   Modal,
 } from "react-bootstrap";
-import { Eye, EyeSlash } from "react-bootstrap-icons";
+import { CheckCircleFill, Eye, EyeSlash, ExclamationTriangleFill } from "react-bootstrap-icons";
 
 //Styles
 import "../css/Signup.css";
@@ -55,12 +55,16 @@ function Signup() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [showTerms, setShowTerms] = useState(false);
+  const [showRegisterConfirmation, setShowRegisterConfirmation] = useState(false);
 
   const [isDoingRequest, setIsDoingRequest] = useState(false);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const navigate = useNavigate();
 
   /* Functions */
+
+  /* Validations */
 
   const isUsernameValid = (username = "") => {
     if (username.length === 0) {
@@ -84,6 +88,58 @@ function Signup() {
     }
     setUsernameValidated(true);
   };
+
+  const isEmailValid = (email = "") => {
+    if (email.length === 0) {
+      setEmailValidationMessage("This field is required");
+      setEmailValid(false);
+    } else if (email.search(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) < 0) {
+      setEmailValidationMessage("Please enter a valid email address");
+      setEmailValid(false);
+    } else {
+      isEmailAvailable(email);
+    }
+    setEmailValidated(true);
+  };
+
+  const isPasswordSecure = (pwd = "") => {
+    setPasswordValid(false);
+
+    if (pwd.length === 0) {
+      setPasswordError("This field is required");
+    } else if (pwd.length < 8) {
+      setPasswordError("Password must be at least 8 characters long");
+    } else if (pwd.search(/[a-z]/i) < 0) {
+      setPasswordError("Password must contain at least one letter");
+    } else if (pwd.search(/[A-Z]/) < 0) {
+      setPasswordError("Password must contain at least one capital letter");
+    } else if (pwd.search(/[0-9]/) < 0) {
+      setPasswordError("Password must contain at least one number");
+    } else if (pwd.search(/[ !@#$%^&\*-\._,;ºª\\/()~?¿¡:="·<>{}[\]+]/) < 0) {
+      setPasswordError("Password must contain at least one special character");
+    } else {
+      setPasswordError("");
+      setPasswordValid(true);
+    }
+
+    setPasswordValidated(true);
+  };
+
+  const checkPasswordsMatch = (pwd = "", confirmPwd = "") => {
+    setPasswordsMatch(false);
+    if (pwd.length === 0) {
+      setConfirmPasswordError("This field is required");
+    } else if (pwd !== confirmPwd) {
+      setConfirmPasswordError("Passwords do not match");
+    } else {
+      setConfirmPasswordError("");
+      setPasswordsMatch(true);
+    }
+
+    setConfirmPasswordValidated(true);
+  };
+
+  /* Requests */
 
   const isUsernameAvailable = async (username = "") => {
     if (!isDoingRequest) {
@@ -120,19 +176,6 @@ function Signup() {
         setIsDoingRequest(false);
       }
     }
-  };
-
-  const isEmailValid = (email = "") => {
-    if (email.length === 0) {
-      setEmailValidationMessage("This field is required");
-      setEmailValid(false);
-    } else if (email.search(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) < 0) {
-      setEmailValidationMessage("Please enter a valid email address");
-      setEmailValid(false);
-    } else {
-      isEmailAvailable(email);
-    }
-    setEmailValidated(true);
   };
 
   const isEmailAvailable = async (email = "") => {
@@ -172,41 +215,45 @@ function Signup() {
     }
   };
 
-  const isPasswordSecure = (pwd = "") => {
-    setPasswordValid(false);
-
-    if (pwd.length === 0) {
-      setPasswordError("This field is required");
-    } else if (pwd.length < 8) {
-      setPasswordError("Password must be at least 8 characters long");
-    } else if (pwd.search(/[a-z]/i) < 0) {
-      setPasswordError("Password must contain at least one letter");
-    } else if (pwd.search(/[A-Z]/) < 0) {
-      setPasswordError("Password must contain at least one capital letter");
-    } else if (pwd.search(/[0-9]/) < 0) {
-      setPasswordError("Password must contain at least one number");
-    } else if (pwd.search(/[ !@#$%^&\*-\._,;ºª\\/()~?¿¡:="·<>{}[\]+]/) < 0) {
-      setPasswordError("Password must contain at least one special character");
-    } else {
-      setPasswordError("");
-      setPasswordValid(true);
+  const registerUser = async () => {
+    if (!isDoingRequest) {
+      setIsDoingRequest(true);
+      try {
+        const response = await fetch("http://0.0.0.0:8000/user/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+            email: email,
+            password: password,
+            bio: bio || "",
+          }),
+        });
+        if (!response.ok) {
+          const data = await response.json();
+          if (data && data.detail) {
+            setSubmitMessage(data.detail);
+          } else {
+            setSubmitMessage(
+              "There has been an unexpected error. Please try again later."
+            );
+          }
+          setRegistrationSuccess(false);
+        } else {
+          const data = await response.json();
+          setSubmitMessage("User registered successfully!");
+          setRegistrationSuccess(true);
+        }
+      } catch (error) {
+        setSubmitMessage(error.JSON.stringify);
+        setRegistrationSuccess(false);
+      } finally {
+        setIsDoingRequest(false);
+        setShowRegisterConfirmation(true);
+      }
     }
-
-    setPasswordValidated(true);
-  };
-
-  const checkPasswordsMatch = (pwd = "", confirmPwd = "") => {
-    setPasswordsMatch(false);
-    if (pwd.length === 0) {
-      setConfirmPasswordError("This field is required");
-    } else if (pwd !== confirmPwd) {
-      setConfirmPasswordError("Passwords do not match");
-    } else {
-      setConfirmPasswordError("");
-      setPasswordsMatch(true);
-    }
-
-    setConfirmPasswordValidated(true);
   };
 
   /* Events */
@@ -250,6 +297,13 @@ function Signup() {
     setShowTerms(false);
   };
 
+  const handleRegisterConfirmationClose = () => {
+    setShowRegisterConfirmation(false);
+    if (registrationSuccess) {
+      navigate("/login");
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     isUsernameValid(username);
@@ -258,47 +312,17 @@ function Signup() {
     checkPasswordsMatch(password, confirmPassword);
     setAcceptTermsValidated(true);
 
-    // Validaciones:
-
-    /*
-    const passwordValidationMsg = isPasswordSecure(password);
-    if (passwordValidationMsg) {
-      setPasswordError(passwordValidationMsg);
+    if (
+      !usernameValid ||
+      !emailValid ||
+      !passwordValid ||
+      !passwordsMatch ||
+      !acceptTerms
+    ) {
       return;
+    } else {
+      registerUser();
     }
-    setPasswordError("");
-
-    try {
-      const response = await fetch("http://127.0.0.1:8000/user/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          password: password,
-          bio: bio || "This is a short bio",
-          profile_picture: "imgurl",
-        }),
-      });
-      if (!response.ok) {
-        const data = await response.json();
-        if (data && data.detail) {
-          setGeneralMessage(data.detail);
-        } else {
-          setGeneralMessage(
-            "Hi ha hagut un error inesperat. Si us plau, intenta-ho de nou."
-          );
-        }
-      } else {
-        const data = await response.json();
-        setGeneralMessage("Usuari registrat amb èxit!");
-        navigate("/login");
-      }
-    } catch (error) {
-      setGeneralMessage(error.JSON.stringify);
-    }*/
   };
 
   /* Render */
@@ -464,9 +488,15 @@ function Signup() {
                     </Form.Control.Feedback>
                   </Form.Check>
                 </Form.Group>
-                <Button variant="primary" type="submit" id="formButtonRegister">
-                  REGISTER NOW
-                </Button>
+                <Row>
+                  <Col sm={3}></Col>
+                  <Col sm={6}>
+                    <Button variant="primary" type="submit" id="formButtonRegister">
+                    REGISTER NOW
+                    </Button>
+                  </Col>
+                  <Col sm={3}></Col>
+                </Row>
               </Form>
             </Row>
           </Col>
@@ -481,11 +511,11 @@ function Signup() {
         <Modal.Body>
           {terms.policies.map((policy, index) => (
             <Container key={index} fluid>
-              <h3 className="mb-4">{policy.title}</h3>
+              <h3 className="mb-4 fw-semibold">{policy.title}</h3>
               {policy.sections.map((section, sectionIndex) => (
                 <Container key={sectionIndex} fluid>
                   <h5 className="mb-3">{section.name}</h5>
-                  <p className="text-right mb-4">{section.body}</p>
+                  <p className="text-right mb-4 fw-light">{section.body}</p>
                 </Container>
               ))}
               {index == 0 ? <hr className="mb-4" /> : <></>}
@@ -506,8 +536,31 @@ function Signup() {
                   Accept
                 </Button>
               </Col>
-            </Row>{" "}
+            </Row>
           </Container>
+        </Modal.Footer>
+      </Modal>
+      
+      <Modal show={showRegisterConfirmation} size="sm" onHide={handleRegisterConfirmationClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{registrationSuccess ? "Confirm Registration" : "Registration Error"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col className="text-center mb-4">
+              {registrationSuccess ? <CheckCircleFill className="text-success" size={100} /> : <ExclamationTriangleFill className="text-warning" size={100} />}
+            </Col>
+          </Row>
+          <Row>
+            <Col className="text-center">
+              <p>{submitMessage}</p>
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant={registrationSuccess ? "success" : "secondary"} onClick={handleRegisterConfirmationClose}>
+            {registrationSuccess ? "Go to login" : "Close"}
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
