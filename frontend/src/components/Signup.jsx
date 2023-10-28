@@ -13,7 +13,7 @@ import {
   InputGroup,
   Modal,
 } from "react-bootstrap";
-import { CheckCircleFill, Eye, EyeSlash, ExclamationTriangleFill } from "react-bootstrap-icons";
+import { ArrowLeft, CheckCircleFill, Eye, EyeSlash, ExclamationTriangleFill } from "react-bootstrap-icons";
 
 //Styles
 import "../css/Signup.css";
@@ -328,15 +328,23 @@ function Signup() {
   /* Render */
 
   return (
-    <div className="register min-vh-10">
+    <div className="register min-vh-100">
       <Container className="pt-5 pb-5">
         <Row>
           <Col sm={3}></Col>
           <Col sm={6} className="register-container rounded">
             <Row>
+                <Col sm={1}>
+                    <Button variant="link" className="text-decoration-none fs-3 text-reset my-2" onClick={() => navigate("/login")}>
+                        <ArrowLeft></ArrowLeft>
+                    </Button>
+                </Col>
+                <Col sm={11}></Col>
+            </Row>
+            <Row>
               <Col sm={4}></Col>
               <Col sm={4}>
-                <Image className="my-4" src={logo} fluid />
+                <Image className="mb-4" src={logo} fluid />
               </Col>
               <Col sm={4}></Col>
             </Row>
