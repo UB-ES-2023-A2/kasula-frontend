@@ -30,6 +30,10 @@ function Signup() {
   const [bio, setBio] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
 
+  const [usernameValid, setUsernameValid] = useState(false);
+  const [usernameValidated, setUsernameValidated] = useState(false);
+  const [emailValid, setEmailValid] = useState(false);
+  const [emailValidated, setEmailValidated] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
   const [passwordValidated, setPasswordValidated] = useState(false);
   const [passwordsMatch, setPasswordsMatch] = useState(false);
@@ -37,8 +41,9 @@ function Signup() {
     useState(false);
   const [acceptTermsValidated, setAcceptTermsValidated] = useState(false);
 
-  const [usernameError, setUsernameError] = useState("");
-  const [emailError, setEmailError] = useState("");
+  const [usernameValidationMessage, setUsernameValidationMessage] =
+    useState("");
+  const [emailValidationMessage, setEmailValidationMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [generalMessage, setGeneralMessage] = useState("");
@@ -46,9 +51,121 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const [isDoingRequest, setIsDoingRequest] = useState(false);
+
   const navigate = useNavigate();
 
   /* Functions */
+
+  const isUsernameValid = (username = "") => {
+    if (username.length === 0) {
+      setUsernameValidationMessage("This field is required");
+      setUsernameValid(false);
+    } else if (
+      username.search(/[ !@#$%^&\*-\.,;ºª\\/()~?¿¡:="·<>{}[\]+]/) >= 0
+    ) {
+      setUsernameValidationMessage(
+        "Username can only contain letters, numbers and underscores"
+      );
+      setUsernameValid(false);
+    } else if (username.length < 4) {
+      setUsernameValidationMessage("Username must be at least 4 characters");
+      setUsernameValid(false);
+    } else if (username.length > 20) {
+      setUsernameValidationMessage("Username must be less than 20 characters");
+      setUsernameValid(false);
+    } else {
+      isUsernameAvailable(username);
+    }
+    setUsernameValidated(true);
+  };
+
+  const isUsernameAvailable = async (username = "") => {
+    if (!isDoingRequest) {
+      setIsDoingRequest(true);
+      try {
+        const response = await fetch(
+          "http://0.0.0.0:8000/user/check_username/".concat(username),
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          const data = await response.json();
+          if (data && data.detail) {
+            setUsernameValidationMessage(data.detail);
+          } else {
+            setUsernameValidationMessage(
+              "Could not check if username is available. Please try again later."
+            );
+          }
+        } else {
+          const data = await response.json();
+          setUsernameValidationMessage(data.message);
+          setUsernameValid(data.status);
+        }
+      } catch (error) {
+        setUsernameValidationMessage(
+          "Could not check if username is available. Please try again later."
+        );
+      } finally {
+        setIsDoingRequest(false);
+      }
+    }
+  };
+
+  const isEmailValid = (email = "") => {
+    if (email.length === 0) {
+      setEmailValidationMessage("This field is required");
+      setEmailValid(false);
+    } else if (email.search(/^[^\s@]+@[^\s@]+\.[^\s@]+$/) < 0) {
+      setEmailValidationMessage("Please enter a valid email address");
+      setEmailValid(false);
+    } else {
+      isEmailAvailable(email);
+    }
+    setEmailValidated(true);
+  };
+
+  const isEmailAvailable = async (email = "") => {
+    if (!isDoingRequest) {
+      setIsDoingRequest(true);
+      try {
+        const response = await fetch(
+          "http://0.0.0.0:8000/user/check_email/".concat(email),
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          const data = await response.json();
+          if (data && data.detail) {
+            setEmailValidationMessage(data.detail);
+          } else {
+            setEmailValidationMessage(
+              "Could not check if email is available. Please try again later."
+            );
+          }
+        } else {
+          const data = await response.json();
+          setEmailValidationMessage(data.message);
+          setEmailValid(data.status);
+        }
+      } catch (error) {
+        setEmailValidationMessage(
+          "Could not check if email is available. Please try again later."
+        );
+      } finally {
+        setIsDoingRequest(false);
+      }
+    }
+  };
 
   const isPasswordSecure = (pwd = "") => {
     setPasswordValid(false);
@@ -89,25 +206,42 @@ function Signup() {
 
   /* Events */
 
+  const onUsernameChange = ({ target: { value } }) => {
+    setUsername(value);
+    isUsernameValid(value);
+    if (value.length === 0) {
+      setUsernameValidated(false);
+    }
+  };
+
+  const onEmailChange = ({ target: { value } }) => {
+    setEmail(value);
+    isEmailValid(value);
+    if (value.length === 0) {
+      setEmailValidated(false);
+    }
+  };
+
   const onPasswordChange = ({ target: { value } }) => {
+    setPassword(value);
     isPasswordSecure(value);
     if (value.length === 0) {
       setPasswordValidated(false);
     }
-    setPassword(value);
   };
 
   const onConfirmPasswordChange = ({ target: { value } }) => {
+    setConfirmPassword(value);
     checkPasswordsMatch(password, value);
     if (value.length === 0) {
       setConfirmPasswordValidated(false);
     }
-    setConfirmPassword(value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(acceptTerms);
+    isUsernameValid(username);
+    isEmailValid(email);
     isPasswordSecure(password);
     checkPasswordsMatch(password, confirmPassword);
     setAcceptTermsValidated(true);
@@ -189,24 +323,49 @@ function Signup() {
                 <Form.Group className="mb-4" controlId="formUsername">
                   <Form.Label>User</Form.Label>
                   <Form.Control
-                    required
+                    className={
+                      usernameValidated
+                        ? usernameValid
+                          ? "is-valid"
+                          : "is-invalid"
+                        : ""
+                    }
                     type="text"
                     placeholder="Type your username"
+                    onChange={onUsernameChange}
+                    value={username}
                   />
+                  <Form.Control.Feedback
+                    type={usernameValid ? "valid" : "invalid"}
+                  >
+                    {usernameValidationMessage}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group className="mb-4" controlId="formEmail">
                   <Form.Label>Email</Form.Label>
                   <Form.Control
-                    required
+                    className={
+                      emailValidated
+                        ? emailValid
+                          ? "is-valid"
+                          : "is-invalid"
+                        : ""
+                    }
                     type="email"
                     placeholder="Type your email"
+                    onChange={onEmailChange}
+                    value={email}
                   />
+                  <Form.Control.Feedback
+                    type={emailValid ? "valid" : "invalid"}
+                  >
+                    {emailValidationMessage}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group className="mb-4" controlId="formPassword">
                   <Form.Label>Password</Form.Label>
                   <InputGroup>
                     <Form.Control
-                      required
                       className={
                         passwordValidated
                           ? passwordValid
@@ -234,7 +393,6 @@ function Signup() {
                   <Form.Label>Confirm Password</Form.Label>
                   <InputGroup>
                     <Form.Control
-                      required
                       className={
                         confirmPasswordValidated
                           ? passwordsMatch
