@@ -11,6 +11,7 @@ import {
   Form,
   Image,
   InputGroup,
+  Modal,
 } from "react-bootstrap";
 import { Eye, EyeSlash } from "react-bootstrap-icons";
 
@@ -19,6 +20,7 @@ import "../css/Signup.css";
 
 //Assets
 import logo from "../assets/logo.png";
+import terms from "../assets/jsonData/terms.json";
 
 function Signup() {
   /* Variables */
@@ -46,10 +48,13 @@ function Signup() {
   const [emailValidationMessage, setEmailValidationMessage] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [generalMessage, setGeneralMessage] = useState("");
+
+  const [submitMessage, setSubmitMessage] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [showTerms, setShowTerms] = useState(false);
 
   const [isDoingRequest, setIsDoingRequest] = useState(false);
 
@@ -237,6 +242,9 @@ function Signup() {
       setConfirmPasswordValidated(false);
     }
   };
+
+  const handleTermsShow = () => setShowTerms(true);
+  const handleTermsClose = () => setShowTerms(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -437,7 +445,14 @@ function Signup() {
                       }}
                     />
                     <Form.Check.Label>
-                      I accept the Terms of Use and Privacy Policy
+                      I accept the{" "}
+                      <a
+                        href="#"
+                        className="text-decoration-none"
+                        onClick={handleTermsShow}
+                      >
+                        Terms of Use and Privacy Policy
+                      </a>
                     </Form.Check.Label>
                     <Form.Control.Feedback type="invalid">
                       You must accept the Terms of Use and Privacy Policy
@@ -453,6 +468,43 @@ function Signup() {
           <Col sm={3}></Col>
         </Row>
       </Container>
+
+      <Modal show={showTerms} size="lg" onHide={handleTermsClose}>
+        <Modal.Header closeButton className="mb-2">
+          <Modal.Title>Terms of Use and Privacy Policy</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {terms.policies.map((policy, index) => (
+            <Container key={index} fluid>
+              <h3 className="mb-4">{policy.title}</h3>
+              {policy.sections.map((section, sectionIndex) => (
+                <Container key={sectionIndex} fluid>
+                  <h5 className="mb-3">{section.name}</h5>
+                  <p className="text-right mb-4">{section.body}</p>
+                </Container>
+              ))}
+              {index == 0 ? <hr className="mb-4" /> : <></>}
+            </Container>
+          ))}
+        </Modal.Body>
+        <Modal.Footer>
+          <Container fluid>
+            <Row>
+              <Col sm={7}></Col>
+              <Col sm={2}>
+                <Button variant="secondary" onClick={handleTermsClose}>
+                  Close
+                </Button>
+              </Col>
+              <Col sm={3}>
+                <Button variant="success" onClick={handleTermsClose}>
+                  Accept
+                </Button>
+              </Col>
+            </Row>{" "}
+          </Container>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
