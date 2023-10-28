@@ -245,6 +245,10 @@ function Signup() {
 
   const handleTermsShow = () => setShowTerms(true);
   const handleTermsClose = () => setShowTerms(false);
+  const handleTermsAccept = () => {
+    setAcceptTerms(true);
+    setShowTerms(false);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -439,6 +443,7 @@ function Signup() {
                       type="checkbox"
                       isInvalid={acceptTermsValidated && !acceptTerms}
                       isValid={acceptTermsValidated && acceptTerms}
+                      checked={acceptTerms}
                       onChange={() => {
                         setAcceptTerms(!acceptTerms);
                         setAcceptTermsValidated(false);
@@ -497,7 +502,7 @@ function Signup() {
                 </Button>
               </Col>
               <Col sm={3}>
-                <Button variant="success" onClick={handleTermsClose}>
+                <Button variant="success" onClick={handleTermsAccept}>
                   Accept
                 </Button>
               </Col>
