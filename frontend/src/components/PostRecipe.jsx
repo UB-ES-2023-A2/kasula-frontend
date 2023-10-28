@@ -6,6 +6,7 @@ import logo from '../assets/logo.png';
 import uploadIcon from '../assets/upload_icon.png';
 import { useAuth } from './AuthContext'; // Asegúrate de actualizar esta ruta
 import { useNavigate } from 'react-router-dom';
+import UploadFile from './UploadFile';
 
 const RecipePost = () => {
     const { token } = useAuth();
@@ -27,6 +28,7 @@ const RecipePost = () => {
     };
 
     const [recipeName, setRecipeName] = useState('');
+    const [imageName, setImageName] = useState('');
     const [ingredients, setIngredients] = useState([]);
     const [preparation, setPreparation] = useState([]);
     const [time, setTime] = useState('');
@@ -128,7 +130,7 @@ const RecipePost = () => {
             cooking_time: convertTimeToMinutes(time),
             difficulty: difficulty,
             energy: parseInt(energy),
-            image: "imgurl",
+            image: imageName,
             ingredients: ingredients,
             instructions: preparation
         };
@@ -160,6 +162,10 @@ const RecipePost = () => {
         } catch (error) {
             console.error("Network error:", error);
         }
+    };
+
+    const handleCallback = (childData) => {
+        setImageName(childData)
     };
 
     return (
@@ -252,12 +258,14 @@ const RecipePost = () => {
                         </div>
     
                         <div className="recipe-details">
-                            <div className="upload-btn-wrapper">
+                            <UploadFile myParentCallback={handleCallback} />
+
+                            {/*<div className="upload-btn-wrapper">
                                 <button id='buttons_postRecipe' className="upload-button">
                                     <img src={uploadIcon} alt="Upload Icon" className="upload-icon" /> Upload Image
                                 </button>
                                 <input id='input_postRecipe' type="file" />
-                            </div>
+                                    </div>*/}
     
                             <div className="detail-item">
                                 <label>Time of Cook</label>
