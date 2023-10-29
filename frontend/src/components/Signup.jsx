@@ -16,7 +16,7 @@ import {
 import { ArrowLeft, CheckCircleFill, Eye, EyeSlash, ExclamationTriangleFill } from "react-bootstrap-icons";
 
 //Styles
-import "../css/Signup.css";
+import "../css/common.css";
 
 //Assets
 import logo from "../assets/logo.png";
@@ -328,11 +328,11 @@ function Signup() {
   /* Render */
 
   return (
-    <div className="register min-vh-100">
-      <Container className="pt-5 pb-5">
+    <div>
+      <Container className="py-5 min-vh-100">
         <Row>
           <Col sm={3}></Col>
-          <Col sm={6} className="register-container rounded">
+          <Col sm={6} className="form-container rounded">
             <Row>
                 <Col sm={1}>
                     <Button variant="link" className="text-decoration-none fs-3 text-reset my-2" onClick={() => navigate("/login")}>
@@ -350,19 +350,19 @@ function Signup() {
             </Row>
             <Row className="mb-4">
               <Col>
-                <h1 className="register-title">Register</h1>
+                <h1 className="fw-bold text-center">Register</h1>
               </Col>
             </Row>
             <Row>
               <Col>
-                <p className="register-description mb-4">
+                <p className="mx-4 mb-4 fs-6 fw-normal text-center">
                   Register and enjoy the benefits of Posting your own recipes
                   and providing feedback to others! You will also be able to
                   save your favourite recipes!
                 </p>
               </Col>
             </Row>
-            <Row className="register-form">
+            <Row className="px-4">
               <Form noValidate onSubmit={handleSubmit}>
                 <Form.Group className="mb-4" controlId="formUsername">
                   <Form.Label>User</Form.Label>
@@ -481,7 +481,7 @@ function Signup() {
                         setAcceptTermsValidated(false);
                       }}
                     />
-                    <Form.Check.Label>
+                    <Form.Check.Label className="mt-1 ms-2">
                       I accept the{" "}
                       <a
                         href="#"
@@ -499,7 +499,7 @@ function Signup() {
                 <Row>
                   <Col sm={3}></Col>
                   <Col sm={6}>
-                    <Button variant="primary" type="submit" id="formButtonRegister">
+                    <Button className="w-100 mb-4 border-0" variant="primary" type="submit" id="formSubmitButton">
                     REGISTER NOW
                     </Button>
                   </Col>
