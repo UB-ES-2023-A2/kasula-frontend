@@ -36,8 +36,7 @@ function PasswordRecovery() {
     setEmailValidated(true);
   };
 
-  const checkEmailExistance = async (email) => {
-    console.log("Checking email existance");
+  const checkEmailExistance = async () => {
     try {
       const response = await fetch(
         "http://0.0.0.0:8000/user/check_email/".concat(email),
@@ -64,9 +63,7 @@ function PasswordRecovery() {
         if (data.status) {
           setEmailErrorMessage("Email does not exist.");
         } else {
-          navigate("/password-recovery/verify-email", {
-            state: { email: email },
-          });
+          sendEmailRequest();
         }
       }
     } catch (error) {
@@ -75,10 +72,42 @@ function PasswordRecovery() {
     }
   };
 
+  const sendEmailRequest = async () => {
+    try {
+      const response = await fetch(
+        "http://0.0.0.0:8000/user/password_recovery/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email }),
+        }
+      );
+      if (!response.ok) {
+        console.log(response);
+        const data = await response.json();
+        setEmailValid(false);
+        if (data && data.detail) {
+          setEmailErrorMessage(data.detail);
+        } else {
+          setEmailErrorMessage("Could not send email. Please try again later.");
+        }
+      } else {
+        navigate("/passwordrecovery/set", {
+          state: { email: email },
+        });
+      }
+    } catch (error) {
+      setEmailErrorMessage("Could not send email. Please try again later.");
+      setEmailValid(false);
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     if (emailValid) {
-      checkEmailExistance(email);
+      checkEmailExistance();
     }
     setEmailValidated(true);
   };
