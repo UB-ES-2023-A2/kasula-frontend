@@ -8,6 +8,7 @@ import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Logout from "./components/Logout";
 import PasswordRecovery from "./components/PasswordRecovery";
+import PasswordChange from "./components/PasswordChange";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './components/AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -29,6 +30,7 @@ root.render(
             <Route path="/userfeed" element={<UserFeed />} />
             <Route path="/RecipeDetail/:id" element={<RecipeDetail />} />
             <Route path="/passwordrecovery" element={<PasswordRecovery />} />
+            <Route path="/passwordrecovery/set" element={<PasswordChange />} />
           </Routes>
         </Router>
       </AuthProvider>
