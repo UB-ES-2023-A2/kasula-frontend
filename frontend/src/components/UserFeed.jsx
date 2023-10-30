@@ -5,6 +5,7 @@ import { CSSTransition } from "react-transition-group";
 import logo from "../assets/logo.png";
 import gyozas from "../assets/gyozas.jpg";
 import { Link, useHistory, useNavigate } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
 
 function UserFeed() {
   const [recipes, setRecipes] = useState([]);
@@ -21,8 +22,8 @@ function UserFeed() {
   }, []);
 
   return (
-    <div className="user-feed-container">
-      <header class="header_user_feed">
+    <Container fluid className="bg-image min-vh-100">
+      <Row class="bg-danger text-white">
         <img src={logo} alt="KASULÀ" className="logo_user_feed" />
         <h1 class="h1_user_feed">KASULÀ</h1>
         <button class="post-recipe-button" onClick={() => navigate("/postRecipe")}>
@@ -31,7 +32,7 @@ function UserFeed() {
         <button class="logout_button_user_feed" onClick={() => navigate("/logout")}>
           Log Out
         </button>
-      </header>
+      </Row>
       <div className="background-image"></div>
       <CSSTransition
         in={true} 
@@ -54,7 +55,7 @@ function UserFeed() {
         ))}
       </div>
       </CSSTransition>
-    </div>
+    </Container>
   );
 }
 

@@ -24,6 +24,10 @@ function RecipeDetail() {
       })
       .catch((error) => console.error("Error al obtener receta:", error));
   }, [id]);
+  
+  function getImage(filename) {
+    return gyozas;
+  }  
 
   return (
       <Container fluid className="bg-image min-vh-100">
