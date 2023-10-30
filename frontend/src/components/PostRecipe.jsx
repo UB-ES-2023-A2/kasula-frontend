@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from 'react';
 import "../css/PostRecipe.css";
 import "../css/Transitions.css";
-import { CSSTransition } from "react-transition-group";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 import logo from '../assets/logo.png';
 import uploadIcon from '../assets/upload_icon.png';
 import { useAuth } from './AuthContext'; // Asegúrate de actualizar esta ruta
@@ -10,6 +10,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Card } from "react-bootstrap";
 import { Container, Row, Col, Image } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 
 const RecipePost = () => {
     const { token } = useAuth();
@@ -75,6 +77,7 @@ const RecipePost = () => {
         newIngredients[index][field] = value;
         setIngredients(newIngredients);
     };    
+    
 
     const addIngredientField = () => {
         const newIngredient = {
@@ -175,10 +178,38 @@ const RecipePost = () => {
                 <Col sm={11}></Col>
             </Row>
             
-        <Container>
+        <Container >
             <Row>
-            <Col sm={2} md={2} lg={2}></Col>
-            <Col sm={8} md={8} lg={8}>
+            <Col sm={3} md={3} lg={3}>
+                <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+                    <Container id='recipe-container' className="mt-5 rounded box-shadow">
+                        <Row>
+                            <Col xs={12} md={12} lg={12}>
+                            <div className="ingredient-list">
+                                <TransitionGroup component={null}>
+                                        {ingredients.map((ingredient, index) => (
+                                            <CSSTransition key={index} timeout={500} classNames="ingredient-fade">
+                                            <div key={index} className="ingredient-item">
+                                                <Row>
+                                                    <Col xs={9} md={9} lg={9}>
+                                                        <span>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</span>
+                                                    </Col>
+                                                    <Col xs={3} md={3} lg={3}>
+                                                        <Button id='buttons_remove' onClick={() => handleIngredientDelete(index)}>X</Button>{' '}
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                            </CSSTransition>
+                                        ))}
+                                        </TransitionGroup>
+                                    </div>
+                            </Col>
+                        </Row>   
+                    </Container>
+                </CSSTransition>
+            </Col>
+                
+            <Col sm={7} md={7} lg={7}>
                 <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
                 <Container id='recipe-container' className="mt-5 rounded box-shadow" style={{ backgroundColor: '#ffb79fe0'}}>
                     <Row>
@@ -192,69 +223,71 @@ const RecipePost = () => {
                         <Col sm={1} md={1} lg={1}></Col>
                         <Col sm={9} md={9} lg={0}>
                         <div className="input-section">
-                            <label id='subtitle'>Recipe Name</label>
-                            <input id='input_postRecipe' 
-                                type="text" 
+                            <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+                                <Form.Label>Recipe name</Form.Label>
+                                <Form.Control as="textarea" rows={1} 
                                 value={recipeName} 
                                 onChange={(e) => setRecipeName(e.target.value)} 
-                                placeholder="Enter Recipe Name" 
-                             />
+                                />
+                            </Form.Group>
                         </div>
                         </Col>
                         <Col sm={1} md={1} lg={1}></Col>
                     </Row>
                     <Row>
                         <Col xs={6} md={6} lg={6}>
+                        <div className="fade-container">
                             <label>INGREDIENTS</label>
-                                    <div className="ingredient-list">
-                                        {ingredients.map((ingredient, index) => (
-                                            <div key={index} className="ingredient-item">
-                                                <span>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</span>
-                                                <button id='buttons_postRecipe'  onClick={() => handleIngredientDelete(index)}>X</button>
-                                            </div>
+                                    <Row>
+                                    <Col sm={6} md={6} lg={6}>
+                                        <Form.Control type="text" placeholder="Ingredient name" 
+                                        ref={ingredientNameRef}
+                                        style={{ width: '200px' }}
+                                        />
+                                    </Col>
+                                    <Col sm={3} md={3} lg={3}>
+                                    <Form.Control type="number" placeholder="Quantity" 
+                                        ref={ingredientQuantityRef}
+                                        />
+                                    </Col>
+                                    <Col sm={3} md={3} lg={3}>
+                                    <Form.Select className="ingredient-unit-select" ref={ingredientUnitRef} aria-label="Ingredient Unit Selection">
+                                        {Object.values(Unit).map(unit => (
+                                            <option key={unit} value={unit}>{unit}</option>
                                         ))}
-                                    </div>
-                                    <div className="ingredient-input-group">
-                                        <input id='input_postRecipe-ingredient' 
-                                            type="text" 
-                                            ref={ingredientNameRef}
-                                            placeholder="Ingredient Name"
-                                        />
-        
-                                        <input id='input_postRecipe' 
-                                            type="number" 
-                                            ref={ingredientQuantityRef}
-                                            placeholder="Quantity"
-                                        />
-                                        <select className="ingredient-unit-select"
-                                            ref={ingredientUnitRef}
-                                        >
-                                            {Object.values(Unit).map(unit => (
-                                                <option key={unit} value={unit}>{unit}</option>
-                                            ))}
-                                        </select>
-                                    </div>
+                                    </Form.Select>
+                                    </Col>
+                                    </Row>
                                     <button id='buttons_postRecipe' onClick={addIngredientField}>Add ingredient</button>
+                        </div>
                         </Col>
                         <Col xs={6} md={6} lg={6}>
+                        <div className="fade-container">
                             <label>PREPARATION</label>
                                     <div className="preparation-list">
                                         {preparation.map((step, index) => (
-                                            <div key={index} className="preparation-item">
-                                                <span>Step {step.step_number}: {step.body}</span>
-                                                <button id='buttons_postRecipe' onClick={() => handleInstructionDelete(index)}>X</button>
+                                            <div key={index}>
+                                                <Row>
+                                                    <Col xs={9} md={9} lg={9}>
+                                                        <span>Step {step.step_number}: {step.body}</span>
+                                                    </Col>
+                                                    <Col xs={3} md={3} lg={3}>
+                                                        <Button id='buttons_remove' onClick={() => handleInstructionDelete(index)}>X</Button>{' '}
+                                                    </Col>
+                                                </Row>
                                             </div>
                                         ))}
                                     </div>
                                     <div className="instruction-input-group">
-                                        <textarea 
-                                            id='textArea_postRecipe' 
-                                            ref={instructionRef}
-                                            placeholder={`Step ${preparation.length > 0 ? preparation.length + 1 : 1}`}
-                                            maxLength={2000}
+                                        <Form.Control type="text"
+                                        id='textArea_postRecipe' 
+                                        ref={instructionRef}
+                                        placeholder={`Step ${preparation.length > 0 ? preparation.length + 1 : 1}`}
+                                        maxLength={2000}
                                         />
                                     </div>
                                     <button id='buttons_postRecipe' style={{marginTop: '10px'}} onClick={addInstructionField}>Add step</button>
+                        </div>
                         </Col>
                     </Row>
                     <Row>
@@ -319,7 +352,7 @@ const RecipePost = () => {
                 </Container>                             
             </CSSTransition>
             </Col>
-            <Col sm={2}></Col>
+            <Col sm={3}></Col>
             </Row>
         </Container>
         </Container>
