@@ -101,11 +101,11 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (identifier.length == 0) {
+    if (identifier.length === 0) {
       setIdentifierFilled(false);
       setIdentifierValidated(true);
     }
-    if (password.length == 0) {
+    if (password.length === 0) {
       setPasswordFilled(false);
       setPasswordValidated(true);
     }
@@ -198,7 +198,7 @@ function Login() {
                 <Row className="mb-5">
                   <Col sm={12}>
                     <a
-                      href="/forgotpassword"
+                      href="/passwordrecovery"
                       className="text-decoration-none fs-6"
                     >
                       Forgot your password?
