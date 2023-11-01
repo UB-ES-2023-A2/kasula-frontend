@@ -7,11 +7,20 @@ import uploadIcon from '../assets/upload_icon.png';
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Card } from "react-bootstrap";
-import { Container, Row, Col, Image } from "react-bootstrap";
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import { ArrowLeft, CheckCircleFill, Eye, EyeSlash, ExclamationTriangleFill } from "react-bootstrap-icons";
+
+//React Components
+import {
+    Container,
+    Row,
+    Col,
+    Button,
+    Form,
+    Image,
+    InputGroup,
+    Modal
+  } from "react-bootstrap";
 
 const RecipePost = () => {
     const { token } = useAuth();
@@ -44,6 +53,9 @@ const RecipePost = () => {
     const ingredientUnitRef = useRef(null);
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
+    const [showPostRecipeConfirmation, setShowPostRecipeConfirmation] = useState(false);
+    const [postSuccess, setPostRecipeSuccess] = useState(false);
+    const [submitMessage, setSubmitMessage] = useState("");
 
     const renderStars = (amount) => {
         let stars = [];
@@ -165,14 +177,17 @@ const RecipePost = () => {
             const data = await response.json();
     
             if (response.ok) {
-                console.log("Recipe posted successfully:", data);
-                navigate("/userfeed");
+                setSubmitMessage("Recipe posted successfully:", data);
+                setPostRecipeSuccess(true);
             } else {
-                console.error("Error posting recipe:", data);
+                setSubmitMessage("Error posting recipe:", data);
             }
         } catch (error) {
-            console.error("Network error:", error);
-        }
+            setSubmitMessage(error.JSON.stringify);
+            setPostRecipeSuccess(false);
+          } finally {
+            setShowPostRecipeConfirmation(true);
+          }
     };
     
     const handleImageUpload = (event) => {
@@ -186,7 +201,15 @@ const RecipePost = () => {
         }
     }
 
+    const handlePostRecipeConfirmationClose = () => {
+        setShowPostRecipeConfirmation(false);
+        if (postSuccess) {
+          navigate("/userfeed");
+        }
+      }
+
     return (
+        <div>
         <Container fluid className="bg-image min-vh-100">
             <Row className="bg-danger text-white">
                 <Col sm={1} className="py-2"> 
@@ -386,6 +409,30 @@ const RecipePost = () => {
             </Row>
         </Container>
         </Container>
+
+        <Modal show={showPostRecipeConfirmation} size="sm" onHide={handlePostRecipeConfirmationClose}>
+        <Modal.Header closeButton>
+        <Modal.Title>{postSuccess ? "Confirm Posting" : "Posting Error"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <Row>
+            <Col className="text-center mb-4">
+            {postSuccess ? <CheckCircleFill className="text-success" size={100} /> : <ExclamationTriangleFill className="text-warning" size={100} />}
+            </Col>
+        </Row>
+        <Row>
+            <Col className="text-center">
+            <p>{submitMessage}</p>
+            </Col>
+        </Row>
+        </Modal.Body>
+        <Modal.Footer>
+        <Button variant={postSuccess ? "success" : "secondary"} onClick={handlePostRecipeConfirmationClose}>
+            {postSuccess ? "Go to recipes" : "Close"}
+        </Button>
+        </Modal.Footer>
+        </Modal>
+        </div>
     );
 }
 
