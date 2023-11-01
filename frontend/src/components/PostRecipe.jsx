@@ -185,10 +185,17 @@ const RecipePost = () => {
             </Row>
             
         <Container className='translucidContainer mt-5'>
+                    <Row>
+                        <Col xs={5}></Col>
+                            <Col xs={6}>
+                                <h2 id='title'>Post recipe</h2>
+                            </Col>
+                        <Col xs={3}></Col>
+                    </Row>
             <Row>
             <Col sm={3} md={3} lg={3}>
                 <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-                    <Container id='recipe-container' className="mt-5 rounded box-shadow">
+                    <Container id='recipe-container' className="mt-3 rounded box-shadow">
                         <Row>
                             <Col xs={12}>
                             <div className="ingredient-list">
@@ -217,14 +224,7 @@ const RecipePost = () => {
                 
             <Col sm={6}>
                 <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-                <Container id='recipe-container' className="mt-5 rounded box-shadow">
-                    <Row>
-                        <Col xs={4}></Col>
-                            <Col xs={6}>
-                                <h2 id='title'>Post recipe</h2>
-                            </Col>
-                        <Col xs={4}></Col>
-                    </Row>
+                <Container id='recipe-container' className="rounded box-shadow">
                     <Row>
                         <Col sm={12}>
                             <FloatingLabel
@@ -243,13 +243,13 @@ const RecipePost = () => {
                         <Col xs={6} md={6} lg={6}>
                             <label>INGREDIENTS</label>
                                     <Row className='mt-2'>
-                                    <Col sm={4}>
+                                    <Col sm={12}>
                                         <Form.Control placeholder="Name" 
                                         ref={ingredientNameRef}
                                         />
                                     </Col>
-                                    <Col sm={3}>
-                                    <Form.Control type="number" placeholder="" 
+                                    <Col sm={7}>
+                                    <Form.Control type="number" placeholder="Quantity" 
                                         ref={ingredientQuantityRef}
                                         />
                                     </Col>
@@ -290,16 +290,16 @@ const RecipePost = () => {
                         </Col>
                         <Col xs={6} md={6} lg={6}>
                             <Row>
-                                <label>Cooking time</label>
-                            </Row>
-                            <Row>
-                                <div className="time-input">
-                                        <input id='input_postRecipe' 
-                                            type="time" 
+                                <Form.Group className="mb-3">
+                                <Form.Label>Cooking time</Form.Label>
+                                    <Form.Control
+                                            ref={instructionRef}
+                                            placeholder={`Minutes`}
                                             value={time}
+                                            type="number" 
                                             onChange={(e) => setTime(e.target.value)} 
-                                        />
-                                    </div>
+                                    />
+                                </Form.Group>
                             </Row>
                         </Col>
                         <Col xs={6} md={6} lg={6}>
@@ -314,31 +314,32 @@ const RecipePost = () => {
                         </Col>
                         <Col xs={6}>
                             <Row>
-                                <label>Energy (kcal)</label>
-                            </Row>
-                            <Row>
-                                    <div className="energy-input">
-                                        <input id='input_postRecipe' 
+                                <Form.Group className="mb-3">
+                                <Form.Label>Energy</Form.Label>
+                                    <Form.Control
+                                            ref={instructionRef}
                                             type="number" 
-                                            value={energy} 
+                                            placeholder={`Kcal`}
+                                            value={energy}
                                             onChange={(e) => setEnergy(e.target.value)} 
-                                            placeholder="kcal"
-                                        />
-                                     </div> 
+                                    />
+                                </Form.Group>
                             </Row>
                         </Col>
                     </Row> 
                     <Row>
-                        <Col xs={6} md={12} lg={12}>
-                            <button className="post-button" onClick={handleSubmit}>POST RECIPE</button>
+                        <Col xs={3}></Col>
+                        <Col xs={6}>
+                            <Button className='mb-3' style={{marginTop: '10px'}} onClick={handleSubmit} variant="danger">POST RECIPE</Button>{' '}
                         </Col>
+                        <Col xs={3}></Col>
                     </Row>     
                 </Container>                             
             </CSSTransition>
             </Col>
             <Col sm={3}>
                 <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-                    <Container id='recipe-container' className="mt-5 rounded box-shadow">
+                    <Container id='recipe-container' className="mt-3 rounded box-shadow">
                         <Row>
                             <Col xs={12} md={12} lg={12}>
                             <div className="preparation-list">
