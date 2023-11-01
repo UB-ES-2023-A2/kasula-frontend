@@ -4,7 +4,7 @@ import "../css/Transitions.css";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import logo from '../assets/logo.png';
 import uploadIcon from '../assets/upload_icon.png';
-import { useAuth } from './AuthContext'; // Asegúrate de actualizar esta ruta
+import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card } from "react-bootstrap";
@@ -178,24 +178,24 @@ const RecipePost = () => {
                 <Col sm={11}></Col>
             </Row>
             
-        <Container >
+        <Container className='translucidContainer mt-5'>
             <Row>
             <Col sm={3} md={3} lg={3}>
                 <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
                     <Container id='recipe-container' className="mt-5 rounded box-shadow">
                         <Row>
-                            <Col xs={12} md={12} lg={12}>
+                            <Col xs={12}>
                             <div className="ingredient-list">
                                 <TransitionGroup component={null}>
                                         {ingredients.map((ingredient, index) => (
                                             <CSSTransition key={index} timeout={500} classNames="ingredient-fade">
-                                            <div key={index} className="ingredient-item">
+                                            <div key={index}>
                                                 <Row>
-                                                    <Col xs={9} md={9} lg={9}>
+                                                    <Col xs={9}>
                                                         <span>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</span>
                                                     </Col>
-                                                    <Col xs={3} md={3} lg={3}>
-                                                        <Button id='buttons_remove' onClick={() => handleIngredientDelete(index)}>X</Button>{' '}
+                                                    <Col xs={3}>
+                                                        <Button id='buttons_remove' classNames="remove-button" onClick={() => handleIngredientDelete(index)}>X</Button>{' '}
                                                     </Col>
                                                 </Row>
                                             </div>
@@ -209,9 +209,9 @@ const RecipePost = () => {
                 </CSSTransition>
             </Col>
                 
-            <Col sm={7} md={7} lg={7}>
+            <Col sm={6}>
                 <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-                <Container id='recipe-container' className="mt-5 rounded box-shadow" style={{ backgroundColor: '#ffb79fe0'}}>
+                <Container id='recipe-container' className="mt-5 rounded box-shadow">
                     <Row>
                         <Col xs={12} md={6} lg={6}>
                             <Col xs={10}>
@@ -239,18 +239,17 @@ const RecipePost = () => {
                         <div className="fade-container">
                             <label>INGREDIENTS</label>
                                     <Row>
-                                    <Col sm={6} md={6} lg={6}>
+                                    <Col sm={6}>
                                         <Form.Control type="text" placeholder="Ingredient name" 
                                         ref={ingredientNameRef}
-                                        style={{ width: '200px' }}
                                         />
                                     </Col>
-                                    <Col sm={3} md={3} lg={3}>
+                                    <Col sm={3}>
                                     <Form.Control type="number" placeholder="Quantity" 
                                         ref={ingredientQuantityRef}
                                         />
                                     </Col>
-                                    <Col sm={3} md={3} lg={3}>
+                                    <Col sm={3}>
                                     <Form.Select className="ingredient-unit-select" ref={ingredientUnitRef} aria-label="Ingredient Unit Selection">
                                         {Object.values(Unit).map(unit => (
                                             <option key={unit} value={unit}>{unit}</option>
@@ -258,50 +257,34 @@ const RecipePost = () => {
                                     </Form.Select>
                                     </Col>
                                     </Row>
-                                    <button id='buttons_postRecipe' onClick={addIngredientField}>Add ingredient</button>
+                                    <Button className='mb-3' style={{marginTop: '10px'}} onClick={addIngredientField} variant="danger">Add ingredient</Button>{' '}
                         </div>
                         </Col>
                         <Col xs={6} md={6} lg={6}>
                         <div className="fade-container">
                             <label>PREPARATION</label>
-                                    <div className="preparation-list">
-                                        {preparation.map((step, index) => (
-                                            <div key={index}>
-                                                <Row>
-                                                    <Col xs={9} md={9} lg={9}>
-                                                        <span>Step {step.step_number}: {step.body}</span>
-                                                    </Col>
-                                                    <Col xs={3} md={3} lg={3}>
-                                                        <Button id='buttons_remove' onClick={() => handleInstructionDelete(index)}>X</Button>{' '}
-                                                    </Col>
-                                                </Row>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div className="instruction-input-group">
-                                        <Form.Control type="text"
-                                        id='textArea_postRecipe' 
-                                        ref={instructionRef}
-                                        placeholder={`Step ${preparation.length > 0 ? preparation.length + 1 : 1}`}
-                                        maxLength={2000}
-                                        />
-                                    </div>
-                                    <button id='buttons_postRecipe' style={{marginTop: '10px'}} onClick={addInstructionField}>Add step</button>
+                                    <Row>
+                                        <Col sm={12}>
+                                            <Form.Control type="text"
+                                            ref={instructionRef}
+                                            placeholder={`Step ${preparation.length > 0 ? preparation.length + 1 : 1}`}
+                                            maxLength={2000}
+                                            />
+                                        </Col>
+                                        <Col sm={12}>
+                                        <Button className='mb-3' style={{marginTop: '10px'}} onClick={addInstructionField} variant="danger">Add step</Button>{' '}
+                                        </Col>
+                                    </Row>
                         </div>
                         </Col>
                     </Row>
                     <Row>
                         <Col xs={6} md={6} lg={6}>
                             <Row>
-                            <label>Recipe image</label>
-                            </Row>
-                            <Row>
-                                <div className="upload-btn-wrapper">
-                                <Button variant="outline-danger">
-                                    <img src={uploadIcon} alt="Upload Icon" className="upload-icon" /> Upload Image
-                                    <input id='input_postRecipe' type="file" />
-                                </Button>{' '}
-                                </div>    
+                                <Form.Group controlId="formFile" className="mb-3">
+                                    <Form.Label>Upload a file image</Form.Label>
+                                    <Form.Control type="file" />
+                                </Form.Group>
                             </Row>
                         </Col>
                         <Col xs={6} md={6} lg={6}>
@@ -328,7 +311,7 @@ const RecipePost = () => {
                                     </div>  
                             </Row>
                         </Col>
-                        <Col xs={6} md={6} lg={6}>
+                        <Col xs={6}>
                             <Row>
                                 <label>Energy (kcal)</label>
                             </Row>
@@ -346,13 +329,40 @@ const RecipePost = () => {
                     </Row> 
                     <Row>
                         <Col xs={6} md={12} lg={12}>
-                            <button id='buttons_postRecipe' className="post-button" onClick={handleSubmit}>POST RECIPE</button>
+                            <button className="post-button" onClick={handleSubmit}>POST RECIPE</button>
                         </Col>
                     </Row>     
                 </Container>                             
             </CSSTransition>
             </Col>
-            <Col sm={3}></Col>
+            <Col sm={3}>
+                <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+                    <Container id='recipe-container' className="mt-5 rounded box-shadow">
+                        <Row>
+                            <Col xs={12} md={12} lg={12}>
+                            <div className="preparation-list">
+                                <TransitionGroup component={null}>
+                                        {preparation.map((step, index) => (
+                                            <CSSTransition key={index} timeout={500} classNames="ingredient-fade">
+                                            <div key={index}>
+                                                <Row>
+                                                    <Col xs={9} md={9} lg={9}>
+                                                        <span>Step {step.step_number}: {step.body}</span>
+                                                    </Col>
+                                                    <Col xs={3} md={3} lg={3}>
+                                                        <Button id='buttons_remove' onClick={() => handleInstructionDelete(index)}>X</Button>{' '}
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                            </CSSTransition>
+                                        ))}
+                                        </TransitionGroup>
+                                    </div>
+                            </Col>
+                        </Row>   
+                    </Container>
+                </CSSTransition>
+            </Col>
             </Row>
         </Container>
         </Container>
