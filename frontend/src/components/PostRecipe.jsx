@@ -138,10 +138,10 @@ const RecipePost = () => {
     const handleSubmit = async () => {
         const recipeData = {
             name: recipeName,
-            cooking_time: convertTimeToMinutes(time),
+            cooking_time: time,
             difficulty: difficulty,
             energy: parseInt(energy),
-            image: "imgurl",
+            image: image,
             ingredients: ingredients,
             instructions: preparation
         };
