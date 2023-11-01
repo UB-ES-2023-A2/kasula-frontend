@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "./AuthContext";
 import "../css/UserFeed.css";
 import "../css/Transitions.css";
 import { CSSTransition } from "react-transition-group";
 import logo from "../assets/logo.png";
 import gyozas from "../assets/gyozas.jpg";
 import { Link, useHistory, useNavigate } from "react-router-dom";
+//React Components
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Form,
+  Image,
+  InputGroup,
+  Modal,
+} from "react-bootstrap";
+import { ArrowLeft, CheckCircleFill, Eye, EyeSlash, ExclamationTriangleFill } from "react-bootstrap-icons";
 
 function UserFeed() {
   const [recipes, setRecipes] = useState([]);
   const navigate = useNavigate();
+  const [showLogout, setLogout] = useState(false);
+  const { token, logout } = useAuth();
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/recipe/")
@@ -20,7 +35,17 @@ function UserFeed() {
       .catch((error) => console.error("Error al obtener recetas:", error));
   }, []);
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const handleHide = () => {
+    setLogout(false);
+  };
+
   return (
+    <div>
     <div className="user-feed-container">
       <header class="header_user_feed">
         <img src={logo} alt="KASULÀ" className="logo_user_feed" />
@@ -28,7 +53,7 @@ function UserFeed() {
         <button class="post-recipe-button" onClick={() => navigate("/postRecipe")}>
           Post Recipe
         </button>
-        <button class="logout_button_user_feed" onClick={() => navigate("/logout")}>
+        <button class="logout_button_user_feed" onClick={() => setLogout(true)}>
           Log Out
         </button>
       </header>
@@ -55,7 +80,34 @@ function UserFeed() {
       </div>
       </CSSTransition>
     </div>
+    <Modal show={showLogout} size="sm" onHide={handleLogout}>
+        <Modal.Header closeButton>
+          <Modal.Title>Tancar la sessió</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col className="text-center mb-4">
+              <ExclamationTriangleFill className="text-warning" size={100}/>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="text-center">
+              <p>Segur que vols tancar sessió?</p>
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleLogout}>
+            Tancar
+          </Button>
+          <Button variant="success" onClick={handleHide}>
+            No tancar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
   );
+  
 }
 
 export default UserFeed;
