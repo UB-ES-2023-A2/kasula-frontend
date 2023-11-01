@@ -12,6 +12,7 @@ import { Container, Row, Col, Image } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
 const RecipePost = () => {
     const { token } = useAuth();
@@ -48,13 +49,18 @@ const RecipePost = () => {
         let stars = [];
         for (let i = 1; i <= 5; i++) {
             stars.push(
-                <span key={i} onClick={() => setDifficulty(i)}>
+                <span 
+                    key={i} 
+                    onClick={() => setDifficulty(i)} 
+                    style={{ color: i <= amount ? 'yellow' : 'grey' }}
+                >
                     {i <= amount ? '★' : '☆'}
                 </span>
             );
         }
         return stars;
     };
+    
 
     const handleIngredientDelete = (index) => {
         const newIngredients = [...ingredients];
@@ -213,43 +219,41 @@ const RecipePost = () => {
                 <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
                 <Container id='recipe-container' className="mt-5 rounded box-shadow">
                     <Row>
-                        <Col xs={12} md={6} lg={6}>
-                            <Col xs={10}>
+                        <Col xs={4}></Col>
+                            <Col xs={6}>
                                 <h2 id='title'>Post recipe</h2>
                             </Col>
-                        </Col>
+                        <Col xs={4}></Col>
                     </Row>
                     <Row>
-                        <Col sm={1} md={1} lg={1}></Col>
-                        <Col sm={9} md={9} lg={0}>
-                        <div className="input-section">
-                            <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-                                <Form.Label>Recipe name</Form.Label>
-                                <Form.Control as="textarea" rows={1} 
+                        <Col sm={12}>
+                            <FloatingLabel
+                                controlId="floatingInput"
+                                label="Recipe name"
+                                className="mb-3 mt-3"
+                            >
+                                <Form.Control placeholder="name@example.com" 
                                 value={recipeName} 
                                 onChange={(e) => setRecipeName(e.target.value)} 
                                 />
-                            </Form.Group>
-                        </div>
+                            </FloatingLabel>
                         </Col>
-                        <Col sm={1} md={1} lg={1}></Col>
                     </Row>
                     <Row>
                         <Col xs={6} md={6} lg={6}>
-                        <div className="fade-container">
                             <label>INGREDIENTS</label>
-                                    <Row>
-                                    <Col sm={6}>
-                                        <Form.Control type="text" placeholder="Ingredient name" 
+                                    <Row className='mt-2'>
+                                    <Col sm={4}>
+                                        <Form.Control placeholder="Name" 
                                         ref={ingredientNameRef}
                                         />
                                     </Col>
                                     <Col sm={3}>
-                                    <Form.Control type="number" placeholder="Quantity" 
+                                    <Form.Control type="number" placeholder="" 
                                         ref={ingredientQuantityRef}
                                         />
                                     </Col>
-                                    <Col sm={3}>
+                                    <Col sm={5}>
                                     <Form.Select className="ingredient-unit-select" ref={ingredientUnitRef} aria-label="Ingredient Unit Selection">
                                         {Object.values(Unit).map(unit => (
                                             <option key={unit} value={unit}>{unit}</option>
@@ -258,12 +262,10 @@ const RecipePost = () => {
                                     </Col>
                                     </Row>
                                     <Button className='mb-3' style={{marginTop: '10px'}} onClick={addIngredientField} variant="danger">Add ingredient</Button>{' '}
-                        </div>
                         </Col>
                         <Col xs={6} md={6} lg={6}>
-                        <div className="fade-container">
                             <label>PREPARATION</label>
-                                    <Row>
+                                    <Row className='mt-2'>
                                         <Col sm={12}>
                                             <Form.Control type="text"
                                             ref={instructionRef}
@@ -275,21 +277,20 @@ const RecipePost = () => {
                                         <Button className='mb-3' style={{marginTop: '10px'}} onClick={addInstructionField} variant="danger">Add step</Button>{' '}
                                         </Col>
                                     </Row>
-                        </div>
                         </Col>
                     </Row>
                     <Row>
                         <Col xs={6} md={6} lg={6}>
                             <Row>
                                 <Form.Group controlId="formFile" className="mb-3">
-                                    <Form.Label>Upload a file image</Form.Label>
+                                    <Form.Label>Upload an image</Form.Label>
                                     <Form.Control type="file" />
                                 </Form.Group>
                             </Row>
                         </Col>
                         <Col xs={6} md={6} lg={6}>
                             <Row>
-                                <label>Time of Cook</label>
+                                <label>Cooking time</label>
                             </Row>
                             <Row>
                                 <div className="time-input">
