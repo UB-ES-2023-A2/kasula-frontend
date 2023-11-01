@@ -11,7 +11,6 @@ import { Card } from "react-bootstrap";
 import { Container, Row, Col, Image } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
 const RecipePost = () => {
@@ -44,6 +43,7 @@ const RecipePost = () => {
     const instructionRef = useRef(null);
     const ingredientUnitRef = useRef(null);
     const navigate = useNavigate();
+    const [image, setImage] = useState(null);
 
     const renderStars = (amount) => {
         let stars = [];
@@ -174,6 +174,17 @@ const RecipePost = () => {
             console.error("Network error:", error);
         }
     };
+    
+    const handleImageUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            setImage(e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
+    }
 
     return (
         <Container fluid className="bg-image min-vh-100">
@@ -242,12 +253,14 @@ const RecipePost = () => {
                     <Row>
                         <Col xs={6} md={6} lg={6}>
                             <label>INGREDIENTS</label>
-                                    <Row className='mt-2'>
+                                    <Row className='mt-2 mb-1'>
                                     <Col sm={12}>
                                         <Form.Control placeholder="Name" 
                                         ref={ingredientNameRef}
                                         />
                                     </Col>
+                                    </Row>
+                                    <Row>
                                     <Col sm={7}>
                                     <Form.Control type="number" placeholder="Quantity" 
                                         ref={ingredientQuantityRef}
@@ -261,7 +274,10 @@ const RecipePost = () => {
                                     </Form.Select>
                                     </Col>
                                     </Row>
-                                    <Button className='mb-3' style={{marginTop: '10px'}} onClick={addIngredientField} variant="danger">Add ingredient</Button>{' '}
+                                    <div className="d-grid gap-2">
+                                    <Button className='mb-3' onClick={addIngredientField} variant="danger">Add ingredient</Button>
+                                    </div>
+                                    
                         </Col>
                         <Col xs={6} md={6} lg={6}>
                             <label>PREPARATION</label>
@@ -274,7 +290,9 @@ const RecipePost = () => {
                                             />
                                         </Col>
                                         <Col sm={12}>
+                                        <div className="d-grid gap-2">
                                         <Button className='mb-3' style={{marginTop: '10px'}} onClick={addInstructionField} variant="danger">Add step</Button>{' '}
+                                        </div>
                                         </Col>
                                     </Row>
                         </Col>
@@ -284,7 +302,7 @@ const RecipePost = () => {
                             <Row>
                                 <Form.Group controlId="formFile" className="mb-3">
                                     <Form.Label>Upload an image</Form.Label>
-                                    <Form.Control type="file" />
+                                    <Form.Control type="file" onChange={handleImageUpload}/>
                                 </Form.Group>
                             </Row>
                         </Col>
