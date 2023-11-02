@@ -80,7 +80,7 @@ function UserFeed() {
       </div>
       </CSSTransition>
     </div>
-    <Modal show={showLogout} size="sm" onHide={handleLogout}>
+    <Modal show={showLogout} size="sm" onHide={handleHide}>
         <Modal.Header closeButton>
           <Modal.Title>Tancar la sessió</Modal.Title>
         </Modal.Header>
@@ -92,7 +92,7 @@ function UserFeed() {
           </Row>
           <Row>
             <Col className="text-center">
-              <p>Segur que vols tancar sessió?</p>
+              <p className="ms-0">Segur que vols tancar sessió?</p>
             </Col>
           </Row>
         </Modal.Body>
