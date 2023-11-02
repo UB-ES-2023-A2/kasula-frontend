@@ -44,7 +44,6 @@ function Login() {
 
   const loginRequest = async (identifier, password) => {
     const api_url = process.env.REACT_APP_API_URL + "/user/token";
-    console.log(api_url);
     const requestBody = queryString.stringify({
       grant_type: "",
       username: identifier,
