@@ -56,6 +56,9 @@ const RecipePost = () => {
     const [showPostRecipeConfirmation, setShowPostRecipeConfirmation] = useState(false);
     const [postSuccess, setPostRecipeSuccess] = useState(false);
     const [submitMessage, setSubmitMessage] = useState("");
+    const [isIngredientFieldsFilled, setIsIngredientFieldsFilled] = useState(false);
+    const [isInstructionFieldFilled, setIsInstructionFieldFilled] = useState(false);
+    const [isPostButtonEnabled, setIsPostButtonEnabled] = useState(false);
 
     const renderStars = (amount) => {
         let stars = [];
@@ -78,6 +81,7 @@ const RecipePost = () => {
         const newIngredients = [...ingredients];
         newIngredients.splice(index, 1);
         setIngredients(newIngredients);
+        checkPostButtonConditions();
     };
 
     const convertTimeToMinutes = (timeStr) => {
@@ -106,6 +110,8 @@ const RecipePost = () => {
         setIngredients([...ingredients, newIngredient]);
         ingredientNameRef.current.value = "";
         ingredientQuantityRef.current.value = "";
+        setIsIngredientFieldsFilled(false);
+        checkPostButtonConditions();
     };    
 
     const handleInstructionChange = (index, value) => {
@@ -125,6 +131,8 @@ const RecipePost = () => {
         };
         setPreparation([...preparation, newInstruction]);
         instructionRef.current.value = "";
+        setIsInstructionFieldFilled(false);
+        checkPostButtonConditions();
     };      
 
     const handleInstructionDelete = (index) => {
@@ -134,6 +142,7 @@ const RecipePost = () => {
             inst.step_number = idx + 1;
         });
         setPreparation(newInstructions);
+        checkPostButtonConditions();
     };
 
     const validateRecipeData = (data) => {
@@ -146,7 +155,27 @@ const RecipePost = () => {
         
         return null;
     };
+
+    const checkIngredientFields = () => {
+        const nameFilled = ingredientNameRef.current.value.length > 0;
+        const quantityFilled = ingredientQuantityRef.current.value.length > 0;
+        const unitFilled = ingredientUnitRef.current.value.length > 0;
+        setIsIngredientFieldsFilled(nameFilled && quantityFilled && unitFilled);
+    };
     
+    const checkInstructionField = () => {
+        setIsInstructionFieldFilled(instructionRef.current.value.length > 0);
+    };    
+    
+    const checkPostButtonConditions = () => {
+        const areConditionsMet = 
+            ingredients.length > 0 && 
+            preparation.length > 0 && 
+            time.length > 0 && 
+            energy.length > 0;
+        setIsPostButtonEnabled(areConditionsMet);
+    };
+
     const handleSubmit = async () => {
         const recipeData = {
             name: recipeName,
@@ -210,7 +239,7 @@ const RecipePost = () => {
 
     return (
         <div>
-        <Container fluid className="bg-image min-vh-100">
+        <Container fluid className="min-vh-100">
             <Row className="bg-danger text-white">
                 <Col sm={1} className="py-2"> 
                 <Image src={logo} alt="KASULÀ" fluid />
@@ -220,11 +249,19 @@ const RecipePost = () => {
             
         <Container className='translucidContainer mt-5'>
                     <Row>
-                        <Col xs={5}></Col>
-                            <Col xs={6}>
+                        <Col xs={5}>
+                            <Button
+                            variant="link"
+                            className="text-decoration-none fs-3 text-reset my-2"
+                            onClick={() => navigate("/userfeed")}
+                            >
+                            <ArrowLeft></ArrowLeft>
+                            </Button>
+                        </Col>
+                            <Col xs={5}>
                                 <h2 id='title'>Post recipe</h2>
                             </Col>
-                        <Col xs={3}></Col>
+                        <Col xs={2}></Col>
                     </Row>
             <Row>
             <Col sm={3} md={3} lg={3}>
@@ -280,6 +317,7 @@ const RecipePost = () => {
                                     <Col sm={12}>
                                         <Form.Control placeholder="Name" 
                                         ref={ingredientNameRef}
+                                        onChange={checkIngredientFields}
                                         />
                                     </Col>
                                     </Row>
@@ -287,6 +325,7 @@ const RecipePost = () => {
                                     <Col sm={7}>
                                     <Form.Control type="number" placeholder="Quantity" 
                                         ref={ingredientQuantityRef}
+                                        onChange={checkIngredientFields}
                                         />
                                     </Col>
                                     <Col sm={5}>
@@ -294,11 +333,12 @@ const RecipePost = () => {
                                         {Object.values(Unit).map(unit => (
                                             <option key={unit} value={unit}>{unit}</option>
                                         ))}
+                                        onChange={checkIngredientFields}
                                     </Form.Select>
                                     </Col>
                                     </Row>
                                     <div className="d-grid gap-2">
-                                    <Button className='mb-3' onClick={addIngredientField} variant="danger">Add ingredient</Button>
+                                    <Button className='mb-3' onClick={addIngredientField} variant="danger" disabled={!isIngredientFieldsFilled}>Add ingredient</Button>
                                     </div>
                                     
                         </Col>
@@ -310,11 +350,12 @@ const RecipePost = () => {
                                             ref={instructionRef}
                                             placeholder={`Step ${preparation.length > 0 ? preparation.length + 1 : 1}`}
                                             maxLength={2000}
+                                            onChange={checkInstructionField}
                                             />
                                         </Col>
                                         <Col sm={12}>
                                         <div className="d-grid gap-2">
-                                        <Button className='mb-3' style={{marginTop: '10px'}} onClick={addInstructionField} variant="danger">Add step</Button>{' '}
+                                        <Button className='mb-3' style={{marginTop: '10px'}} onClick={addInstructionField} variant="danger" disabled={!isInstructionFieldFilled}>Add step</Button>{' '}
                                         </div>
                                         </Col>
                                     </Row>
@@ -334,11 +375,13 @@ const RecipePost = () => {
                                 <Form.Group className="mb-3">
                                 <Form.Label>Cooking time</Form.Label>
                                     <Form.Control
-                                            ref={instructionRef}
                                             placeholder={`Minutes`}
                                             value={time}
                                             type="number" 
-                                            onChange={(e) => setTime(e.target.value)} 
+                                            onChange={(e) => {
+                                                setTime(e.target.value);
+                                                checkPostButtonConditions();
+                                            }}
                                     />
                                 </Form.Group>
                             </Row>
@@ -358,22 +401,24 @@ const RecipePost = () => {
                                 <Form.Group className="mb-3">
                                 <Form.Label>Energy</Form.Label>
                                     <Form.Control
-                                            ref={instructionRef}
                                             type="number" 
                                             placeholder={`Kcal`}
                                             value={energy}
-                                            onChange={(e) => setEnergy(e.target.value)} 
+                                            onChange={(e) => {
+                                                setEnergy(e.target.value);
+                                                checkPostButtonConditions();
+                                            }}
                                     />
                                 </Form.Group>
                             </Row>
                         </Col>
                     </Row> 
                     <Row>
-                        <Col xs={3}></Col>
-                        <Col xs={6}>
-                            <Button className='mb-3' style={{marginTop: '10px'}} onClick={handleSubmit} variant="danger">POST RECIPE</Button>{' '}
+                        <Col xs={5}></Col>
+                        <Col xs={4}>
+                            <Button className='mb-3' style={{marginTop: '10px'}} onClick={handleSubmit} variant="danger" disabled={!isPostButtonEnabled}>POST</Button>{' '}
                         </Col>
-                        <Col xs={3}></Col>
+                        <Col xs={4}></Col>
                     </Row>     
                 </Container>                             
             </CSSTransition>
