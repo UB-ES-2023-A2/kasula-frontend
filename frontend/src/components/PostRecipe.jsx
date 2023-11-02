@@ -44,8 +44,8 @@ const RecipePost = () => {
     const [recipeName, setRecipeName] = useState('');
     const [ingredients, setIngredients] = useState([]);
     const [preparation, setPreparation] = useState([]);
-    const [time, setTime] = useState('');
-    const [energy, setEnergy] = useState('');
+    const [time, setTime] = useState(-1);
+    const [energy, setEnergy] = useState(-1);
     const [difficulty, setDifficulty] = useState(3);
     const ingredientNameRef = useRef(null);
     const ingredientQuantityRef = useRef(null);
@@ -169,10 +169,11 @@ const RecipePost = () => {
     
     const checkPostButtonConditions = () => {
         const areConditionsMet = 
+            recipeName.length> 0 && 
             ingredients.length > 0 && 
             preparation.length > 0 && 
-            time.length > 0 && 
-            energy.length > 0;
+            time.length > -1 && 
+            energy.length > -1;
         setIsPostButtonEnabled(areConditionsMet);
     };
 
@@ -206,10 +207,10 @@ const RecipePost = () => {
             const data = await response.json();
     
             if (response.ok) {
-                setSubmitMessage("Recipe posted successfully:", data);
+                setSubmitMessage("Recipe posted successfully", data);
                 setPostRecipeSuccess(true);
             } else {
-                setSubmitMessage("Error posting recipe:", data);
+                setSubmitMessage("Error posting recipe: "  + data.stringify);
             }
         } catch (error) {
             setSubmitMessage(error.JSON.stringify);
@@ -279,7 +280,7 @@ const RecipePost = () => {
                                                         <span>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</span>
                                                     </Col>
                                                     <Col xs={3}>
-                                                        <Button id='buttons_remove' classNames="remove-button" onClick={() => handleIngredientDelete(index)}>X</Button>{' '}
+                                                        <Button id='buttons_remove' variant="danger" onClick={() => handleIngredientDelete(index)}>X</Button>{' '}
                                                     </Col>
                                                 </Row>
                                             </div>
@@ -438,7 +439,7 @@ const RecipePost = () => {
                                                         <span>Step {step.step_number}: {step.body}</span>
                                                     </Col>
                                                     <Col xs={3} md={3} lg={3}>
-                                                        <Button id='buttons_remove' onClick={() => handleInstructionDelete(index)}>X</Button>{' '}
+                                                        <Button id='buttons_remove' variant="danger" onClick={() => handleInstructionDelete(index)}>X</Button>{' '}
                                                     </Col>
                                                 </Row>
                                             </div>
