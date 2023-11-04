@@ -14,6 +14,8 @@ import {
   Eye,
   EyeSlash,
   ExclamationTriangleFill,
+  StarFill,
+  Star
 } from "react-bootstrap-icons";
 
 //React Components
@@ -78,7 +80,7 @@ const RecipePost = () => {
           onClick={() => setDifficulty(i)}
           style={{ color: i <= amount ? "yellow" : "grey" }}
         >
-          {i <= amount ? "★" : "☆"}
+          {i <= amount ? <StarFill /> : <Star />}
         </span>
       );
     }
@@ -287,8 +289,7 @@ const RecipePost = () => {
                   className="mt-3 rounded box-shadow"
                 >
                   <Row>
-                    <Col xs={12}>
-                      <div className="ingredient-list">
+                    <Col xs={12} className="ingredient-list">
                         <TransitionGroup component={null}>
                           {ingredients.map((ingredient, index) => (
                             <CSSTransition
@@ -296,7 +297,6 @@ const RecipePost = () => {
                               timeout={500}
                               classNames="ingredient-fade"
                             >
-                              <div key={index}>
                                 <Row>
                                   <Col xs={9}>
                                     <span>
@@ -316,11 +316,9 @@ const RecipePost = () => {
                                     </Button>{" "}
                                   </Col>
                                 </Row>
-                              </div>
                             </CSSTransition>
                           ))}
                         </TransitionGroup>
-                      </div>
                     </Col>
                   </Row>
                 </Container>
