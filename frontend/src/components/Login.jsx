@@ -43,7 +43,7 @@ function Login() {
   /* Requests */
 
   const loginRequest = async (identifier, password) => {
-    const api_url = "http://0.0.0.0:8000/user/token";
+    const api_url = "http://127.0.0.1:8000/user/token";
     const requestBody = queryString.stringify({
       grant_type: "",
       username: identifier,
