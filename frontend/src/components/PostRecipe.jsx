@@ -6,9 +6,8 @@ import logo from '../assets/logo.png';
 import uploadIcon from '../assets/upload_icon.png';
 import { useAuth } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
-import "bootstrap/dist/css/bootstrap.min.css";
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import { ArrowLeft, CheckCircleFill, Eye, EyeSlash, ExclamationTriangleFill } from "react-bootstrap-icons";
+import { StarFill, Star, ArrowLeft, CheckCircleFill, Eye, EyeSlash, ExclamationTriangleFill } from "react-bootstrap-icons";
 
 //React Components
 import {
@@ -44,8 +43,8 @@ const RecipePost = () => {
     const [recipeName, setRecipeName] = useState('');
     const [ingredients, setIngredients] = useState([]);
     const [preparation, setPreparation] = useState([]);
-    const [time, setTime] = useState(-1);
-    const [energy, setEnergy] = useState(-1);
+    const [time, setTime] = useState('');
+    const [energy, setEnergy] = useState('');
     const [difficulty, setDifficulty] = useState(3);
     const ingredientNameRef = useRef(null);
     const ingredientQuantityRef = useRef(null);
@@ -53,6 +52,7 @@ const RecipePost = () => {
     const ingredientUnitRef = useRef(null);
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
+    const [formData, setFormData] = useState(null);
     const [showPostRecipeConfirmation, setShowPostRecipeConfirmation] = useState(false);
     const [postSuccess, setPostRecipeSuccess] = useState(false);
     const [submitMessage, setSubmitMessage] = useState("");
@@ -69,7 +69,7 @@ const RecipePost = () => {
                     onClick={() => setDifficulty(i)} 
                     style={{ color: i <= amount ? 'yellow' : 'grey' }}
                 >
-                    {i <= amount ? '★' : '☆'}
+                    {i <= amount ? <StarFill /> : <Star />}
                 </span>
             );
         }
@@ -185,7 +185,7 @@ const RecipePost = () => {
             energy: parseInt(energy),
             image: image,
             ingredients: ingredients,
-            instructions: preparation
+            instructions: preparation,
         };
 
         const errorMessage = validateRecipeData(recipeData);
@@ -222,6 +222,9 @@ const RecipePost = () => {
     
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
+        const formData = new FormData();
+        setFormData(formData);
+        formData.append('file', file);
         if (file) {
           const reader = new FileReader();
           reader.onload = (e) => {
@@ -269,13 +272,13 @@ const RecipePost = () => {
                 <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
                     <Container id='recipe-container' className="mt-3 rounded box-shadow">
                         <Row>
-                            <Col xs={12}>
-                            <div className="ingredient-list">
+                            <Col xs={12} className="ingredient-list">
                                 <TransitionGroup component={null}>
                                         {ingredients.map((ingredient, index) => (
                                             <CSSTransition key={index} timeout={500} classNames="ingredient-fade">
-                                            <div key={index}>
+                                            
                                                 <Row>
+                                                    key={index}
                                                     <Col xs={9}>
                                                         <span>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</span>
                                                     </Col>
@@ -283,11 +286,9 @@ const RecipePost = () => {
                                                         <Button id='buttons_remove' variant="danger" onClick={() => handleIngredientDelete(index)}>X</Button>{' '}
                                                     </Col>
                                                 </Row>
-                                            </div>
                                             </CSSTransition>
                                         ))}
                                         </TransitionGroup>
-                                    </div>
                             </Col>
                         </Row>   
                     </Container>
