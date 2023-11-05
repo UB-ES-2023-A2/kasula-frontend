@@ -147,6 +147,7 @@ function Signup() {
       try {
         const response = await fetch(
           "http://127.0.0.1:8000/user/check_username/".concat(username),
+          //process.env.REACT_APP_API_URL + "/user/check_username/".concat(username),
           {
             method: "GET",
             headers: {
@@ -184,6 +185,7 @@ function Signup() {
       try {
         const response = await fetch(
           "http://127.0.0.1:8000/user/check_email/".concat(email),
+        //const response = await fetch(process.env.REACT_APP_API_URL + "/user/check_email/".concat(email),
           {
             method: "GET",
             headers: {
@@ -220,6 +222,7 @@ function Signup() {
       setIsDoingRequest(true);
       try {
         const response = await fetch("http://127.0.0.1:8000/user/", {
+        //const response = await fetch(process.env.REACT_APP_API_URL + "/user/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
