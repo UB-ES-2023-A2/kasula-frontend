@@ -96,14 +96,11 @@ function UserFeed() {
             </Col>
           </Row>
         </Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer className="justify-content-center">
           <Button variant="danger" onClick={handleLogout}>
-            Tancar
+              Tancar
           </Button>
-          <Button variant="success" onClick={handleHide}>
-            No tancar
-          </Button>
-        </Modal.Footer>
+      </Modal.Footer>
       </Modal>
     </div>
   );

@@ -75,7 +75,7 @@ function PasswordRecovery() {
   const sendEmailRequest = async () => {
     try {
       const response = await fetch(
-        "http://0.0.0.0:8000/user/password_recovery/",
+        "http://127.0.0.1:8000/user/password_recovery/",
         {
           method: "POST",
           headers: {
