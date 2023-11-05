@@ -9,6 +9,7 @@ import { Container, Row, Col, Image } from "react-bootstrap";
 
 function UserFeed() {
   const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,12 +18,16 @@ function UserFeed() {
       .then((data) => {
         console.log(data);
         setRecipes(data);
+        setLoading(false);
       })
       .catch((error) => console.error("Error al obtener recetas:", error));
+      setLoading(false);
   }, []);
 
   return (
+    
     <Container fluid className="bg-image min-vh-100">
+      {/* {!loading ? <> */}
       <Row className="bg-danger text-white">
           <Col sm={1} className="py-2"> 
             <Image src={logo} alt="KASULÀ" fluid />
@@ -61,12 +66,14 @@ function UserFeed() {
               </Link>
             ))}
           </div>
-          </CSSTransition>
+          </CSSTransition> 
           </Col>
           <Col sm={1}></Col>
         </Row>
-      </Container>
+      </Container> 
+      {/* </>: <div class="spinner-border back" role="status"></div> } */}
     </Container>
+    
   );
 }
 
