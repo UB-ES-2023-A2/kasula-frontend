@@ -3,7 +3,7 @@
   background-size: cover; /*Ajusta el tamaño de la imagen para cubrir todo el contenedor*/
 }
 
-.recipe-container-user-feed_1 {
+.recipes-container{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,15 +12,12 @@
 #recipes-list {
   background-color: white;
   height: 150px;
-  width: 1000px;
+  /* width: 1000px; */
   transition: transform 0.3s, box-shadow 0.3s;  
 }
 
 .recipe-image-user-feed {
-  width: auto;
   height: 200px;
-  margin-right: 20px;
-  border-radius: 8px;    
   transition: transform 0.5s;  
 }
 
@@ -33,15 +30,6 @@
 #recipes-list:hover .recipe-image-user-feed {
   transform: scale(1.05);   
 }
-
-.recipe-name {
-  margin: 0;
-  font-weight: bold;
-  font-size: 28px;
-  flex-grow: 1;
-  color: #333; 
-}
-
 
 .recipe-link {
   text-decoration: none; 

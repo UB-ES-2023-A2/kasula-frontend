@@ -47,16 +47,22 @@ function UserFeed() {
           <Col sm={1}></Col>
           <Col sm={10}>
           <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-          <div className="recipe-container-user-feed_1 mt-5">
+          <div className="recipes-container mt-5">
             {recipes.map((recipe) => (
               <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="recipe-link">
                 <div className="mt-4 p-3 shadow rounded d-flex align-items-center overflow-hidden" id='recipes-list'>
-                  <p className="recipe-name">{recipe.name}</p>
-                  <img
-                    src={recipe.image ? recipe.image : gyozas}
-                    alt={recipe.name}
-                    className="recipe-image-user-feed"
-                  />
+                  <Row className="align-items-center">
+                    <Col sm={9}>
+                      <p className="font-large-bold fs-5 text-dark">{recipe.name}</p>
+                    </Col>
+                    <Col sm={3}>
+                      <Image
+                        src={recipe.image ? recipe.image : gyozas}
+                        alt={recipe.name}
+                        fluid
+                      />
+                    </Col>
+                  </Row>
                 </div>
               </Link>
             ))}
