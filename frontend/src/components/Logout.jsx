@@ -14,12 +14,13 @@ function Logout() {
     setToken(null);
 
     // redirect to login screen
+    localStorage.setItem("logged", false); 
     navigate('/login');
   };
 
   const handleCancel = () => {
     // go back to the user feed
-    navigate("/userfeed");
+    navigate("/");
   };
 
   return (
