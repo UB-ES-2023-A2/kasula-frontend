@@ -190,42 +190,47 @@ const RecipePost = () => {
   };
 
   const handleSubmit = async () => {
+
     const recipeData = {
       name: recipeName,
       cooking_time: time,
       difficulty: difficulty,
       energy: parseInt(energy),
-      image: image,
       ingredients: ingredients,
       instructions: preparation,
     };
-
+  
     const errorMessage = validateRecipeData(recipeData);
     if (errorMessage) {
       alert(errorMessage);
       return;
     }
-
+  
+    const formData = new FormData();
+    formData.append('recipe', JSON.stringify(recipeData));
+    if (image) {
+    formData.append('file', image);
+    }
+  
     try {
       const response = await fetch("http://127.0.0.1:8000/recipe/", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(recipeData),
+        body: formData,
       });
-
+  
       const data = await response.json();
-
+  
       if (response.ok) {
         setSubmitMessage("Recipe posted successfully", data);
         setPostRecipeSuccess(true);
       } else {
-        setSubmitMessage("Error posting recipe: " + data.stringify);
+        setSubmitMessage("Error posting recipe: " + JSON.stringify(data));
       }
     } catch (error) {
-      setSubmitMessage(error.JSON.stringify);
+      setSubmitMessage(JSON.stringify(error));
       setPostRecipeSuccess(false);
     } finally {
       setShowPostRecipeConfirmation(true);
@@ -233,14 +238,7 @@ const RecipePost = () => {
   };
 
   const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImage(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    setImage(event.target.files[0]);
   };
 
   const handlePostRecipeConfirmationClose = () => {
