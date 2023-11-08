@@ -52,8 +52,8 @@ const RecipePost = () => {
   const [recipeName, setRecipeName] = useState("");
   const [ingredients, setIngredients] = useState([]);
   const [preparation, setPreparation] = useState([]);
-  const [time, setTime] = useState(-1);
-  const [energy, setEnergy] = useState(-1);
+  const [time, setTime] = useState(0);
+  const [energy, setEnergy] = useState(0);
   const [difficulty, setDifficulty] = useState(3);
   const ingredientNameRef = useRef(null);
   const ingredientQuantityRef = useRef(null);
@@ -69,7 +69,7 @@ const RecipePost = () => {
     useState(false);
   const [isInstructionFieldFilled, setIsInstructionFieldFilled] =
     useState(false);
-  const [isPostButtonEnabled, setIsPostButtonEnabled] = useState(false);
+  const [isPostButtonEnabled, setIsPostButtonEnabled] = useState(true);
 
   const renderStars = (amount) => {
     let stars = [];
@@ -180,12 +180,19 @@ const RecipePost = () => {
   };
 
   const checkPostButtonConditions = () => {
+    // Asumiendo que 'time' y 'energy' son cadenas que representan números enteros
+    const timeInt = parseInt(time, 10); // Convierte 'time' a entero base 10
+    const energyInt = parseInt(energy, 10); // Convierte 'energy' a entero base 10
+
+    // Verifica que tanto 'timeInt' como 'energyInt' sean mayores que 0
+    // y que no sean NaN (lo cual ocurriría si 'time' o 'energy' no fueran cadenas numéricas)
     const areConditionsMet =
-      recipeName.length > 0 &&
-      ingredients.length > 0 &&
-      preparation.length > 0 &&
-      time.length > -1 &&
-      energy.length > -1;
+        recipeName.length > 0 &&
+        ingredients.length > 0 &&
+        preparation.length > 0 &&
+        !isNaN(timeInt) && timeInt > 0 &&
+        !isNaN(energyInt) && energyInt > 0;
+    console.log(recipeName)
     setIsPostButtonEnabled(areConditionsMet);
   };
 
@@ -488,7 +495,6 @@ const RecipePost = () => {
                         style={{ marginTop: "10px" }}
                         onClick={handleSubmit}
                         variant="danger"
-                        disabled={!isPostButtonEnabled}
                       >
                         POST
                       </Button>{" "}
