@@ -26,7 +26,7 @@ function UserFeed() {
   const { token, logout } = useAuth();
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/recipe/")
+    fetch(process.env.REACT_APP_API_URL + "/recipe/")
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
