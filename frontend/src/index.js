@@ -12,6 +12,7 @@ import PasswordChange from "./components/PasswordChange";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './components/AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './css/index.css';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

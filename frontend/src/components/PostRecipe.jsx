@@ -1,21 +1,22 @@
 import React, { useState, useRef, useContext } from "react";
 import "../css/PostRecipe.css";
 import "../css/Transitions.css";
+import "../css/common.css";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import logo from "../assets/logo.png";
-import uploadIcon from "../assets/upload_icon.png";
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import {
   ArrowLeft,
   CheckCircleFill,
-  Eye,
-  EyeSlash,
   ExclamationTriangleFill,
   StarFill,
-  Star
+  Star,
+  PlusSquareFill,
+  Plus,
+  TrashFill,
+  XCircleFill,
 } from "react-bootstrap-icons";
 
 //React Components
@@ -26,8 +27,8 @@ import {
   Button,
   Form,
   Image,
-  InputGroup,
   Modal,
+  Table,
 } from "react-bootstrap";
 
 const RecipePost = () => {
@@ -52,9 +53,9 @@ const RecipePost = () => {
   const [recipeName, setRecipeName] = useState("");
   const [ingredients, setIngredients] = useState([]);
   const [preparation, setPreparation] = useState([]);
-  const [time, setTime] = useState(-1);
-  const [energy, setEnergy] = useState(-1);
-  const [difficulty, setDifficulty] = useState(3);
+  const [time, setTime] = useState(0);
+  const [energy, setEnergy] = useState(0);
+  const [difficulty, setDifficulty] = useState(1);
   const ingredientNameRef = useRef(null);
   const ingredientQuantityRef = useRef(null);
   const instructionRef = useRef(null);
@@ -77,8 +78,11 @@ const RecipePost = () => {
       stars.push(
         <span
           key={i}
+          className={"difficulty-star "
+            .concat(i <= amount ? "active" : "inactive")
+            .concat(" ms-2 fs-4")}
+          role="button"
           onClick={() => setDifficulty(i)}
-          style={{ color: i <= amount ? "yellow" : "grey" }}
         >
           {i <= amount ? <StarFill /> : <Star />}
         </span>
@@ -111,6 +115,7 @@ const RecipePost = () => {
   };
 
   const addIngredientField = () => {
+    if (!isIngredientFieldsFilled) return;
     const newIngredient = {
       name: ingredientNameRef.current.value,
       quantity: ingredientQuantityRef.current.value,
@@ -137,6 +142,7 @@ const RecipePost = () => {
   };
 
   const addInstructionField = () => {
+    if (!isInstructionFieldFilled) return;
     const newInstruction = {
       body: instructionRef.current.value,
       step_number: preparation.length + 1,
@@ -170,7 +176,7 @@ const RecipePost = () => {
 
   const checkIngredientFields = () => {
     const nameFilled = ingredientNameRef.current.value.length > 0;
-    const quantityFilled = ingredientQuantityRef.current.value.length > 0;
+    const quantityFilled = ingredientQuantityRef.current.value > 0;
     const unitFilled = ingredientUnitRef.current.value.length > 0;
     setIsIngredientFieldsFilled(nameFilled && quantityFilled && unitFilled);
   };
@@ -190,7 +196,6 @@ const RecipePost = () => {
   };
 
   const handleSubmit = async () => {
-
     const recipeData = {
       name: recipeName,
       cooking_time: time,
@@ -199,19 +204,19 @@ const RecipePost = () => {
       ingredients: ingredients,
       instructions: preparation,
     };
-  
+
     const errorMessage = validateRecipeData(recipeData);
     if (errorMessage) {
       alert(errorMessage);
       return;
     }
-  
+
     const formData = new FormData();
-    formData.append('recipe', JSON.stringify(recipeData));
+    formData.append("recipe", JSON.stringify(recipeData));
     if (image) {
-    formData.append('file', image);
+      formData.append("file", image);
     }
-  
+
     try {
       const response = await fetch(process.env.REACT_APP_API_URL + "/recipe/", {
         method: "POST",
@@ -220,9 +225,9 @@ const RecipePost = () => {
         },
         body: formData,
       });
-  
+
       const data = await response.json();
-  
+
       if (response.ok) {
         setSubmitMessage("Recipe posted successfully", data);
         setPostRecipeSuccess(true);
@@ -258,25 +263,25 @@ const RecipePost = () => {
           <Col sm={11}></Col>
         </Row>
 
-        <Container className="translucidContainer mt-5">
+        <Container className="form-container mt-5 pt-4 pb-2 rounded shadow-sm">
           <Row>
-            <Col xs={5}>
+            <Col xs={4}>
               <Button
                 variant="link"
-                className="text-decoration-none fs-3 text-reset my-2"
+                className="text-decoration-none fs-3 text-reset py-0"
                 onClick={() => navigate("/userfeed")}
               >
                 <ArrowLeft></ArrowLeft>
               </Button>
             </Col>
-            <Col xs={5}>
-              <h2 id="title">Post recipe</h2>
+            <Col xs={4} className="text-center fw-semibold">
+              <h2 className="mb-0">Post recipe</h2>
             </Col>
-            <Col xs={2}></Col>
+            <Col xs={4}></Col>
           </Row>
           <Row>
-            <Col sm={3} md={3} lg={3}>
-              <CSSTransition
+            <Col sm={1}>
+              {/* <CSSTransition
                 in={true}
                 timeout={500}
                 classNames="slideUp"
@@ -287,43 +292,44 @@ const RecipePost = () => {
                   className="mt-3 rounded box-shadow"
                 >
                   <Row>
-                    <Col xs={12} className="ingredient-list">
-                        <TransitionGroup component={null}>
-                          {ingredients.map((ingredient, index) => (
-                            <CSSTransition
-                              key={index}
-                              timeout={500}
-                              classNames="ingredient-fade"
-                            >
-                                <Row>
-                                  <Col xs={9}>
-                                    <span>
-                                      {ingredient.name} - {ingredient.quantity}{" "}
-                                      {ingredient.unit}
-                                    </span>
-                                  </Col>
-                                  <Col xs={3}>
-                                    <Button
-                                      id="buttons_remove"
-                                      variant="danger"
-                                      onClick={() =>
-                                        handleIngredientDelete(index)
-                                      }
-                                    >
-                                      X
-                                    </Button>{" "}
-                                  </Col>
-                                </Row>
-                            </CSSTransition>
-                          ))}
-                        </TransitionGroup>
+                    <Col
+                      xs={12}
+                      className="ingredient-list overflow-x-hidden overflow-y-auto"
+                    >
+                      <TransitionGroup component={null}>
+                        {ingredients.map((ingredient, index) => (
+                          <CSSTransition
+                            key={index}
+                            timeout={500}
+                            classNames="ingredient-fade"
+                          >
+                            <Row>
+                              <Col xs={9}>
+                                <span>
+                                  {ingredient.name} - {ingredient.quantity}{" "}
+                                  {ingredient.unit}
+                                </span>
+                              </Col>
+                              <Col xs={3}>
+                                <Button
+                                  id="buttons_remove"
+                                  variant="danger"
+                                  onClick={() => handleIngredientDelete(index)}
+                                >
+                                  X
+                                </Button>{" "}
+                              </Col>
+                            </Row>
+                          </CSSTransition>
+                        ))}
+                      </TransitionGroup>
                     </Col>
                   </Row>
                 </Container>
-              </CSSTransition>
+              </CSSTransition> */}
             </Col>
 
-            <Col sm={6}>
+            <Col sm={10}>
               <CSSTransition
                 in={true}
                 timeout={500}
@@ -331,7 +337,7 @@ const RecipePost = () => {
                 appear
               >
                 <Container id="recipe-container" className="rounded box-shadow">
-                  <Row>
+                  <Row className="mb-4">
                     <Col sm={12}>
                       <FloatingLabel
                         controlId="floatingInput"
@@ -347,83 +353,164 @@ const RecipePost = () => {
                     </Col>
                   </Row>
                   <Row>
-                    <Col xs={6} md={6} lg={6}>
-                      <label>INGREDIENTS</label>
-                      <Row className="mt-2 mb-1">
-                        <Col sm={12}>
-                          <Form.Control
-                            placeholder="Name"
-                            ref={ingredientNameRef}
-                            onChange={checkIngredientFields}
-                          />
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col sm={7}>
-                          <Form.Control
-                            type="number"
-                            placeholder="Quantity"
-                            ref={ingredientQuantityRef}
-                            onChange={checkIngredientFields}
-                          />
-                        </Col>
-                        <Col sm={5}>
-                          <Form.Select
-                            className="ingredient-unit-select"
-                            ref={ingredientUnitRef}
-                            aria-label="Ingredient Unit Selection"
-                          >
-                            {Object.values(Unit).map((unit) => (
-                              <option key={unit} value={unit}>
-                                {unit}
-                              </option>
-                            ))}
-                            onChange={checkIngredientFields}
-                          </Form.Select>
-                        </Col>
-                      </Row>
-                      <div className="d-grid gap-2">
-                        <Button
-                          className="mb-3"
-                          onClick={addIngredientField}
-                          variant="danger"
-                          disabled={!isIngredientFieldsFilled}
+                    <label>INGREDIENTS</label>
+                    <Row className="mt-2 mb-4 pe-0">
+                      <Col sm={6} className="pe-0">
+                        <Form.Control
+                          placeholder="Name"
+                          ref={ingredientNameRef}
+                          onChange={checkIngredientFields}
+                        />
+                      </Col>
+                      <Col sm={3} className="pe-0">
+                        <Form.Control
+                          type="number"
+                          placeholder="Quantity"
+                          ref={ingredientQuantityRef}
+                          min={0}
+                          onChange={checkIngredientFields}
+                        />
+                      </Col>
+                      <Col sm={2} className="ps-0">
+                        <Form.Select
+                          ref={ingredientUnitRef}
+                          aria-label="Ingredient Unit Selection"
                         >
-                          Add ingredient
-                        </Button>
-                      </div>
-                    </Col>
-                    <Col xs={6} md={6} lg={6}>
-                      <label>PREPARATION</label>
-                      <Row className="mt-2">
-                        <Col sm={12}>
-                          <Form.Control
-                            type="text"
-                            ref={instructionRef}
-                            placeholder={`Step ${
-                              preparation.length > 0
-                                ? preparation.length + 1
-                                : 1
-                            }`}
-                            maxLength={2000}
-                            onChange={checkInstructionField}
-                          />
+                          {Object.values(Unit).map((unit) => (
+                            <option key={unit} value={unit}>
+                              {unit}
+                            </option>
+                          ))}
+                          onChange={checkIngredientFields}
+                        </Form.Select>
+                      </Col>
+                      <Col sm={1} className="pe-0 text-end">
+                        <span
+                          className={"add-ingredient-button"
+                            .concat(
+                              isIngredientFieldsFilled ? " active" : " inactive"
+                            )
+                            .concat(" text-center fs-4")}
+                          role="button"
+                          onClick={addIngredientField}
+                        >
+                          <PlusSquareFill></PlusSquareFill>
+                        </span>
+                      </Col>
+                    </Row>
+                    <Row className="mb-4 pe-0">
+                      {ingredients.length > 0 ? (
+                        <Col sm={12} className="pe-0">
+                          <Table striped bordered hover>
+                            <thead>
+                              <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                                <th>Unit</th>
+                                <th className="text-center">
+                                  <TrashFill></TrashFill>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {ingredients.map((ingredient, index) => (
+                                <tr key={index}>
+                                  <td>{index + 1}</td>
+                                  <td>{ingredient.name}</td>
+                                  <td>{ingredient.quantity}</td>
+                                  <td>{ingredient.unit}</td>
+                                  <td className="text-center">
+                                    <span
+                                      className="remove-ingredient-button"
+                                      role="button"
+                                      onClick={() => {
+                                        handleIngredientDelete(index);
+                                      }}
+                                    >
+                                      <XCircleFill></XCircleFill>
+                                    </span>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </Table>
                         </Col>
+                      ) : (
+                        <p className="mx-2">
+                          No ingredients added yet, use the fields above to add
+                          a new ingredient.
+                        </p>
+                      )}
+                    </Row>
+                    <label>PREPARATION</label>
+                    <Row className="mt-2 mb-4 pe-0">
+                      <Col sm={11}>
+                        <Form.Control
+                          type="text"
+                          as="textarea"
+                          ref={instructionRef}
+                          placeholder={`Step ${
+                            preparation.length > 0 ? preparation.length + 1 : 1
+                          }`}
+                          maxLength={2000}
+                          onChange={checkInstructionField}
+                        />
+                      </Col>
+                      <Col sm={1} className="pe-0 text-end">
+                        <span
+                          className={"add-ingredient-button"
+                            .concat(
+                              isInstructionFieldFilled ? " active" : " inactive"
+                            )
+                            .concat(" text-center fs-4")}
+                          role="button"
+                          onClick={addInstructionField}
+                        >
+                          <PlusSquareFill></PlusSquareFill>
+                        </span>
+                      </Col>
+                    </Row>
+                    <Row className="mb-4">
+                      {preparation.length > 0 ? (
                         <Col sm={12}>
-                          <div className="d-grid gap-2">
-                            <Button
-                              className="mb-3"
-                              style={{ marginTop: "10px" }}
-                              onClick={addInstructionField}
-                              variant="danger"
-                              disabled={!isInstructionFieldFilled}
-                            >
-                              Add step
-                            </Button>{" "}
-                          </div>
+                          <h5 className="fw-semibold fs-6 mb-3">
+                            Preparation Steps
+                          </h5>
+                          {preparation.map((step, index) => (
+                            <Container>
+                              <Row className="mb-2">
+                                <Col sm={11}>
+                                  <h6 key={index} className="fw-normal fs-6">
+                                    Step {index + 1}:
+                                  </h6>
+                                </Col>
+                                <Col sm={1} className="text-center">
+                                  <span
+                                    className="remove-ingredient-button"
+                                    role="button"
+                                    onClick={() => {
+                                      handleInstructionDelete(index);
+                                    }}
+                                  >
+                                    <XCircleFill></XCircleFill>
+                                  </span>
+                                </Col>
+                              </Row>
+                              <Container>
+                                <p className="text-break">{step.body}</p>
+                              </Container>
+                              <hr></hr>
+                            </Container>
+                          ))}
                         </Col>
-                      </Row>
-                    </Col>
+                      ) : (
+                        <p className="mx-2">
+                          No steps added yet, use the fields above to add a new
+                          step.
+                        </p>
+                      )}
+                    </Row>
                   </Row>
                   <Row>
                     <Col xs={6} md={6} lg={6}>
@@ -440,11 +527,12 @@ const RecipePost = () => {
                     <Col xs={6} md={6} lg={6}>
                       <Row>
                         <Form.Group className="mb-3">
-                          <Form.Label>Cooking time</Form.Label>
+                          <Form.Label>Cooking time (minutes)</Form.Label>
                           <Form.Control
                             placeholder={`Minutes`}
                             value={time}
                             type="number"
+                            min={0}
                             onChange={(e) => {
                               setTime(e.target.value);
                               checkPostButtonConditions();
@@ -456,21 +544,18 @@ const RecipePost = () => {
                     <Col xs={6} md={6} lg={6}>
                       <Row>
                         <label>Difficulty</label>
-                      </Row>
-                      <Row>
-                        <div className="difficulty">
-                          {renderStars(difficulty)}
-                        </div>
+                        <div>{renderStars(difficulty)}</div>
                       </Row>
                     </Col>
                     <Col xs={6}>
                       <Row>
                         <Form.Group className="mb-3">
-                          <Form.Label>Energy</Form.Label>
+                          <Form.Label>Energy (kcal)</Form.Label>
                           <Form.Control
                             type="number"
                             placeholder={`Kcal`}
                             value={energy}
+                            min={0}
                             onChange={(e) => {
                               setEnergy(e.target.value);
                               checkPostButtonConditions();
@@ -498,8 +583,8 @@ const RecipePost = () => {
                 </Container>
               </CSSTransition>
             </Col>
-            <Col sm={3}>
-              <CSSTransition
+            <Col sm={1}>
+              {/* <CSSTransition
                 in={true}
                 timeout={500}
                 classNames="slideUp"
@@ -511,7 +596,7 @@ const RecipePost = () => {
                 >
                   <Row>
                     <Col xs={12} md={12} lg={12}>
-                      <div className="preparation-list">
+                      <div className="preparation-list overflow-y-auto">
                         <TransitionGroup component={null}>
                           {preparation.map((step, index) => (
                             <CSSTransition
@@ -546,7 +631,7 @@ const RecipePost = () => {
                     </Col>
                   </Row>
                 </Container>
-              </CSSTransition>
+              </CSSTransition> */}
             </Col>
           </Row>
         </Container>

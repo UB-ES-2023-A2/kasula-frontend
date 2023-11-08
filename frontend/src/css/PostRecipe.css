@@ -1,28 +1,40 @@
-.time-input input[type="time"],
-.energy-input input[type="number"] {
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  padding: 5px;
+.difficulty-star.active {
+  color: #e06c00;
 }
 
-.difficulty {
-  display: flex;
-  align-items: center;
-  margin: 0 20px 10px 0;
+.difficulty-star.active:hover {
+  color: rgb(151, 114, 1);
 }
 
-.difficulty span {
-  font-size: 1.5rem;
-  cursor: pointer;
-  margin: 0 5px;
+.difficulty-star.inactive {
+  color: #a7a7a7;
 }
 
-.ingredient-unit-select {
-  margin-bottom: 10px;
-  margin-top: 1px;
+.difficulty-star.inactive:hover {
+  color: #7c7c7c;
 }
 
-#buttons_remove {
+.add-ingredient-button.active {
+  color: rgb(0, 194, 0);
+}
+
+.add-ingredient-button.inactive {
+  color: #a7a7a7;
+}
+
+.add-ingredient-button.active:hover {
+  color: rgb(0, 99, 0);
+}
+
+.remove-ingredient-button {
+  color: rgb(199, 0, 0);
+}
+
+.remove-ingredient-button:hover {
+  color: rgb(105, 0, 0);
+}
+
+/* #buttons_remove {
 
   border: none;
   color: white;
@@ -32,15 +44,6 @@
   font-size: 16px;
   min-width: auto;
   width: 25px;
-}
-
-#input_postRecipe {
-  width: 90%;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
-  font-size: 16px;
 }
 
 .ingredient-fade-enter {
@@ -63,16 +66,8 @@
   opacity: 0.01;
   transform: translateX(-100%);
   transition: opacity 500ms ease-in, transform 500ms ease-in;
-}
-
-.translucidContainer {
-  background-color: #ffb79fc9;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+} */
 
 .ingredient-list, .preparation-list {
   max-height: 400px;
-  overflow-y: auto;
 }
