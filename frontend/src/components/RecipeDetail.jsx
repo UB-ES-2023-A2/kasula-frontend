@@ -13,14 +13,14 @@ function RecipeDetail() {
   const [recipe, setRecipe] = useState({});
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/recipe/${id}`)
+    fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
         setRecipe(data);
 
         // Log the value of recipe.image
-        console.log("recipe.image:", data.image);
+        console.log(">>>>data:", data);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
   }, [id]);
@@ -42,11 +42,11 @@ function RecipeDetail() {
                   <Row>
                     <Col xs={12} md={6} lg={6}>
                       <Col xs={10}>
-                        <img
-                          src={getImage(recipe.image)}
+                        <Image
+                          src={recipe.image ?? gyozas}
                           alt={recipe.name}
                           className="img-fluid mx-3 my-4 box-shadow"
-                          style={{ height: 'auto' }}
+                          fluid
                         />
                         </Col>
                       <Col xs={12}>
@@ -65,7 +65,11 @@ function RecipeDetail() {
                           </div>
                           <div id='timeCooking' className="d-flex align-items-center my-2 mx-3">
                             <h5>Time:</h5>
-                            <p id="time" className="fs-5 fw-bold mt-2">{recipe.cooking_time}</p>
+                            <p id="time" className="fs-7 fw-bold mt-2">{recipe.cooking_time} min</p>
+                          </div>
+                          <div id='energy' className="d-flex align-items-center my-2 mx-3">
+                            <h5>Energy: </h5>
+                            <p className="fs-7 fw-bold mt-2">{recipe.energy ?? 'No info of'} kcal</p>
                           </div>
                         </div>
                       </Col>
