@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "../css/common.css";
 import "../css/Transitions.css";
+import chefIcon from "../assets/icons/chef.png"
 import logo from "../assets/logo.png";
 import { useParams } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css"; 
 import { Container, Row, Col, Image } from "react-bootstrap";
-import { StarFill } from "react-bootstrap-icons";
+import { StarFill, Stopwatch, Lightning, CloudFog } from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
 
 
@@ -73,20 +74,20 @@ function RecipeDetail() {
                       <h2 style={{ marginBottom: '1rem' }}>{recipe.name}</h2>
                     </Col>
                     <Col md={12}>
-                      <div className="mt-5 pt-2 bg-light box-shadow">
+                      <div className="mt-5 pb-3 pt-2 bg-light box-shadow">
                         <h4>Más información</h4>
                         <div className="d-flex align-items-center my-2 mx-3">
-                          <h5>Difficulty: {Array(recipe.difficulty || 0).fill().map((_, index) => (
-                              <span key={index} className="fs-4 ms-1 text-center"><StarFill></StarFill></span>
+                          <h5><Image src={chefIcon} style={{height:'24px', width: '24px'}} fluid/> {Array(recipe.difficulty || 0).fill().map((_, index) => (
+                              <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
                             ))}</h5>
                         </div>
                         <div className="d-flex align-items-center my-2 mx-3">
-                          <h5>Time:</h5>
-                          <p className="fs-5 fw-bold mt-2 ms-2 text-muted">{recipe.cooking_time} min</p>
+                          <h5><Stopwatch/></h5>
+                          <span className="fs-6 fw-bold ms-2 text-muted">{recipe.cooking_time} min</span>
                         </div>
-                        <div className="d-flex align-items-center my-2 mx-3">
-                          <h5>Energy:</h5>
-                          <p className="fs-5 fw-bold mt-2 ms-2 text-muted">{recipe.energy ?? 'No info of'} kcal</p>
+                        <div className="d-flex align-items-center mt-2 mx-3">
+                          <h5><Lightning/></h5>
+                          <span className="fs-6 fw-bold ms-2 text-muted">{recipe.energy ?? 'No info of'} kcal</span>
                         </div>
                       </div>
                     </Col>
