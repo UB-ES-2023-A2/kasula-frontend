@@ -71,6 +71,7 @@ const RecipePost = () => {
   const [isInstructionFieldFilled, setIsInstructionFieldFilled] =
     useState(false);
   const [isPostButtonEnabled, setIsPostButtonEnabled] = useState(true);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState('');
 
   const renderStars = (amount) => {
     let stars = [];
@@ -252,7 +253,10 @@ const RecipePost = () => {
   };
 
   const handleImageUpload = (event) => {
-    setImage(event.target.files[0]);
+    const file = event.target.files[0];
+    setImage(file);
+    const imageUrl = URL.createObjectURL(file);
+    setImagePreviewUrl(imageUrl);
   };
 
   const handlePostRecipeConfirmationClose = () => {
@@ -552,8 +556,8 @@ const RecipePost = () => {
                     </Col>
                     <Col xs={6} md={6} lg={6}>
                       <Row>
-                        <label>Difficulty</label>
-                        <div>{renderStars(difficulty)}</div>
+                          {imagePreviewUrl && <img src={imagePreviewUrl} alt="Uploaded" />}
+                          {!imagePreviewUrl && <p>poner imagen</p>}
                       </Row>
                     </Col>
                     <Col xs={6}>
@@ -571,6 +575,10 @@ const RecipePost = () => {
                             }}
                           />
                         </Form.Group>
+                      </Row>
+                      <Row>
+                        <label>Difficulty</label>
+                        <div>{renderStars(difficulty)}</div>
                       </Row>
                     </Col>
                   </Row>
