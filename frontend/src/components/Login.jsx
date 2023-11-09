@@ -43,7 +43,8 @@ function Login() {
   /* Requests */
 
   const loginRequest = async (identifier, password) => {
-    const api_url = process.env.REACT_APP_API_URL + "/user/token";
+    const api_url = "http://127.0.0.1:8000/user/token";
+    //const api_url = process.env.REACT_APP_API_URL + "/user/token";
     const requestBody = queryString.stringify({
       grant_type: "",
       username: identifier,
@@ -76,7 +77,8 @@ function Login() {
       } else {
         const data = await response.json();
         setToken(data.access_token);
-        navigate("/userfeed");
+        localStorage.setItem("logged", true); 
+        navigate("/");
       }
     } catch (error) {
       setLoginError(true);
@@ -130,7 +132,7 @@ function Login() {
                 <Button
                   variant="link"
                   className="text-decoration-none fs-3 text-reset my-2"
-                  onClick={() => navigate("/userfeed")}
+                  onClick={() => navigate("/")}
                 >
                   <ArrowLeft></ArrowLeft>
                 </Button>

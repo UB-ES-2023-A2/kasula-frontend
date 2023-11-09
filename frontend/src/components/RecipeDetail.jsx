@@ -30,6 +30,10 @@ function RecipeDetail() {
       })
       .catch((error) => console.error("Error al obtener receta:", error));
   }, [id]);
+  
+  function getImage(filename) {
+    return gyozas;
+  }  
 
   const handleOpenModal = () => {
     setShowModal(true);
