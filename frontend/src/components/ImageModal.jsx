@@ -1,20 +1,16 @@
 import React from "react";
-import { Modal, Image } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 function ImageModal({ show, onHide, recipeImage, recipeName }) {
   return (
-    // <Modal show={show} onHide={onHide} size="lg">
-    //   <Modal.Header closeButton>
-    //     <Modal.Title>{recipeName}</Modal.Title>
-    //   </Modal.Header>
-    //   <Modal.Body>
-    //     <Image src={recipeImage} alt={recipeName} className="img-fluid" />
-    //   </Modal.Body>
-    // </Modal>
     <Modal show={show} onHide={onHide} size="lg">
-        <Modal.Body className="p-0">
-            <Image src={recipeImage} alt="Recipe" fluid />
-        </Modal.Body>
+      <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src={recipeImage} class="d-block w-100" alt={recipeName} />
+          </div>
+        </div>
+      </div>
     </Modal>
   );
 }
