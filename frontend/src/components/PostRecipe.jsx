@@ -254,7 +254,7 @@ const RecipePost = () => {
   const handlePostRecipeConfirmationClose = () => {
     setShowPostRecipeConfirmation(false);
     if (postSuccess) {
-      navigate("/userfeed");
+      navigate("/");
     }
   };
 

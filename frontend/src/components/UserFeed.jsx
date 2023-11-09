@@ -52,7 +52,15 @@ function UserFeed() {
                 </button>
               )}
               {isLogged && (<>
-                <button className='btn btn-light me-2' onClick={() => navigate("/postRecipe")}>
+                <button 
+                  className='btn btn-light me-2' 
+                  onClick={() => {
+                    if (token) {
+                      navigate("/postRecipe");
+                    } else {
+                      navigate("/login");
+                    }
+                  }}>
                   Post Recipe
                 </button>
                 <button className='btn btn-light' onClick={() => setLogout(true)}>
