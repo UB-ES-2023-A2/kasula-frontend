@@ -215,42 +215,34 @@ const RecipePost = () => {
       instructions: preparation,
     };
 
-    const errorMessage = validateRecipeData(recipeData);
-    if (errorMessage) {
-      alert(errorMessage);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("recipe", JSON.stringify(recipeData));
-    if (image) {
-      formData.append("file", image);
-    }
-
-    try {
-      const response = await fetch(process.env.REACT_APP_API_URL + "/recipe/", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSubmitMessage("Recipe posted successfully", data);
-        setPostRecipeSuccess(true);
-      } else {
-        setSubmitMessage("Error posting recipe: " + JSON.stringify(data));
-      }
-    } catch (error) {
-      setSubmitMessage(JSON.stringify(error));
-      setPostRecipeSuccess(false);
-    } finally {
-      setShowPostRecipeConfirmation(true);
-    }
-  };
+        const errorMessage = validateRecipeData(recipeData);
+        if (errorMessage) {
+            alert(errorMessage);
+            return;
+        }
+    
+        try {
+            const response = await fetch(process.env.REACT_APP_API_URL + "/recipe/", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(recipeData)
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                console.log("Recipe posted successfully:", data);
+                navigate("/");
+            } else {
+                console.error("Error posting recipe:", data);
+            }
+        } catch (error) {
+            console.error("Network error:", error);
+        }
+    };
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
