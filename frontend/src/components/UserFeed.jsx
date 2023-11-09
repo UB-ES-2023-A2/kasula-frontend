@@ -4,7 +4,7 @@ import "../css/Transitions.css";
 import { CSSTransition } from "react-transition-group";
 import logo from "../assets/logo.png";
 import gyozas from "../assets/gyozas.jpg";
-import { Link, useHistory, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Image } from "react-bootstrap";
 
 function UserFeed() {
@@ -18,7 +18,6 @@ function UserFeed() {
     fetch(process.env.REACT_APP_API_URL + "/recipe/")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setRecipes(data);
       })
       .catch((error) => console.error("Error al obtener recetas:", error));
@@ -40,7 +39,6 @@ function UserFeed() {
                   </button>
                 )}
                 {isLogged && (<>
-                {console.log(">>>>>>LOGEADO", localStorage.getItem("logged"))}
                  <button className='btn btn-light me-2' onClick={() => navigate("/postRecipe")}>
                   Post Recipe
                 </button>
