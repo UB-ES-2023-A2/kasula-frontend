@@ -24,7 +24,7 @@ function UserFeed() {
   }, []);
 
   return (
-    <Container fluid className="bg-image min-vh-100">
+    <Container fluid className="min-vh-100">
       <Row className="bg-danger text-white">
           <Col sm={1} className="py-2"> 
             <Image src={logo} alt="KASULÀ" fluid />
@@ -57,11 +57,11 @@ function UserFeed() {
           <div className="recipes-container mt-5">
             {recipes && recipes.length > 0 ? (
               recipes.map((recipe) => (
-                <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="recipe-link">
+                <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="text-decoration-none">
                   <div className="mt-4 p-3 shadow rounded d-flex align-items-center overflow-hidden" id='recipes-list'>
                     <Row className="align-items-center">
                       <Col sm={9}>
-                        <p className="font-large-bold fs-5 text-dark">{recipe.name}</p>
+                        <p className="font-large-bold fs-5 text-dark mb-0">{recipe.name}</p>
                       </Col>
                       <Col sm={3}>
                         <Image
