@@ -1,13 +1,13 @@
-name: Azure Static Web Apps CI/CD
+name: Release Azure Static Web Apps CI/CD deploymnet
 
 on:
   push:
     branches:
-      - devops/azure
+      - release
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - devops/azure
+      - release
 
 env:
   CI: false
