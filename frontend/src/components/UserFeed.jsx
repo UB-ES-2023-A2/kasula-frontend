@@ -5,27 +5,19 @@ import "../css/Transitions.css";
 import { CSSTransition } from "react-transition-group";
 import logo from "../assets/logo.png";
 import gyozas from "../assets/gyozas.jpg";
-import { Link, useHistory, useNavigate } from "react-router-dom";
-//React Components
-import {
-  Container,
-  Row,
-  Col,
-  Button,
-  Form,
-  Image,
-  InputGroup,
-  Modal,
-} from "react-bootstrap";
-import { ArrowLeft, CheckCircleFill, Eye, EyeSlash, ExclamationTriangleFill } from "react-bootstrap-icons";
+import { Link, useHistory, useNavigate, useLocation } from "react-router-dom";
+import { Container, Row, Col, Image } from "react-bootstrap";
 
 function UserFeed() {
   const [recipes, setRecipes] = useState([]);
   const navigate = useNavigate();
   const [showLogout, setLogout] = useState(false);
   const { token, logout } = useAuth();
+  const [isLogged, setIsLogged] = useState(localStorage.getItem("logged") === "true");
+
 
   useEffect(() => {
+    setIsLogged(localStorage.getItem("logged") === "true");
     fetch(process.env.REACT_APP_API_URL + "/recipe/")
       .then((response) => response.json())
       .then((data) => {
@@ -50,18 +42,24 @@ function UserFeed() {
           <Col sm={1} className="py-2"> 
             <Image src={logo} alt="KASULÀ" fluid />
             </Col>
-            <Col sm={9}></Col>
-            <Col sm={2}>
+            <Col sm={8}></Col>
+            <Col sm={3}>
               <div id='buttons-group' className="mt-4">
-                <button onClick={() => navigate("/")}>
-                  Log In
-                </button>
-                <button onClick={() => navigate("/postRecipe")}>
+                {!isLogged && ( 
+                  <button className='btn btn-light' onClick={() => navigate("/login")}>
+                    Log In
+                  </button>
+                )}
+                {isLogged && (<>
+                {console.log(">>>>>>LOGEADO", localStorage.getItem("logged"))}
+                 <button className='btn btn-light me-2' onClick={() => navigate("/postRecipe")}>
                   Post Recipe
                 </button>
-                <button onClick={() => navigate("/logout")}>
+                <button className='btn btn-light' onClick={() => navigate("/logout")}>
                   Log Out
                 </button>
+                </>
+                )}
               </div>
             </Col>
       </Row>
