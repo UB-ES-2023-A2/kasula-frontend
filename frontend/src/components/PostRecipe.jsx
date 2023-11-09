@@ -557,7 +557,6 @@ const RecipePost = () => {
                     <Col xs={6} md={6} lg={6}>
                       <Row>
                           {imagePreviewUrl && <img src={imagePreviewUrl} alt="Uploaded" />}
-                          {!imagePreviewUrl && <p>poner imagen</p>}
                       </Row>
                     </Col>
                     <Col xs={6}>
