@@ -155,7 +155,7 @@ const RecipePost = () => {
     
             if (response.ok) {
                 console.log("Recipe posted successfully:", data);
-                navigate("/userfeed");
+                navigate("/");
             } else {
                 console.error("Error posting recipe:", data);
             }
