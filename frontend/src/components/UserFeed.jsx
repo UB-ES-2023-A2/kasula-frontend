@@ -45,64 +45,58 @@ function UserFeed() {
   };
 
   return (
-    <div>
-    <div className="user-feed-container">
-      <header class="header_user_feed">
-        <img src={logo} alt="KASULÀ" className="logo_user_feed" />
-        <h1 class="h1_user_feed">KASULÀ</h1>
-        <button class="post-recipe-button" onClick={() => navigate("/postRecipe")}>
-          Post Recipe
-        </button>
-        <button class="logout_button_user_feed" onClick={() => setLogout(true)}>
-          Log Out
-        </button>
-      </header>
-      <div className="background-image"></div>
-      <CSSTransition
-        in={true} 
-        timeout={500} 
-        classNames="slideUp"
-        appear
-        >
-      <div className="recipe-container-user-feed_1">
-        {recipes.map((recipe) => (
-          <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="recipe-link">
-            <div className="recipe-container-user-feed">
-              <p className="recipe-name">{recipe.name}</p>
-              <img
-                src={recipe.image ? recipe.image : gyozas}
-                alt={recipe.name}
-                className="recipe-image-user-feed"
-              />
-            </div>
-          </Link>
-        ))}
-      </div>
-      </CSSTransition>
-    </div>
-    <Modal show={showLogout} size="sm" onHide={handleHide}>
-        <Modal.Header closeButton>
-          <Modal.Title>Tancar la sessió</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Row>
-            <Col className="text-center mb-4">
-              <ExclamationTriangleFill className="text-warning" size={100}/>
+    <Container fluid className="bg-image min-vh-100">
+      <Row className="bg-danger text-white">
+          <Col sm={1} className="py-2"> 
+            <Image src={logo} alt="KASULÀ" fluid />
             </Col>
-          </Row>
-          <Row>
-            <Col className="text-center">
-              <p className="ms-0">Segur que vols tancar sessió?</p>
+            <Col sm={9}></Col>
+            <Col sm={2}>
+              <div id='buttons-group' className="mt-4">
+                <button onClick={() => navigate("/")}>
+                  Log In
+                </button>
+                <button onClick={() => navigate("/postRecipe")}>
+                  Post Recipe
+                </button>
+                <button onClick={() => navigate("/logout")}>
+                  Log Out
+                </button>
+              </div>
             </Col>
-          </Row>
-        </Modal.Body>
-        <Modal.Footer className="justify-content-center">
-          <Button variant="danger" onClick={handleLogout}>
-              Tancar
-          </Button>
-      </Modal.Footer>
-      </Modal>
-    </div>
+      </Row>
+      <Container>
+        <Row>
+          <Col sm={1}></Col>
+          <Col sm={10}>
+          <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+          <div className="recipes-container mt-5">
+            {recipes.map((recipe) => (
+              <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="recipe-link">
+                <div className="mt-4 p-3 shadow rounded d-flex align-items-center overflow-hidden" id='recipes-list'>
+                  <Row className="align-items-center">
+                    <Col sm={9}>
+                      <p className="font-large-bold fs-5 text-dark">{recipe.name}</p>
+                    </Col>
+                    <Col sm={3}>
+                      <Image
+                        src={recipe.image ? recipe.image : gyozas}
+                        alt={recipe.name}
+                        fluid
+                      />
+                    </Col>
+                  </Row>
+                </div>
+              </Link>
+            ))}
+          </div>
+          </CSSTransition> 
+          </Col>
+          <Col sm={1}></Col>
+        </Row>
+      </Container> 
+    </Container>
+    
   );
   
 }
