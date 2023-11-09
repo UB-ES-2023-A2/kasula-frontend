@@ -20,13 +20,12 @@ root.render(
       <AuthProvider>
         <Router>
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<UserFeed />} />
             <Route path="/recipeDetail" element={<RecipeDetail />} />
             <Route path="/postRecipe" element={<PostRecipe />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/userfeed" element={<UserFeed />} />
             <Route path="/RecipeDetail/:id" element={<RecipeDetail />} />
             <Route path="/passwordrecovery" element={<PasswordRecovery />} />
             <Route path="/passwordrecovery/set" element={<PasswordChange />} />

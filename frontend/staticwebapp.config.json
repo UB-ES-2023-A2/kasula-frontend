@@ -23,11 +23,7 @@
       {
         "route": "/logout",
         "allowedRoles": ["authenticated"]
-      },    
-      {
-        "route": "/userfeed",
-        "allowedRoles": ["authenticated"]
-      },    
+      },
       {
         "route": "/RecipeDetail/:id",
         "allowedRoles": ["authenticated"]

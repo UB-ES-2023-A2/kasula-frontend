@@ -1,61 +1,130 @@
 import React, { useState, useEffect } from "react";
 import "../css/UserFeed.css";
+import { useAuth } from "./AuthContext";
 import "../css/Transitions.css";
 import { CSSTransition } from "react-transition-group";
 import logo from "../assets/logo.png";
 import gyozas from "../assets/gyozas.jpg";
-import { Link, useHistory, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Container, Row, Col, Image, Modal, Button} from "react-bootstrap";
+import { ExclamationTriangleFill } from "react-bootstrap-icons";
 
 function UserFeed() {
   const [recipes, setRecipes] = useState([]);
   const navigate = useNavigate();
+  const [isLogged, setIsLogged] = useState(localStorage.getItem("logged") === "true");
+  const [showLogout, setLogout] = useState(false);
+  const { token, logout } = useAuth();
+
 
   useEffect(() => {
+    setIsLogged(localStorage.getItem("logged") === "true");
     fetch(process.env.REACT_APP_API_URL + "/recipe/")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setRecipes(data);
       })
       .catch((error) => console.error("Error al obtener recetas:", error));
   }, []);
 
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const handleHide = () => {
+    setLogout(false);
+  };
+
   return (
-    <div className="user-feed-container">
-      <header class="header_user_feed">
-        <img src={logo} alt="KASULÀ" className="logo_user_feed" />
-        <h1 class="h1_user_feed">KASULÀ</h1>
-        <button class="post-recipe-button" onClick={() => navigate("/postRecipe")}>
-          Post Recipe
-        </button>
-        <button class="logout_button_user_feed" onClick={() => navigate("/logout")}>
-          Log Out
-        </button>
-      </header>
-      <div className="background-image"></div>
-      <CSSTransition
-        in={true} 
-        timeout={500} 
-        classNames="slideUp"
-        appear
-        >
-      <div className="recipe-container-user-feed_1">
-        {recipes.map((recipe) => (
-          <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="recipe-link">
-            <div className="recipe-container-user-feed">
-              <p className="recipe-name">{recipe.name}</p>
-              <img
-                src={recipe.image ? recipe.image : gyozas}
-                alt={recipe.name}
-                className="recipe-image-user-feed"
-              />
+    <div>
+      <Container fluid className="min-vh-100">
+        <Row className="bg-danger text-white">
+          <Col sm={1} className="py-2">
+            <Image src={logo} alt="KASULÀ" fluid />
+          </Col>
+          <Col sm={9}></Col>
+          <Col sm={2}>
+            <div id='buttons-group' className="mt-4">
+              {!isLogged && (
+                <button className='btn btn-light' onClick={() => navigate("/login")}>
+                  Log In
+                </button>
+              )}
+              {isLogged && (<>
+                <button className='btn btn-light me-2' onClick={() => navigate("/postRecipe")}>
+                  Post Recipe
+                </button>
+                <button className='btn btn-light' onClick={() => setLogout(true)}>
+                  Log Out
+                </button>
+              </>
+              )}
             </div>
-          </Link>
-        ))}
-      </div>
-      </CSSTransition>
+          </Col>
+        </Row>
+        <Container>
+          <Row>
+            <Col sm={1}></Col>
+            <Col sm={10}>
+              <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+                <div className="recipes-container mt-5">
+                  {recipes && recipes.length > 0 ? (
+                    recipes.map((recipe) => (
+                      <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="text-decoration-none">
+                        <div className="mt-4 p-3 shadow rounded d-flex align-items-center overflow-hidden" id='recipes-list'>
+                          <Row className="align-items-center">
+                            <Col sm={9}>
+                              <p className="font-large-bold fs-5 text-dark mb-0">{recipe.name}</p>
+                            </Col>
+                            <Col sm={3}>
+                              <Image
+                                src={recipe.image ? recipe.image : gyozas}
+                                alt={recipe.name}
+                                fluid
+                              />
+                            </Col>
+                          </Row>
+                        </div>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="alert alert-warning" role="alert">
+                      No hay recetas disponibles
+                    </div>
+                  )}
+                </div>
+              </CSSTransition>
+            </Col>
+            <Col sm={1}></Col>
+          </Row>
+        </Container>
+      </Container>
+      <Modal show={showLogout} size="sm" onHide={handleHide}>
+        <Modal.Header closeButton>
+          <Modal.Title>Tancar la sessió</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col className="text-center mb-4">
+              <ExclamationTriangleFill className="text-warning" size={100} />
+            </Col>
+          </Row>
+          <Row>
+            <Col className="text-center">
+              <p className="ms-0">Segur que vols tancar sessió?</p>
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer className="justify-content-center">
+          <Button variant="danger" onClick={handleLogout}>
+            Tancar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
+
 }
 
 export default UserFeed;

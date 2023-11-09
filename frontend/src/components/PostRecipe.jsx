@@ -244,7 +244,7 @@ const RecipePost = () => {
   const handlePostRecipeConfirmationClose = () => {
     setShowPostRecipeConfirmation(false);
     if (postSuccess) {
-      navigate("/userfeed");
+      navigate("/");
     }
   };
 
@@ -264,7 +264,7 @@ const RecipePost = () => {
               <Button
                 variant="link"
                 className="text-decoration-none fs-3 text-reset my-2"
-                onClick={() => navigate("/userfeed")}
+                onClick={() => navigate("/")}
               >
                 <ArrowLeft></ArrowLeft>
               </Button>

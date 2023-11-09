@@ -76,7 +76,8 @@ function Login() {
       } else {
         const data = await response.json();
         setToken(data.access_token);
-        navigate("/userfeed");
+        localStorage.setItem("logged", true); 
+        navigate("/");
       }
     } catch (error) {
       setLoginError(true);
@@ -130,7 +131,7 @@ function Login() {
                 <Button
                   variant="link"
                   className="text-decoration-none fs-3 text-reset my-2"
-                  onClick={() => navigate("/userfeed")}
+                  onClick={() => navigate("/")}
                 >
                   <ArrowLeft></ArrowLeft>
                 </Button>
