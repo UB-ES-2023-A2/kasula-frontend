@@ -58,11 +58,7 @@ function UserFeed() {
                 <button 
                   className='btn btn-light me-2' 
                   onClick={() => {
-                    if (isLogged) {
                       navigate("/postRecipe");
-                    } else {
-                      navigate("/login");
-                    }
                   }}>
                   Post Recipe
                 </button>

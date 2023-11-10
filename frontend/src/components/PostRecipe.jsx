@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../css/PostRecipe.css";
 import "../css/Transitions.css";
 import "../css/common.css";
@@ -72,6 +72,12 @@ const RecipePost = () => {
     useState(false);
   const [isPostButtonEnabled, setIsPostButtonEnabled] = useState(true);
   const [imagePreviewUrl, setImagePreviewUrl] = useState('');
+
+  useEffect(() => {
+    if (localStorage.getItem("logged") === "false") {
+      navigate("/login");
+    }
+  }, [localStorage.getItem("logged"), navigate]);
 
   const renderStars = (amount) => {
     let stars = [];
@@ -274,7 +280,7 @@ const RecipePost = () => {
               <Button
                 variant="link"
                 className="text-decoration-none fs-3 text-reset py-0"
-                onClick={() => navigate("/userfeed")}
+                onClick={() => navigate("/")}
               >
                 <ArrowLeft></ArrowLeft>
               </Button>
