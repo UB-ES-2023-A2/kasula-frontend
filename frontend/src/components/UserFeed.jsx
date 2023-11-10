@@ -13,9 +13,7 @@ function UserFeed() {
   const [recipes, setRecipes] = useState([]);
   const navigate = useNavigate();
   const [isLogged, setIsLogged] = useState(localStorage.getItem("logged") === "true");
-  const [showLogout, setLogout] = useState(false);
-  const { token, logout } = useAuth();
-
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     setIsLogged(localStorage.getItem("logged") === "true");
@@ -27,14 +25,19 @@ function UserFeed() {
       .catch((error) => console.error("Error al obtener recetas:", error));
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
+  const handleOpenModal = () => {
+    setShowModal(true);
   };
 
-  const handleHide = () => {
-    setLogout(false);
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
+
+  const handleLogout = () => {
+    localStorage.setItem('logged', 'false'); // This will update the localStorage
+    setIsLogged(false); // This will update the state within the app
+    handleCloseModal(); // This will close the modal
+  };  
 
   return (
     <div>
@@ -55,7 +58,7 @@ function UserFeed() {
                 <button 
                   className='btn btn-light me-2' 
                   onClick={() => {
-                    if (token) {
+                    if (isLogged) {
                       navigate("/postRecipe");
                     } else {
                       navigate("/login");
@@ -63,7 +66,7 @@ function UserFeed() {
                   }}>
                   Post Recipe
                 </button>
-                <button className='btn btn-light' onClick={() => setLogout(true)}>
+                <button className='btn btn-light' onClick={() => handleOpenModal()}>
                   Log Out
                 </button>
               </>
@@ -108,7 +111,7 @@ function UserFeed() {
           </Row>
         </Container>
       </Container>
-      <Modal show={showLogout} size="sm" onHide={handleHide}>
+      <Modal show={showModal} size="sm" onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Tancar la sessió</Modal.Title>
         </Modal.Header>
@@ -125,9 +128,9 @@ function UserFeed() {
           </Row>
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
-          <Button variant="danger" onClick={handleLogout}>
-            Tancar
-          </Button>
+        <Button variant="danger" onClick={handleLogout}>
+          Tancar
+        </Button>
         </Modal.Footer>
       </Modal>
     </div>
