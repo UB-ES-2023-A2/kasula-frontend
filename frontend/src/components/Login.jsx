@@ -1,6 +1,6 @@
 //Logic packages
 import { useAuth } from "./AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import queryString from "query-string";
 
@@ -41,6 +41,12 @@ function Login() {
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
 
   /* Requests */
+
+  useEffect(() => {
+    if (localStorage.getItem("logged") === "true") {
+      navigate("/");
+    }
+  }, [localStorage.getItem("logged"), navigate]);
 
   const loginRequest = async (identifier, password) => {
     const api_url = process.env.REACT_APP_API_URL + "/user/token";
