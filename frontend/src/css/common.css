@@ -10,3 +10,8 @@
 #formSubmitButton:hover {
     background: linear-gradient(90deg, rgb(161, 16, 5) 0%, rgb(212, 91, 72) 100%);
 }
+
+.box-shadow {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    /* Puedes ajustar estos valores */
+}
