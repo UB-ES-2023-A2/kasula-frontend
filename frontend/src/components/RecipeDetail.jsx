@@ -1,105 +1,135 @@
 import React, { useState, useEffect } from "react";
-import "../css/RecipeDetail.css";
+import "../css/common.css";
 import "../css/Transitions.css";
+import chefIcon from "../assets/icons/chef.png"
 import logo from "../assets/logo.png";
 import { useParams } from "react-router-dom";
-import spaghettiCarbonaraCover from '../assets/spaghetti_carbonara_cover.jpg';
-import vegetableStirFryCover from '../assets/vegetable_stir_fry_cover.jpg';
-import chickenAlfredoCover from '../assets/chicken_alfredo_cover.jpg';
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
+import "bootstrap/dist/css/bootstrap.min.css"; 
+import { Container, Row, Col, Image } from "react-bootstrap";
+import { StarFill, Stopwatch, Lightning, CloudFog } from "react-bootstrap-icons";
+import ImageModal from "./ImageModal";
+
 
 function RecipeDetail() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState({});
+  const [showModal, setShowModal] = useState(false);
 
-  const imageMap = {
-    '../assets/spaghetti_carbonara_cover.jpg': spaghettiCarbonaraCover,
-    '../assets/vegetable_stir_fry_cover.jpg': vegetableStirFryCover,
-    '../assets/chicken_alfredo_cover.jpg': chickenAlfredoCover,
-    '../assets/gyozas.jpg': gyozas
-  };
-  
-  function getImage(filename) {
-    return imageMap[filename] || gyozas;
-  }  
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/recipe/${id}`)
+    fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
         setRecipe(data);
 
         // Log the value of recipe.image
-        console.log("recipe.image:", data.image);
+        console.log(">>>>data:", data);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
   }, [id]);
+  
+  function getImage(filename) {
+    return gyozas;
+  }  
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+  
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+  
 
   return (
-    <div className="recipe-detail-container">
-      <header className="header_recipe_detail">
-        <img src={logo} alt="KASULÀ" className="logo_recipe_detail" />
-        <h1 class="h1_recipe_detail">KASULÀ</h1>
-      </header>
-      <div className="background-image-detail"></div>
-      <CSSTransition
-        in={true} 
-        timeout={500} 
-        classNames="slideUp"
-        appear
-        >
-      <div className="recipe-square-detail">
-        <div className="recipe-content">
-          <div className="image-info-container">
-            <img
-              src={getImage(recipe.image)}
-              alt={recipe.name}
-              className="recipe-image-recipeDetail"
-            />
-
-            <div className="info-box">
-              <h2>Más información</h2>
-              <div className="info-section">
-                <h3>Difficulty:</h3>
-                <div className="difficulty-stars">
-                  {/* Suponiendo que difficulty es un número del 1 al 5, renderizamos las estrellas */}
-                  {Array(recipe.difficulty || 0).fill().map((_, index) => (
-                    <span key={index} className="star">&#9733;</span>
-                  ))}
-                </div>
-              </div>
-              <div className="info-section">
-                <h3>Time:</h3>
-                <p id="time">{recipe.cooking_time}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="recipe-details">
-            <div className="ingredient-box">
-              <h2>Ingredientes</h2>
-              <ul>
-              {recipe.ingredients && recipe.ingredients.map((ingredient, index) => <li key={index}>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</li>)}
-              </ul>
-            </div>
-
-            <div className="step-box">
-              <h2>Pasos</h2>
-              <ol>
-                  {recipe.instructions && recipe.instructions.map((instruction, index) => (
-                      <li key={index}>
-                          Step {instruction.step_number + 1}: {instruction.body}
-                      </li>
-                  ))}
-              </ol>
-            </div>
-          </div>
-        </div>
-      </div>
-      </CSSTransition>
-    </div>
+      <Container fluid className="min-vh-100">
+        <ImageModal
+          show={showModal}
+          onHide={handleCloseModal}
+          recipeImage={recipe.image ?? gyozas}
+          recipeName={recipe.name}
+        />
+        <Row className="bg-danger text-white">
+          <Col sm={1} className="py-2"> 
+            <Image src={logo} alt="KASULÀ" fluid />
+            </Col>
+            <Col sm={11}></Col>
+        </Row>
+        <Container>
+          <Row>
+            <Col sm={2}></Col>
+            <Col sm={8}>
+            <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+              <Container className="mt-5 text-center box-rounded shadow" style={{ backgroundColor: '#ffb79fe0'}}>
+                <Row>
+                  <Col xs={12} md={6} lg={6} className="p-4">
+                    <Col xs={12}>
+                      <Image
+                        src={recipe.image ?? gyozas}
+                        alt={recipe.name}
+                        className="img-fluid shadow mb-3"
+                        onClick={handleOpenModal}
+                        style={{ cursor: "pointer" }}
+                        fluid
+                      />
+                      <h2 style={{ marginBottom: '1rem' }}>{recipe.name}</h2>
+                    </Col>
+                    <Col md={12}>
+                      <div className="mt-5 pb-3 pt-2 bg-light box-shadow">
+                        <h4>Más información</h4>
+                        <div className="d-flex align-items-center my-2 mx-3">
+                          <h5><Image src={chefIcon} style={{height:'24px', width: '24px'}} fluid/> {Array(recipe.difficulty || 0).fill().map((_, index) => (
+                              <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
+                            ))}</h5>
+                        </div>
+                        <div className="d-flex align-items-center my-2 mx-3">
+                          <h5><Stopwatch/></h5>
+                          <span className="fs-6 fw-bold ms-2 text-muted">{recipe.cooking_time} min</span>
+                        </div>
+                        <div className="d-flex align-items-center mt-2 mx-3">
+                          <h5><Lightning/></h5>
+                          <span className="fs-6 fw-bold ms-2 text-muted">{recipe.energy ?? 'No info of'} kcal</span>
+                        </div>
+                      </div>
+                    </Col>
+                  </Col>
+                  <Col xs={12} md={6} lg={6} className="p-4">
+                    <Row>
+                      <Col xs={12}>
+                        <div className="mb-3 py-2 bg-light box-shadow">
+                          <h3>Ingredientes</h3>
+                          <ul className='text-start'>
+                            {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
+                              <li className='mb-2 fs-6 fw-bold text-muted' key={index}>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </Col>
+                      <Col xs={12}>
+                        <div className="mb-3 bg-danger py-2 text-white box-shadow">
+                          <h3>Pasos</h3>
+                          <ol className="text-start">
+                            {recipe.instructions && recipe.instructions.map((instruction, index) => (
+                              <li className='mb-2 fs-6 fw-bold text-white' key={index}>
+                                {instruction.body}
+                              </li>
+                            ))}
+                          </ol>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Container>
+            </CSSTransition>
+            </Col>
+            <Col sm={1}></Col>
+          </Row>
+        </Container>
+      </Container>
   );
 }
 
