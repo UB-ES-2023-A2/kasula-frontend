@@ -6,7 +6,6 @@ import RecipeDetail from "./components/RecipeDetail";
 import UserFeed from "./components/UserFeed";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import Logout from "./components/Logout";
 import PasswordRecovery from "./components/PasswordRecovery";
 import PasswordChange from "./components/PasswordChange";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -24,7 +23,6 @@ root.render(
             <Route path="/" element={<UserFeed />} />
             <Route path="/recipeDetail" element={<RecipeDetail />} />
             <Route path="/postRecipe" element={<PostRecipe />} />
-            <Route path="/logout" element={<Logout />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/RecipeDetail/:id" element={<RecipeDetail />} />
