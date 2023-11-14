@@ -4,6 +4,23 @@ import { Container, Row, Col, Image } from "react-bootstrap";
 
 function Comments(){
     const [comments, setComments] = useState(null);
+
+    useEffect(() => {
+        // Haremos el fetch donde traiga los comentarios
+       const mockComments = [
+        {user: "Jaimito",
+        text: "Good recipe"},
+        {user: "Pedrito",
+        text: "Bad recipe"},
+        {user: "Juanito",
+        text: "Not bad recipe"},
+        {user: "Pepito",
+        text: "Excellent recipe"}
+       ]
+        setComments(mockComments);
+    }, [])
+
+    
     return (
     <Container className="" style={{ backgroundColor: '#ffb79fe0'}}>
         <Row className="mt-5">
