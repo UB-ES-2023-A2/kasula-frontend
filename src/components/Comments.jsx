@@ -20,19 +20,19 @@ function Comments(){
         setComments(mockComments);
     }, [])
 
-    
+
     return (
     <Container className="" style={{ backgroundColor: '#ffb79fe0'}}>
         <Row className="mt-5">
-            <Col sm={12} className="p-3 box-shadow">
-            <h3 className="text-align-center">Comentarios</h3>
+            <Col sm={12} className="p-2 box-shadow text-center">
+            <h3 className="">Comentarios</h3>
             </Col>
-            <Col sm={8} className="mt-3 mx-auto">
+            <Col sm={12} className="mt-3 mx-auto">
                 <Container>
                 <ul className="list-unstyled">
                     {comments ? (
                     comments.map((comment, index) => (
-                    <li key={index} className="mb-3 p-2 fs-6 bg-light">
+                    <li key={index} className="mb-3 p-2 fs-6 bg-light box-shadow">
                         {comment.user}: {comment.text}
                     </li>
                     ))) :

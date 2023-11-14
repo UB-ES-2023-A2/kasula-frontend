@@ -61,8 +61,7 @@ function RecipeDetail() {
         </Row>
         <Container>
           <Row>
-            <Col sm={1}></Col>
-            <Col sm={7}>
+            <Col sm={8}>
             <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
               <Container className="mt-5 text-center box-rounded shadow" style={{ backgroundColor: '#ffb79fe0'}}>
                 <Row>
@@ -128,7 +127,9 @@ function RecipeDetail() {
             </CSSTransition>
             </Col>
             <Col sm={4}>
+            <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
             <Comments/>
+            </CSSTransition>
             </Col>
           </Row>
         </Container>
