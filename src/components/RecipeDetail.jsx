@@ -99,7 +99,7 @@ function RecipeDetail() {
                   <Col xs={12} md={6} lg={6} className="p-4">
                     <Row>
                       <Col xs={12}>
-                        <div className="mb-3 py-2 bg-light box-shadow">
+                        <div className="mb-3 p-2 bg-light box-shadow">
                           <h3>Ingredientes</h3>
                           <ul className='text-start'>
                             {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
@@ -109,7 +109,7 @@ function RecipeDetail() {
                         </div>
                       </Col>
                       <Col xs={12}>
-                        <div className="mb-3 bg-danger py-2 text-white box-shadow">
+                        <div className="mb-3 bg-danger p-2 text-white box-shadow">
                           <h3>Pasos</h3>
                           <ol className="text-start">
                             {recipe.instructions && recipe.instructions.map((instruction, index) => (
