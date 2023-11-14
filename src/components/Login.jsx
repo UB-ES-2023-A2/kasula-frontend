@@ -83,6 +83,7 @@ function Login() {
         const data = await response.json();
         setToken(data.access_token);
         localStorage.setItem("logged", true); 
+        localStorage.setItem("token", data.access_token);
         navigate("/");
       }
     } catch (error) {
@@ -230,7 +231,7 @@ function Login() {
                       className="w-100 mb-5 border-0"
                       variant="primary"
                       type="submit"
-                      id="formSubmitButton"
+                      id="mainButton"
                     >
                       LOG IN
                     </Button>

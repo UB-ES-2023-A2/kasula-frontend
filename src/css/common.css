@@ -2,13 +2,36 @@
     background-color: #ffe7dfe0;
 }
 
-#formSubmitButton {
-    background: linear-gradient(90deg, rgb(245 36 20) 0%, rgb(240 109 90) 100%);
-    transition: background 0.3s ease;
+.bg-lightest {
+    background-color: #ffe7dfe0;
 }
 
-#formSubmitButton:hover {
+.bg-light {
+    background-color: #fcccc3;
+}
+
+.bg-normal {
+    background-color: #FFC1AC;
+}
+
+#mainButton {
+    background: linear-gradient(90deg, rgb(245 36 20) 0%, rgb(240 109 90) 100%);
+    transition: background 0.3s ease;
+    color: white;
+}
+
+#mainButton:hover {
     background: linear-gradient(90deg, rgb(161, 16, 5) 0%, rgb(212, 91, 72) 100%);
+}
+
+#positiveButton {
+    background: linear-gradient(90deg, rgb(39, 204, 6) 0%, rgb(0, 255, 170) 100%);
+    transition: background 0.3s ease;
+    color: black;
+}
+
+#positiveButton:hover {
+    background: linear-gradient(90deg, rgb(31, 161, 5) 0%, rgb(0, 199, 133) 100%);
 }
 
 .box-shadow {
