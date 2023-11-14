@@ -10,6 +10,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Image } from "react-bootstrap";
 import { StarFill, Stopwatch, Lightning, CloudFog } from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
+import Comments from "./Comments";
 
 
 function RecipeDetail() {
@@ -60,8 +61,8 @@ function RecipeDetail() {
         </Row>
         <Container>
           <Row>
-            <Col sm={2}></Col>
-            <Col sm={8}>
+            <Col sm={1}></Col>
+            <Col sm={7}>
             <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
               <Container className="mt-5 text-center box-rounded shadow" style={{ backgroundColor: '#ffb79fe0'}}>
                 <Row>
@@ -126,7 +127,9 @@ function RecipeDetail() {
               </Container>
             </CSSTransition>
             </Col>
-            <Col sm={1}></Col>
+            <Col sm={4}>
+            <Comments/>
+            </Col>
           </Row>
         </Container>
       </Container>
