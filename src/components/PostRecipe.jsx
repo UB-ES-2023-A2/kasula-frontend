@@ -274,7 +274,7 @@ const RecipePost = () => {
 
   return (
     <div>
-      <Container fluid className="min-vh-100">
+      <Container fluid className="min-vh-100 pb-5">
         <Row className="bg-danger text-white">
           <Col sm={1} className="py-2">
             <Image src={logo} alt="KASULÀ" fluid />
@@ -355,7 +355,7 @@ const RecipePost = () => {
                 classNames="slideUp"
                 appear
               >
-                <Container id="recipe-container" className="rounded box-shadow">
+                <Container id="recipe-container" className="rounded">
                   <Row className="mb-4">
                     <Col sm={12}>
                       <FloatingLabel
