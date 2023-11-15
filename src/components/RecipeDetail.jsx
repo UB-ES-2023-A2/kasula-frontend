@@ -8,7 +8,7 @@ import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css"; 
 import { Container, Row, Col, Image } from "react-bootstrap";
-import { StarFill, Stopwatch, Lightning, CloudFog } from "react-bootstrap-icons";
+import { StarFill, Stopwatch, Lightning } from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
 import Comments from "./Comments";
 
@@ -25,17 +25,10 @@ function RecipeDetail() {
       .then((data) => {
         console.log(data);
         setRecipe(data);
-
-        // Log the value of recipe.image
-        console.log(">>>>data:", data);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
   }, [id]);
   
-  function getImage(filename) {
-    return gyozas;
-  }  
-
   const handleOpenModal = () => {
     setShowModal(true);
   };
