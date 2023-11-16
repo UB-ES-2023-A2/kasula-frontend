@@ -177,7 +177,7 @@ function PasswordRecovery() {
                         className="w-100 mb-4 border-0"
                         variant="primary"
                         type="submit"
-                        id="formSubmitButton"
+                        id="mainButton"
                       >
                         Send email
                       </Button>
