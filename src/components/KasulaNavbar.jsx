@@ -81,7 +81,7 @@ function KasulaNavbar() {
   return (
     <>
       <Navbar expand="lg" className="bg-normal sticky-top">
-        <Container fluid>
+        <Container>
           <Navbar.Brand>
             <Link to="/">
               <Image
