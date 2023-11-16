@@ -42,7 +42,7 @@ function Comments(){
         //   recipeName={"Gyozas"}
         />
         <Row className="mt-5">
-            <Col sm={12} className="p-2 box-shadow">
+            {/* <Col sm={12} className="p-2 box-shadow">
             <Row>
                 <Col sm={7}>
                     <h3 className="text-center">Comentarios</h3>
@@ -51,7 +51,7 @@ function Comments(){
                     <Button className="fs-6" onClick={handleOpenModal}>Post comment</Button>
                 </Col>
             </Row>
-            </Col>
+            </Col> */}
             <Col sm={12} className="mt-3 mx-auto">
                 <Container>
                 <ul className="list-unstyled">
