@@ -27,13 +27,12 @@ function Root() {
           <Route
             path="/"
             element={
-              <Container className="my-0 pt-0 pb-4 px-0 min-vh-100">
-                <KasulaNavbar></KasulaNavbar>
-                <Container className="bg-lightest min-vh-100">
+              <>
+              <KasulaNavbar></KasulaNavbar>
+                <Container fluid className="bg-lightest min-vh-100">
                   <UserFeed></UserFeed>
                 </Container>
-              </Container>
-            }
+              </>}
           ></Route>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
