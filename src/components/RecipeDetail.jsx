@@ -78,7 +78,7 @@ function RecipeDetail() {
                       </Col>
                       <Col md={12}>
                         <div className="mt-5 pb-3 pt-2 bg-light box-shadow">
-                          <h4>Más información</h4>
+                          <h4>More information</h4>
                           <div className="d-flex align-items-center my-2 mx-3">
                             <h5><Image src={chefIcon} style={{height:'24px', width: '24px'}} fluid/> {Array(recipe.difficulty || 0).fill().map((_, index) => (
                                 <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
@@ -102,7 +102,7 @@ function RecipeDetail() {
                       <Row>
                         <Col xs={12}>
                           <div className="mb-3 p-2 bg-light box-shadow">
-                            <h3>Ingredientes</h3>
+                            <h3>Ingredients</h3>
                             <ul className='text-start'>
                               {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
                                 <li className='mb-2 fs-6 fw-bold text-muted' key={index}>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</li>
@@ -112,7 +112,7 @@ function RecipeDetail() {
                         </Col>
                         <Col xs={12}>
                           <div className="mb-3 bg-danger p-2 text-white box-shadow">
-                            <h3>Pasos</h3>
+                            <h3>Steps</h3>
                             <ol className="text-start">
                               {recipe.instructions && recipe.instructions.map((instruction, index) => (
                                 <li className='mb-2 fs-6 fw-bold text-white' key={index}>

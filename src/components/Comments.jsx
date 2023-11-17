@@ -61,7 +61,7 @@ function Comments(){
                         {comment.user}: {comment.text}
                     </li>
                     ))) :
-                    <span>Comentarios no disponibles</span>}
+                    <span>Reviews not available</span>}
                 </ul>
                 </Container>
             </Col>
