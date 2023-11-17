@@ -33,14 +33,15 @@ function Comments(){
 
 
     return (
-    <Container className="">
+    <Container className="flex-column justify-content-between align-items-center">
+        <Row className="mt-2">
+        <Button className="fs-6 mx-auto" onClick={handleOpenModal}>Post comment</Button>
         <PostComment
           show={showModal}
           onHide={handleCloseModal}
         //   recipeImage={gyozas}
         //   recipeName={"Gyozas"}
         />
-        <Row className="mt-5">
             {/* <Col sm={12} className="p-2 box-shadow">
             <Row>
                 <Col sm={7}>
@@ -51,7 +52,7 @@ function Comments(){
                 </Col>
             </Row>
             </Col> */}
-            <Col sm={12} className="mt-3 mx-auto">
+            <Col sm={12} className="mt-4 mx-auto">
                 <Container>
                 <ul className="list-unstyled">
                     {comments ? (

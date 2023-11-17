@@ -134,7 +134,10 @@ function RecipeDetail() {
       {/* Offcanvas para mostrar los comentarios */}
       <Offcanvas show={showComments} onHide={() => setShowComments(false)}>
         <Offcanvas.Header closeButton style={{ backgroundColor: '#ffb79fe0' }}>
-          <Offcanvas.Title className="fs-2">Comentarios</Offcanvas.Title>
+          {/* <div> */}
+          <Offcanvas.Title className="fs-2 mt-3">Reviews</Offcanvas.Title>
+          {/* <Button className="fs-6 mt-2" onClick={handleOpenModal}>Post comment</Button>
+          </div> */}
         </Offcanvas.Header>
         <Offcanvas.Body style={{ backgroundColor: '#ffb79fe0' }}>
           <Comments />
