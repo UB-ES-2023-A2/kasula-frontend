@@ -1,15 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import PostRecipe from "./components/PostRecipe";
 import reportWebVitals from "./reportWebVitals";
-import RecipeDetail from "./components/RecipeDetail";
-import UserFeed from "./components/UserFeed";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import PasswordRecovery from "./components/PasswordRecovery";
-import PasswordChange from "./components/PasswordChange";
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { AuthProvider } from './components/AuthContext';
+import Root from "./components/Root";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/index.css';
 
@@ -17,20 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <div className="App">
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<UserFeed />} />
-            <Route path="/recipeDetail" element={<RecipeDetail />} />
-            <Route path="/postRecipe" element={<PostRecipe />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/RecipeDetail/:id" element={<RecipeDetail />} />
-            <Route path="/passwordrecovery" element={<PasswordRecovery />} />
-            <Route path="/passwordrecovery/set" element={<PasswordChange />} />
-          </Routes>
-        </Router>
-      </AuthProvider>
+      <Root></Root>
     </div>
   </React.StrictMode>
 ); 
