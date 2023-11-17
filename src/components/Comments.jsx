@@ -33,8 +33,7 @@ function Comments(){
 
 
     return (
-    <Container className="" style={{ backgroundColor: '#ffb79fe0'}}>
-        {/* Demomento ponemos el modal de las imagenes, pero será el modal para postear una receta */}
+    <Container className="">
         <PostComment
           show={showModal}
           onHide={handleCloseModal}

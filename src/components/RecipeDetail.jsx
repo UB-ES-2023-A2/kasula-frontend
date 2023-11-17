@@ -131,7 +131,6 @@ function RecipeDetail() {
             <Col sm={2}></Col>
           </Row>
       </Container>
-
       {/* Offcanvas para mostrar los comentarios */}
       <Offcanvas show={showComments} onHide={() => setShowComments(false)}>
         <Offcanvas.Header closeButton style={{ backgroundColor: '#ffb79fe0' }}>
