@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "../css/common.css";
 import "../css/Transitions.css";
 import chefIcon from "../assets/icons/chef.png"
-import logo from "../assets/logo.png";
 import { useParams } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
@@ -10,21 +9,21 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col, Image, Offcanvas, Button } from "react-bootstrap";
 import { StarFill, Stopwatch, Lightning } from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
-import Comments from "./Comments";
+import Reviews from "./Reviews";
 
 
 function RecipeDetail() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState({});
   const [showModal, setShowModal] = useState(false);
-  const [showComments, setShowComments] = useState(false);
+  const [showReviews, setShowReviews] = useState(false);
 
 
   useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setRecipe(data);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
@@ -38,8 +37,8 @@ function RecipeDetail() {
     setShowModal(false);
   };
 
-  const handleToggleComments = () => {
-    setShowComments(!showComments);
+  const handleToggleReviews = () => {
+    setShowReviews(!showReviews);
   };
   
 
@@ -85,8 +84,8 @@ function RecipeDetail() {
                           <h5><Lightning/></h5>
                           <span className="fs-6 fw-bold ms-2 text-muted">{recipe.energy ?? 'No info of'} kcal</span>
                         </div>
-                        <Button className="mt-3" onClick={handleToggleComments}>
-                          Toggle Comments
+                        <Button className="mt-3" onClick={handleToggleReviews}>
+                          Toggle Reviews
                         </Button>
                       </div>
                     </Col>
@@ -124,7 +123,7 @@ function RecipeDetail() {
           </Row>
         </Container>
       {/* Offcanvas para mostrar los comentarios */}
-      <Offcanvas show={showComments} onHide={() => setShowComments(false)} placement="end">
+      <Offcanvas show={showReviews} onHide={() => setShowReviews(false)} placement="end">
         <Offcanvas.Header closeButton style={{ backgroundColor: '#ffb79fe0' }}>
           {/* <div> */}
           <Offcanvas.Title className="fs-2 mt-3">Reviews</Offcanvas.Title>
@@ -132,7 +131,7 @@ function RecipeDetail() {
           </div> */}
         </Offcanvas.Header>
         <Offcanvas.Body style={{ backgroundColor: '#ffb79fe0' }}>
-          <Comments />
+          <Reviews />
         </Offcanvas.Body>
       </Offcanvas>
     </Container>

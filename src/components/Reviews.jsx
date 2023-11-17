@@ -3,14 +3,13 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import PostComment from "./PostComment";
 
 
-function Comments(){
-    const [comments, setComments] = useState(null);
+function Reviews(){
+    const [comments, setReviews] = useState(null);
     const [showModal, setShowModal] = useState(false);
-
 
     useEffect(() => {
         // Haremos el fetch donde traiga los comentarios
-       const mockComments = [
+       const mockReviews = [
         {user: "Jaimito",
         text: "Good recipe"},
         {user: "Pedrito",
@@ -20,7 +19,7 @@ function Comments(){
         {user: "Pepito",
         text: "Excellent recipe"}
        ]
-        setComments(mockComments);
+        setReviews(mockReviews);
     }, [])
 
     const handleOpenModal = () => {
@@ -70,6 +69,6 @@ function Comments(){
     </Container>);
 }
 
-export default Comments;
+export default Reviews;
 
 
