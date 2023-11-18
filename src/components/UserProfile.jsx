@@ -1,17 +1,29 @@
-import React, { useState, useRef, useEffect } from "react";
-import "../css/common.css";
 import { useAuth } from "./AuthContext";
-import { useNavigate } from "react-router-dom";
-import { Container, Row, Col, Button, Form, Image, Modal, Dropdown } from "react-bootstrap";
-import logo from "../assets/logo.png";
+
+// React
+import React, { useState, useRef, useEffect } from "react";
+import { CSSTransition } from "react-transition-group";
+import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+
+// Images
 import defaultProfile from "../assets/defaultProfile.png";
-import { Pencil, ExclamationTriangleFill } from "react-bootstrap-icons";
+import chefIcon from "../assets/icons/chef.png";
+import logo from "../assets/logo.png";
+
+// Bootstrap
+import { StarFill, Pencil, ExclamationTriangleFill } from "react-bootstrap-icons";
+import { Container, Row, Col, Card, Button, Form, Image, Modal, Dropdown, ListGroup } from "react-bootstrap";
+
+// CSS
+import "../css/common.css";
 
 const UserProfile = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
 
-  const [userId, setUserId] = useState('');
+  const { userId } = useParams();
+  const [myUserId, setMyUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [userMail, setUserMail] = useState('');
   const [userBio, setUserBio] = useState('');
@@ -19,10 +31,13 @@ const UserProfile = () => {
   const [userMailAux, setUserMailAux] = useState('');
   const [userBioAux, setUserBioAux] = useState('');
   const [profilePicture, setProfilePicture] = useState('');
+
+  const [adminMode, setadminMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showRemoveQuestion, setRemoveQuestion] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [recipes, setRecipes] = useState([]);
 
   const profileSectionStyle = {
     backgroundColor: '#f9f9f9',
@@ -50,8 +65,7 @@ const UserProfile = () => {
     wordWrap: 'break-word'
   };
 
-  // Function to fetch current user data
-  const fetchUserData = async () => {
+  const fetchMyUserData = async () => {
     try {
       const response = await fetch(process.env.REACT_APP_API_URL + '/user/me', {
         method: 'GET',
@@ -64,8 +78,25 @@ const UserProfile = () => {
         throw new Error('Failed to fetch user data');
       }
       const data = await response.json();
+      setMyUserId(data._id)
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
-      setUserId(data._id)
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_API_URL + '/user/' + userId, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+      const data = await response.json();
 
       setUserName(data.username);
       setUserNameAux(data.username);
@@ -86,15 +117,24 @@ const UserProfile = () => {
     if (!token) {
       navigate("/login");
     } else {
+      fetchMyUserData();
+      if(myUserId == userId){
+        setadminMode(true);
+      }
       fetchUserData();
     }
   }, [token, navigate]);
 
+  useEffect(() => {
+    getRecipes();
+  }, []);
+  
   const handleEditToggle = () => {
     setEditMode(!editMode);
   };
 
   const handleCancelEdit = () => {
+    fetchMyUserData();
     fetchUserData();
     setEditMode(false);
   };
@@ -173,16 +213,17 @@ const UserProfile = () => {
     setShowConfirmation(false);
   };
 
+  const getRecipes = () => {
+    fetch(process.env.REACT_APP_API_URL + "/recipe/")
+      .then((response) => response.json())
+      .then((data) => {
+        setRecipes(data);
+      })
+      .catch((error) => console.error("Error al obtener recetas:", error));
+  }
+
   return (
     <div>
-      <Container fluid className="min-vh-100 pb-5">
-        <Row className="bg-danger text-white">
-          <Col sm={1} className="py-2">
-            <Image src={logo} alt="KASULÀ" fluid />
-          </Col>
-          <Col sm={11}></Col>
-        </Row>
-
         <Container>
           {/* Profile Form */}
           <Row>
@@ -232,9 +273,9 @@ const UserProfile = () => {
                 </Row>
                 </Col>
               
-            <Row>
-              <Col sm={5}></Col>
-              <Col sm={4}>
+            <Row className="mt-3">
+              <Col sm={1}></Col>
+              <Col sm={5}>
                 <Button variant="primary" onClick={handleEditToggle}>
                   Edit Profile
                 </Button>
@@ -242,11 +283,36 @@ const UserProfile = () => {
               <Col sm={4}></Col>
             </Row>
             </Row>
+            <Row>
+            <hr className="my-4" style={{ borderTop: '3px solid red', width: '100%' }} /> {}
+            <h1 className="my-4 text-center">My Recipes</h1> {/* Agrega esta línea */}
+              {recipes && recipes.length > 0 ? (
+                recipes.map((recipe) => (
+                  <Col sm={12} md={6} xl={4}>
+                    <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+                      <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="text-decoration-none">
+                        <Card className="mt-2 shadow" id="recipes-list">
+                          <Card.Img className="object-fit-cover" variant="top" src={recipe.image} alt={recipe.name} height={100}/>
+                          <Card.Body>
+                            <Card.Title className="overflow-hidden text-nowrap">{recipe.name}</Card.Title>
+                              <h5><Image src={chefIcon} style={{height:'24px', width: '24px'}} fluid/> {Array(recipe.difficulty || 0).fill().map((_, index) => (
+                                  <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
+                                ))}</h5>
+                              Rated:
+                          </Card.Body>
+                          
+                        </Card>
+                      </Link>
+                    </CSSTransition>
+                  </Col>
+                ))
+              ) : ( <div className="alert alert-warning" role="alert">No hay recetas disponibles</div> )
+              }
+            </Row>
             </Col>
             <Col sm={2}></Col>
           </Row>
         </Container>
-      </Container>
 
       <Modal show={showRemoveQuestion} size="sm" onHide={ImageRemoveQuestionClose}>
         <Modal.Header closeButton>

@@ -128,7 +128,7 @@ function KasulaNavbar() {
                     }
                     id="basic-nav-dropdown"
                   >
-                    <NavDropdown.Item href="#action/3.2">
+                    <NavDropdown.Item href={`/UserProfile/${user._id}`}>
                       My Information
                     </NavDropdown.Item>
                     <NavDropdown.Item href="#action/3.1">
