@@ -35,12 +35,12 @@ const UserProfile = () => {
   const [adminMode, setadminMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [showRemoveQuestion, setRemoveQuestion] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState("");
   const [recipes, setRecipes] = useState([]);
 
   const profileSectionStyle = {
-    backgroundColor: '#f9f9f9',
     padding: '15px',
     borderRadius: '5px',
     marginBottom: '10px',
@@ -57,7 +57,6 @@ const UserProfile = () => {
   const bioBoxStyle = {
     overflowY: 'auto',
     maxHeight: '200px',
-    border: '1px solid #ced4da',
     borderRadius: '0.25rem',
     padding: '0.375rem 0.75rem',
     lineHeight: '1.5',
@@ -118,16 +117,19 @@ const UserProfile = () => {
       navigate("/login");
     } else {
       fetchMyUserData();
-      if(myUserId == userId){
-        setadminMode(true);
-      }
-      fetchUserData();
     }
   }, [token, navigate]);
 
   useEffect(() => {
+    if(myUserId == userId){
+      setadminMode(true);
+    }
+    fetchUserData();
+  }, [myUserId]);
+
+  useEffect(() => {
     getRecipes();
-  }, []);
+  }, [userName]);
   
   const handleEditToggle = () => {
     setEditMode(!editMode);
@@ -228,64 +230,55 @@ const UserProfile = () => {
           {/* Profile Form */}
           <Row>
             <Col sm={2}></Col>
-            <Col sm={8} className="form-container mt-5 pt-4 pb-2 rounded shadow-sm">
+            <Col sm={8} className="form-container mt-5 pt-3 pb-2 rounded shadow-sm">
               <Row>
-                <Col sm={4}>
-                <div className="image-container" style={{ position: 'relative' }}>
+                <Col sm={2}>
+                <div className="image-container" 
+                    style={{ position: 'relative' }}
+                    onMouseEnter={() => setShowDropdown(true)}
+                    onMouseLeave={() => setShowDropdown(false)}>
+
                   <Image 
                     src={profilePicture ? profilePicture : defaultProfile} 
                     alt="Profile" 
                     fluid 
                     roundedCircle 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
-                  <Dropdown align="end" className="edit-button" style={{ position: 'absolute', top: 0, right: 0 }}>
-                    <Dropdown.Toggle as={Button} variant="light" size="sm">
-                      <Pencil/> {/* Ícono de lápiz */}
-                    </Dropdown.Toggle>
-
-                    <Dropdown.Menu>
-                      <Dropdown.Item as="button" onClick={handleImageUpload}>Upload new file</Dropdown.Item>
-                      <Dropdown.Item as="button" onClick={handleImageRemoveQuestion}>Remove image</Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                  {showDropdown && adminMode && (
+                    <Dropdown align="end" className="edit-button" style={{ position: 'absolute', top: 0, right: 0 }}>
+                      <Dropdown.Toggle as={Button} variant="light" size="sm">
+                        <Pencil/>
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item as="button" onClick={handleImageUpload}>Upload new file</Dropdown.Item>
+                        <Dropdown.Item as="button" onClick={handleImageRemoveQuestion}>Remove image</Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  )}
                 </div>
                 </Col>
                 <Col sm={7}>
                 <Row>
-                  <Col md={12} lg={4}>
                     <div style={profileSectionStyle}>
-                      <h5 style={profileTitleStyle}><i className="fas fa-user"></i> Name</h5>
-                      <p style={profileTextStyle}>{userName}</p>
-                    </div>
-                  </Col>
-                  <Col md={12} lg={8}>
-                    <div style={profileSectionStyle}>
-                      <h5 style={profileTitleStyle}><i className="fas fa-envelope"></i> Email</h5>
-                      <p style={profileTextStyle}>{userMail}</p>
-                    </div>
-                  </Col>
-                  <Col md={12}>
-                    <div style={profileSectionStyle}>
-                      <h5 style={profileTitleStyle}><i className="fas fa-align-left"></i> Bio</h5>
+                      <p style={profileTextStyle}>@{userName}</p>
                       <div style={bioBoxStyle}>{userBio}</div>
                     </div>
-                  </Col>
                 </Row>
                 </Col>
-              
-            <Row className="mt-3">
-              <Col sm={1}></Col>
-              <Col sm={5}>
-                <Button variant="primary" onClick={handleEditToggle}>
-                  Edit Profile
-                </Button>
-              </Col>
-              <Col sm={4}></Col>
-            </Row>
+                {adminMode && (
+                  <Row className="mt-3">
+                    <Col sm={5}>
+                      <Button variant="danger" onClick={handleEditToggle}>
+                        Edit Profile
+                      </Button>
+                    </Col>
+                    <Col sm={4}></Col>
+                  </Row>
+                )}
             </Row>
             <Row>
             <hr className="my-4" style={{ borderTop: '3px solid red', width: '100%' }} /> {}
-            <h1 className="my-4 text-center">My Recipes</h1> {/* Agrega esta línea */}
               {recipes && recipes.length > 0 ? (
                 recipes.map((recipe) => (
                   <Col sm={12} md={6} xl={4}>
@@ -300,13 +293,12 @@ const UserProfile = () => {
                                 ))}</h5>
                               Rated:
                           </Card.Body>
-                          
                         </Card>
                       </Link>
                     </CSSTransition>
                   </Col>
                 ))
-              ) : ( <div className="alert alert-warning" role="alert">No hay recetas disponibles</div> )
+              ) : ( <div className="alert alert-warning" role="alert">There are no available recipies</div> )
               }
             </Row>
             </Col>
