@@ -52,16 +52,9 @@ function RecipeDetail() {
           recipeImage={recipe.image ?? gyozas}
           recipeName={recipe.name}
         />
-        <Row className="bg-danger text-white">
-          <Col sm={1} className="py-2"> 
-            <Image src={logo} alt="KASULÀ" fluid />
-            </Col>
-            <Col sm={11}></Col>
-        </Row>
         <Container>
           <Row>
-            <Col sm={2}></Col>
-            <Col sm={8}>
+            <Col sm={12}>
             <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
               <Container className="mt-5 text-center box-rounded shadow" style={{ backgroundColor: '#ffb79fe0'}}>
                 <Row>
@@ -126,7 +119,6 @@ function RecipeDetail() {
               </Container>
             </CSSTransition>
             </Col>
-            <Col sm={1}></Col>
           </Row>
         </Container>
       </Container>
