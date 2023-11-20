@@ -6,12 +6,12 @@ import {
   Star
 } from "react-bootstrap-icons";
 
-const PostComment = ({ show, onHide }) => {
+const PostReview = ({ show, onHide }) => {
   const [username, setUsername] = useState('');
-  const [comment, setComment] = useState('');
+  const [review, setReview] = useState('');
   const [difficulty, setDifficulty] = useState(1);
   const [data, setData] = useState(null);
-  const [file, setFile] = useState(null);
+  const [image, setImage] = useState(null);
   const { token } = useAuth();
 
   useEffect(() => {
@@ -28,17 +28,52 @@ const PostComment = ({ show, onHide }) => {
         })
         .catch((error) => console.error("Error:", error));
   }, [])
+
   const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
+    const selectedImage= event.target.files[0];
+    setImage(selectedImage);
   };
 
-  const handlePostComment = () => {
-    // Enviaremos con un post el comentario
-    // limpiamos los campos
-    setUsername('');
-    setComment('');
-    setFile(null);
+  const handlePostReview = async () => {
+    const reviewData = {
+      username: username,
+      review: review,
+      difficulty: difficulty,
+    };
+
+    const formData = new FormData();
+    formData.append("review", JSON.stringify(reviewData));
+
+    if (image) {
+      formData.append("file", image);
+    }
+    console.log(">>>>formD1: ", reviewData)
+    console.log(">>>>formD: ", formData)
+
+    // try {
+    //   const response = await fetch(process.env.REACT_APP_API_URL + "/reviews", {
+    //     method: "POST",
+    //     headers: {
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //     body: formData,
+    //   });
+
+    //   const data = await response.json();
+
+    //   if (response.ok) {
+    //     setSubmitMessage("Recipe posted successfully", data);
+    //     setPostRecipeSuccess(true);
+    //     onClose();
+    //   } else {
+    //     setSubmitMessage("Error posting recipe: " + JSON.stringify(data));
+    //   }
+    // } catch (error) {
+    //   setSubmitMessage(JSON.stringify(error));
+    //   setPostRecipeSuccess(false);
+    // }
+    setReview('');
+    setImage(null);
 
     onHide();
   };
@@ -77,13 +112,13 @@ const PostComment = ({ show, onHide }) => {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Comment</Form.Label>
+            <Form.Label>Review</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
-              placeholder="Write your comment here"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
+              placeholder="Write your review here"
+              value={review}
+              onChange={(e) => setReview(e.target.value)}
             />
           </Form.Group>
 
@@ -102,7 +137,7 @@ const PostComment = ({ show, onHide }) => {
         <Button variant="secondary" onClick={onHide}>
           Close
         </Button>
-        <Button variant="primary" onClick={handlePostComment}>
+        <Button variant="primary" onClick={handlePostReview}>
           Post Review
         </Button>
       </Modal.Footer>
@@ -110,4 +145,4 @@ const PostComment = ({ show, onHide }) => {
   );
 };
 
-export default PostComment;
+export default PostReview;

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import PostComment from "./PostComment";
+import PostReview from "./PostReview";
 
 
 function Reviews(){
-    const [comments, setReviews] = useState(null);
+    const [reviews, setReviews] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
@@ -34,8 +34,8 @@ function Reviews(){
     return (
     <Container className="flex-column justify-content-between align-items-center">
         <Row className="mt-2">
-        <Button className="fs-6 mx-auto" onClick={handleOpenModal}>Post comment</Button>
-        <PostComment
+        <Button className="fs-6 mx-auto" onClick={handleOpenModal}>Post review</Button>
+        <PostReview
           show={showModal}
           onHide={handleCloseModal}
         //   recipeImage={gyozas}
@@ -47,17 +47,17 @@ function Reviews(){
                     <h3 className="text-center">Comentarios</h3>
                 </Col>
                 <Col sm={5}>
-                    <Button className="fs-6" onClick={handleOpenModal}>Post comment</Button>
+                    <Button className="fs-6" onClick={handleOpenModal}>Post review</Button>
                 </Col>
             </Row>
             </Col> */}
             <Col sm={12} className="mt-4 mx-auto">
                 <Container>
                 <ul className="list-unstyled">
-                    {comments ? (
-                    comments.map((comment, index) => (
+                    {reviews ? (
+                    reviews.map((review, index) => (
                     <li key={index} className="mb-3 p-2 fs-6 bg-light box-shadow">
-                        {comment.user}: {comment.text}
+                        {review.user}: {review.text}
                     </li>
                     ))) :
                     <span>Reviews not available</span>}

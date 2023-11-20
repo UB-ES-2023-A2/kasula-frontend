@@ -127,7 +127,7 @@ function RecipeDetail() {
         <Offcanvas.Header closeButton style={{ backgroundColor: '#ffb79fe0' }}>
           {/* <div> */}
           <Offcanvas.Title className="fs-2 mt-3">Reviews</Offcanvas.Title>
-          {/* <Button className="fs-6 mt-2" onClick={handleOpenModal}>Post comment</Button>
+          {/* <Button className="fs-6 mt-2" onClick={handleOpenModal}>Post review</Button>
           </div> */}
         </Offcanvas.Header>
         <Offcanvas.Body style={{ backgroundColor: '#ffb79fe0' }}>
