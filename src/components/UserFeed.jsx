@@ -47,7 +47,7 @@ function UserFeed() {
                           ))}</h5>
                         Rated:
                     </Card.Body>
-                    <Card.Footer>By {recipe.user_id}</Card.Footer>
+                    <Card.Footer>By {recipe.username}</Card.Footer>
                   </Card>
                 </Link>
               </CSSTransition>
