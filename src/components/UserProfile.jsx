@@ -39,12 +39,6 @@ const UserProfile = () => {
   const [showRemoveQuestion, setRemoveQuestion] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState("");
   const [recipes, setRecipes] = useState([]);
-
-  const profileSectionStyle = {
-    padding: '15px',
-    borderRadius: '5px',
-    marginBottom: '10px',
-  };
   
   const profileTitleStyle = {
     marginBottom: '5px',
@@ -66,7 +60,7 @@ const UserProfile = () => {
 
   const fetchMyUserData = async () => {
     try {
-      const response = await fetch(process.env.REACT_APP_API_URL + '/user/me', {
+      const response = await fetch('http://127.0.0.1:8000' + '/user/me', {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -85,7 +79,7 @@ const UserProfile = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch(process.env.REACT_APP_API_URL + '/user/' + userId, {
+      const response = await fetch('http://127.0.0.1:8000' + '/user/' + userId, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -147,9 +141,8 @@ const UserProfile = () => {
       setShowConfirmation(true);
       return;
     }
-  
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
+      const response = await fetch(`${'http://127.0.0.1:8000'}/user/${userId}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -181,22 +174,46 @@ const UserProfile = () => {
     setShowConfirmation(true);
     setEditMode(false);
   };
-  
 
-  const handleImageUpload = () => {
+  const handleImageUpload = async () => {
+    const userData = {
+    };
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = 'image/*';
-    fileInput.onchange = (e) => {
+    fileInput.onchange = async (e) => {
       const file = e.target.files[0];
       if (file && file.type.startsWith('image/')) {
         const imageUrl = URL.createObjectURL(file);
         setProfilePicture(imageUrl);
+  
+        const formData = new FormData();
+        formData.append("file", file);
+  
+        try {
+          const response = await fetch(`http://127.0.0.1:8000/user/${userId}`, {
+            method: 'PUT',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+            body: formData,
+          });
+  
+          if (!response.ok) {
+            throw new Error('Failed to update user data');
+          }
+  
+          const data = await response.json();
+          setConfirmationMessage("Profile updated successfully");
+        } catch (error) {
+          console.error('Error updating user data:', error);
+          setConfirmationMessage("Failed to update profile");
+        }
+        setShowConfirmation(true);
       }
     };
     fileInput.click();
   };
-  
 
   const handleImageRemove = (event) => {
     setRemoveQuestion(false)
@@ -204,7 +221,7 @@ const UserProfile = () => {
   };
 
   const handleImageRemoveQuestion = (event) => {
-    setRemoveQuestion(true)
+    setRemoveQuestion(true);
   };
 
   const ImageRemoveQuestionClose = (event) => {
@@ -216,13 +233,18 @@ const UserProfile = () => {
   };
 
   const getRecipes = () => {
-    fetch(process.env.REACT_APP_API_URL + "/recipe/")
-      .then((response) => response.json())
-      .then((data) => {
-        setRecipes(data);
-      })
-      .catch((error) => console.error("Error al obtener recetas:", error));
+    fetch(`http://127.0.0.1:8000/recipe/user/${userName}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`, 
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      setRecipes(data);
+    })
+    .catch((error) => console.error("Error al obtener recetas:", error));
   }
+  
 
   return (
     <div>
@@ -230,7 +252,7 @@ const UserProfile = () => {
           {/* Profile Form */}
           <Row>
             <Col sm={2}></Col>
-            <Col sm={8} className="form-container mt-5 pt-3 pb-2 rounded shadow-sm">
+            <Col sm={8} className="form-container mt-5 pt-3 pb-2rounded shadow-sm">
               <Row>
                 <Col sm={2}>
                 <div className="image-container" 
@@ -252,7 +274,6 @@ const UserProfile = () => {
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
                         <Dropdown.Item as="button" onClick={handleImageUpload}>Upload new file</Dropdown.Item>
-                        <Dropdown.Item as="button" onClick={handleImageRemoveQuestion}>Remove image</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   )}
@@ -260,22 +281,19 @@ const UserProfile = () => {
                 </Col>
                 <Col sm={7}>
                 <Row>
-                    <div style={profileSectionStyle}>
-                      <p style={profileTextStyle}>@{userName}</p>
+                      <h3 style={profileTextStyle}>@{userName}</h3>
                       <div style={bioBoxStyle}>{userBio}</div>
-                    </div>
+                      {adminMode && (
+                        <Row className="mt-1">
+                            <Col sm={4}>
+                              <Button variant="danger" onClick={handleEditToggle}>
+                                Edit
+                              </Button>
+                            </Col>
+                        </Row>
+                      )}
                 </Row>
                 </Col>
-                {adminMode && (
-                  <Row className="mt-3">
-                    <Col sm={5}>
-                      <Button variant="danger" onClick={handleEditToggle}>
-                        Edit Profile
-                      </Button>
-                    </Col>
-                    <Col sm={4}></Col>
-                  </Row>
-                )}
             </Row>
             <Row>
             <hr className="my-4" style={{ borderTop: '3px solid red', width: '100%' }} /> {}
