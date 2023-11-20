@@ -41,7 +41,7 @@ function KasulaNavbar() {
   }, []);
 
   const getLoggedUserData = () => {
-    fetch('http://127.0.0.1:8000' + "/user/me", {
+    fetch(process.env.REACT_APP_API_URL + "/user/me", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

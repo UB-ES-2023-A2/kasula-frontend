@@ -3,18 +3,15 @@ import "../css/PostRecipe.css";
 import "../css/Transitions.css";
 import "../css/common.css";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
-import logo from "../assets/logo.png";
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import {
-  ArrowLeft,
   CheckCircleFill,
   ExclamationTriangleFill,
   StarFill,
   Star,
   PlusSquareFill,
-  Plus,
   TrashFill,
   XCircleFill,
 } from "react-bootstrap-icons";
@@ -31,7 +28,7 @@ import {
   Table,
 } from "react-bootstrap";
 
-const RecipePost = () => {
+const RecipePost = ({ onClose }) => {
   const { token } = useAuth();
 
   const Unit = {
@@ -247,6 +244,7 @@ const RecipePost = () => {
       if (response.ok) {
         setSubmitMessage("Recipe posted successfully", data);
         setPostRecipeSuccess(true);
+        onClose();
       } else {
         setSubmitMessage("Error posting recipe: " + JSON.stringify(data));
       }
@@ -274,32 +272,8 @@ const RecipePost = () => {
 
   return (
     <div>
-      <Container fluid className="min-vh-100 pb-5">
-        <Row className="bg-danger text-white">
-          <Col sm={1} className="py-2">
-            <Image src={logo} alt="KASULÀ" fluid />
-          </Col>
-          <Col sm={11}></Col>
-        </Row>
-
-        <Container className="form-container mt-5 pt-4 pb-2 rounded shadow-sm">
+      <Container className="form-container p-4">
           <Row>
-            <Col xs={4}>
-              <Button
-                variant="link"
-                className="text-decoration-none fs-3 text-reset py-0"
-                onClick={() => navigate("/")}
-              >
-                <ArrowLeft></ArrowLeft>
-              </Button>
-            </Col>
-            <Col xs={4} className="text-center fw-semibold">
-              <h2 className="mb-0">Post recipe</h2>
-            </Col>
-            <Col xs={4}></Col>
-          </Row>
-          <Row>
-            <Col sm={1}>
               {/* <CSSTransition
                 in={true}
                 timeout={500}
@@ -346,9 +320,8 @@ const RecipePost = () => {
                   </Row>
                 </Container>
               </CSSTransition> */}
-            </Col>
 
-            <Col sm={10}>
+            <Col sm={12}>
               <CSSTransition
                 in={true}
                 timeout={500}
@@ -591,10 +564,10 @@ const RecipePost = () => {
                     <Col xs={5}></Col>
                     <Col xs={4}>
                       <Button
-                        className="mb-3"
+                        className="mt-4 mb-2 border-0"
                         style={{ marginTop: "10px" }}
                         onClick={handleSubmit}
-                        variant="danger"
+                        id="mainButton"
                       >
                         POST
                       </Button>{" "}
@@ -604,7 +577,6 @@ const RecipePost = () => {
                 </Container>
               </CSSTransition>
             </Col>
-            <Col sm={1}>
               {/* <CSSTransition
                 in={true}
                 timeout={500}
@@ -653,9 +625,7 @@ const RecipePost = () => {
                   </Row>
                 </Container>
               </CSSTransition> */}
-            </Col>
           </Row>
-        </Container>
       </Container>
 
       <Modal

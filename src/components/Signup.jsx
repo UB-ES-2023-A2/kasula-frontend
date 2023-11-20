@@ -498,7 +498,7 @@ function Signup() {
                 <Row>
                   <Col sm={3}></Col>
                   <Col sm={6}>
-                    <Button className="w-100 mb-4 border-0" variant="primary" type="submit" id="formSubmitButton">
+                    <Button className="w-100 mb-4 border-0" variant="primary" type="submit" id="mainButton">
                     REGISTER NOW
                     </Button>
                   </Col>

@@ -79,7 +79,7 @@ const UserProfile = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch(process.env.REACT_APP_API_URL + '/user/me', {
+      const response = await fetch('http://127.0.0.1:8000' + '/user/' + userId, {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -235,7 +235,7 @@ const UserProfile = () => {
   const getRecipes = () => {
     fetch(`http://127.0.0.1:8000/recipe/user/${userName}`, {
       headers: {
-        'Authorization': `Bearer ${token}`, // Añade el token aquí
+        'Authorization': `Bearer ${token}`, 
       },
     })
     .then((response) => response.json())
