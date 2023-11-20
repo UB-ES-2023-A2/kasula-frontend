@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { useAuth } from "./AuthContext";
+import {
+  StarFill,
+  Star
+} from "react-bootstrap-icons";
 
 const PostComment = ({ show, onHide }) => {
   const [username, setUsername] = useState('');
   const [comment, setComment] = useState('');
+  const [difficulty, setDifficulty] = useState(1);
   const [data, setData] = useState(null);
   const [file, setFile] = useState(null);
   const { token } = useAuth();
@@ -21,7 +26,7 @@ const PostComment = ({ show, onHide }) => {
           setData(data);
           setUsername(data?.username);
         })
-        .catch((error) => console.error("Error al obtener recetas:", error));
+        .catch((error) => console.error("Error:", error));
   }, [])
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -30,10 +35,6 @@ const PostComment = ({ show, onHide }) => {
 
   const handlePostComment = () => {
     // Enviaremos con un post el comentario
-    // console.log('Usuario:', username);
-    // console.log('Comentario:', comment);
-    // console.log('Imagen:', file);
-
     // limpiamos los campos
     setUsername('');
     setComment('');
@@ -41,6 +42,26 @@ const PostComment = ({ show, onHide }) => {
 
     onHide();
   };
+
+  const renderStars = (amount) => {
+    let stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span
+          key={i}
+          className={"difficulty-star "
+            .concat(i <= amount ? "active" : "inactive")
+            .concat(" ms-2 fs-4")}
+          role="button"
+          onClick={() => setDifficulty(i)}
+        >
+          {i <= amount ? <StarFill /> : <Star />}
+        </span>
+      );
+    }
+    return stars;
+  };
+
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -51,7 +72,8 @@ const PostComment = ({ show, onHide }) => {
         <Form>
           <Form.Group className="mb-3">
             {/* En un futuro esto lo traeremos por props, el usuario */}
-            <Form.Label>Username: {username}</Form.Label>
+            <Form.Label>Username</Form.Label>
+            <p className='fw-bold'>{username}</p>
           </Form.Group>
 
           <Form.Group className="mb-3">
@@ -63,6 +85,11 @@ const PostComment = ({ show, onHide }) => {
               value={comment}
               onChange={(e) => setComment(e.target.value)}
             />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Rating</Form.Label>
+            <div>{renderStars(difficulty)}</div>
           </Form.Group>
 
           <Form.Group className="mb-3">
