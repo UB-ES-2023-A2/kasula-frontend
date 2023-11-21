@@ -1,7 +1,24 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import { CSSTransition } from "react-transition-group";
-import { Container, Row, Col, Image, Offcanvas, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Image,
+  Offcanvas,
+  Button,
+  Table,
+  Card,
+} from "react-bootstrap";
+import {
+  TrashFill,
+  PencilFill,
+  HeartFill,
+  BoxArrowInRight,
+  FolderPlus,
+} from "react-bootstrap-icons";
+import "../css/common.css";
 
 function Collections() {
   const { token } = useAuth();
@@ -10,6 +27,8 @@ function Collections() {
     localStorage.getItem("logged") === "true"
   );
   const [collections, setCollections] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLogged(localStorage.getItem("logged") === "true");
@@ -48,9 +67,85 @@ function Collections() {
   };
 
   return (
-    <div>
-      <h1>Collections</h1>
-    </div>
+    <Container>
+      <h1 className="py-4 text-center text-uppercase">
+        {user.username + "'s collections"}
+      </h1>
+      <Container className="bg-normal p-4">
+        <span className="d-flex">
+          <span
+            className="ms-auto colorless-span-button"
+            role="button"
+            onClick={() => {}}
+          >
+            <span className="me-2">New Collection</span>
+            <FolderPlus className="fs-2" />
+          </span>
+        </span>
+        {collections
+          .sort((a, b) => (b.favorite ? 1 : -1)) // Sort by favorite status
+          .map((collection, index) => (
+            <Col sm={12} md={6} xl={4}>
+              <Card>
+                <Card.Header className="d-flex">
+                  <>
+                    {collection.favorite === true ? (
+                      <span className="me-2">
+                        <HeartFill style={{ color: "red" }}></HeartFill>
+                      </span>
+                    ) : (
+                      <></>
+                    )}
+                  </>
+                  <span className="me-auto">{collection.name}</span>
+                  {collection.favorite === false ? (
+                    <>
+                      <span
+                        className="colorless-span-button me-3"
+                        role="button"
+                        onClick={() => {}}
+                      >
+                        <PencilFill />
+                      </span>
+                      <span
+                        className="colorless-span-button"
+                        role="button"
+                        onClick={() => {}}
+                      >
+                        <TrashFill />
+                      </span>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </Card.Header>
+                <Card.Body>
+                  <Row>
+                    <Col xs={12}>
+                      <span className="text-truncate">
+                        {collection.description}
+                      </span>
+                    </Col>
+                    <Col xs={12} className="d-flex my-0">
+                      <Link
+                        className="ms-auto"
+                        to={`/collections/${collection._id}`}
+                      >
+                        <span
+                          className="colorless-span-button fs-4"
+                          role="button"
+                        >
+                          <BoxArrowInRight />
+                        </span>
+                      </Link>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+      </Container>
+    </Container>
   );
 }
 

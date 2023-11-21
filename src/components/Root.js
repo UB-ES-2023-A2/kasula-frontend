@@ -14,6 +14,7 @@ import PasswordChange from "./PasswordChange";
 import UserFeed from "./UserFeed";
 import RecipeDetail from "./RecipeDetail";
 import Collections from "./Collections";
+import CollectionView from "./CollectionView";
 
 //CSS
 import "../css/Transitions.css";
@@ -58,6 +59,17 @@ function Root() {
                 <KasulaNavbar></KasulaNavbar>
                 <Container fluid className="bg-lightest min-vh-100">
                   <Collections></Collections>
+                </Container>
+              </>
+            }
+          />
+          <Route
+            path="/collections/:id"
+            element={
+              <>
+                <KasulaNavbar></KasulaNavbar>
+                <Container fluid className="bg-lightest min-vh-100">
+                  <CollectionView></CollectionView>
                 </Container>
               </>
             }
