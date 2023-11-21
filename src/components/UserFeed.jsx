@@ -37,8 +37,8 @@ function UserFeed() {
             <Col sm={10}>
               <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
                 <div className="recipes-container mt-5">
-                  {recipes && recipes.length > 0 ? (
-                    recipes.map((recipe) => (
+                  {Array.isArray(recipes) && recipes.length > 0 ? (
+                    recipes?.map((recipe) => (
                       <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="text-decoration-none">
                         <div className="mt-4 ps-3 py-0 pe-0 shadow rounded d-flex align-items-center overflow-hidden" id='recipes-list'>
                           <span className="font-large-bold fs-5 text-dark mb-0">{recipe.name}</span>
