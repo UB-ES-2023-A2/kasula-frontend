@@ -91,7 +91,7 @@ function RecipeDetail() {
                       </div>
                     </Col>
                   </Col>
-                  <Col xs={12} md={6} lg={6} className="p-4">
+                  <Col xs={12} md={6} lg={4} className="p-4">
                     <Row>
                       <Col xs={12}>
                         <div className="mb-3 py-2 bg-light box-shadow">
