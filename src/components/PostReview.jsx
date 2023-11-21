@@ -39,7 +39,7 @@ const PostReview = ({ id, show, onHide }) => {
     const reviewData = {
       username: username,
       review: review,
-      difficulty: difficulty,
+      rating: difficulty,
     };
 
     const formData = new FormData();
