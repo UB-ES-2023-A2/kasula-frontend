@@ -3,12 +3,16 @@ import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import PostReview from "./PostReview";
 import chefIcon from "../assets/icons/chef.png"
 import { StarFill, CalendarCheck} from "react-bootstrap-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp } from '@fortawesome/free-solid-svg-icons';
+
 
 
 function Reviews(props){
     const { id } = props;
     const [reviews, setReviews] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [likes, setLikes] = useState({});
 
     useEffect(() => {
         fetch(process.env.REACT_APP_API_URL + `/review/${id}`)
@@ -71,11 +75,21 @@ function Reviews(props){
                                 />
                             </Col>
                             <Col sm={7}>
-                                <div className="d-flex align-items-center my-2">
-                                <h5><Image src={chefIcon} style={{height:'24px', width: '24px'}} fluid/> {Array(review.rating || 0).fill().map((_, index) => (
-                                    <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
-                                    ))}</h5>
-                                </div>
+                                <Row>
+                                    <Col sm={12}>
+                                    <div className="d-flex align-items-center my-2">
+                                    <h5><Image src={chefIcon} style={{height:'24px', width: '24px'}} fluid/> {Array(review.rating || 0).fill().map((_, index) => (
+                                        <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
+                                        ))}</h5>
+                                    </div>
+                                    </Col>
+                                    <Col sm={12}>
+                                    <div className="d-flex align-items-center">
+                                        <span className="mr-4">{review?.likes ? review.likes : "20"}</span>
+                                        <FontAwesomeIcon className="ml-4" icon={faThumbsUp} style={{ cursor: 'pointer' }} />   {/*onClick={() => handleLike(index)} style={{ cursor: 'pointer' }} /> */}
+                                    </div>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     </li>
