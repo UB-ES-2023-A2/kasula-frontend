@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import PostReview from "./PostReview";
 
 
@@ -20,8 +20,14 @@ function Reviews(props){
         {user: "Pepito",
         text: "Excellent recipe"}
        ]
-        setReviews(mockReviews);
-        console.log(">>>>ID in Reviews: ", id)
+        // setReviews(mockReviews);
+        fetch(process.env.REACT_APP_API_URL + `/review/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+        console.log(">>DATA: ", data);
+        setReviews(data);
+        })
+        .catch((error) => console.error("Error al obtener receta:", error));
     }, [])
 
     const handleOpenModal = () => {
@@ -60,7 +66,14 @@ function Reviews(props){
                     {reviews ? (
                     reviews.map((review, index) => (
                     <li key={index} className="mb-3 p-2 fs-6 bg-light box-shadow">
-                        {review.user}: {review.text}
+                        <span className="fw-bold">{review.username}:{" "}</span>
+                        <span>{" "}{review.comment}{" "} 
+                        <Image
+                        src={review.image} // Asegúrate de tener la propiedad 'image' en tus objetos de revisión
+                        alt={review.user}
+                        style={{ width: '96px', height: '96px', borderRadius: '20%' }}
+                        />
+                        </span>
                     </li>
                     ))) :
                     <span>Reviews not available</span>}

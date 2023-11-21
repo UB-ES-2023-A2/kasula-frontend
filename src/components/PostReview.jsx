@@ -38,7 +38,7 @@ const PostReview = ({ id, show, onHide }) => {
   const handlePostReview = async () => {
     const reviewData = {
       username: username,
-      review: review,
+      comment: review,
       rating: difficulty,
     };
 
@@ -104,12 +104,6 @@ const PostReview = ({ id, show, onHide }) => {
       </Modal.Header>
       <Modal.Body>
         <Form>
-          <Form.Group className="mb-3">
-            {/* En un futuro esto lo traeremos por props, el usuario */}
-            <Form.Label>Username</Form.Label>
-            <p className='fw-bold'>{username}</p>
-          </Form.Group>
-
           <Form.Group className="mb-3">
             <Form.Label>Review</Form.Label>
             <Form.Control
