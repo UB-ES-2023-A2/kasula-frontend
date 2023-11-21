@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import PostReview from "./PostReview";
+import chefIcon from "../assets/icons/chef.png"
+import { StarFill, CalendarCheck} from "react-bootstrap-icons";
 
 
 function Reviews(props){
@@ -9,18 +11,6 @@ function Reviews(props){
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        // Haremos el fetch donde traiga los comentarios
-       const mockReviews = [
-        {user: "Jaimito",
-        text: "Good recipe"},
-        {user: "Pedrito",
-        text: "Bad recipe"},
-        {user: "Juanito",
-        text: "Not bad recipe"},
-        {user: "Pepito",
-        text: "Excellent recipe"}
-       ]
-        // setReviews(mockReviews);
         fetch(process.env.REACT_APP_API_URL + `/review/${id}`)
         .then((response) => response.json())
         .then((data) => {
@@ -66,14 +56,28 @@ function Reviews(props){
                     {reviews ? (
                     reviews.map((review, index) => (
                     <li key={index} className="mb-3 p-2 fs-6 bg-light box-shadow">
-                        <span className="fw-bold">{review.username}:{" "}</span>
-                        <span>{" "}{review.comment}{" "} 
-                        <Image
-                        src={review.image} // Asegúrate de tener la propiedad 'image' en tus objetos de revisión
-                        alt={review.user}
-                        style={{ width: '96px', height: '96px', borderRadius: '20%' }}
-                        />
-                        </span>
+                        <Row>
+                            <Col sm={3} className="fw-bold">
+                                {review.username}:{" "}
+                            </Col>
+                            <Col sm={9}>
+                                {review.comment}
+                            </Col>
+                            <Col sm={5} className="mt-2">
+                                <Image
+                                src={review.image} 
+                                alt={review.user}
+                                style={{ width: '112px', height: '96px', borderRadius: '20%' }}
+                                />
+                            </Col>
+                            <Col sm={7}>
+                                <div className="d-flex align-items-center my-2">
+                                <h5><Image src={chefIcon} style={{height:'24px', width: '24px'}} fluid/> {Array(review.rating || 0).fill().map((_, index) => (
+                                    <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
+                                    ))}</h5>
+                                </div>
+                            </Col>
+                        </Row>
                     </li>
                     ))) :
                     <span>Reviews not available</span>}
