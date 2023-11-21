@@ -32,7 +32,7 @@ function UserFeed() {
   }
 
   return (
-    <Container className="pb-5">
+    <Container className="pb-5 pt-3">
       <Row>
         {recipes && recipes.length > 0 ? (
           recipes.map((recipe) => (
@@ -54,7 +54,7 @@ function UserFeed() {
               </CSSTransition>
             </Col>
           ))
-        ) : ( <div className="alert alert-warning" role="alert">No hay recetas disponibles</div> )
+        ) : ( <div className="alert alert-warning" role="alert">There are currently no Recipes</div> )
         }
       </Row>
     </Container>
