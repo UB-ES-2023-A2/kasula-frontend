@@ -38,3 +38,8 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     /* Puedes ajustar estos valores */
 }
+
+.min-width-container {
+    min-width: 8ch;
+    display: inline-block;
+}

@@ -15,7 +15,7 @@ import Comments from "./Comments";
 
 function RecipeDetail() {
   const { id } = useParams();
-  const [recipe, setRecipe] = useState({});
+  const [recipe, setRecipe] = useState({images: []});
   const [showModal, setShowModal] = useState(false);
   const [showComments, setShowComments] = useState(false);
 

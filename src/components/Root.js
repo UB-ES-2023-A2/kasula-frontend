@@ -13,6 +13,7 @@ import PasswordRecovery from "./PasswordRecovery";
 import PasswordChange from "./PasswordChange";
 import UserFeed from "./UserFeed";
 import RecipeDetail from "./RecipeDetail";
+import Collections from "./Collections";
 
 //CSS
 import "../css/Transitions.css";
@@ -40,16 +41,27 @@ function Root() {
           <Route
             path="/RecipeDetail/:id"
             element={
-              <Container className="my-0 pt-0 pb-4 px-0 min-vh-100">
+              <>
                 <KasulaNavbar></KasulaNavbar>
-                <Container className="bg-lightest min-vh-100">
+                <Container fluid className="bg-lightest min-vh-100">
                   <RecipeDetail></RecipeDetail>
                 </Container>
-              </Container>
+              </>
             }
           ></Route>
           <Route path="/passwordrecovery" element={<PasswordRecovery />} />
           <Route path="/passwordrecovery/set" element={<PasswordChange />} />
+          <Route
+            path="/collections"
+            element={
+              <>
+                <KasulaNavbar></KasulaNavbar>
+                <Container fluid className="bg-lightest min-vh-100">
+                  <Collections></Collections>
+                </Container>
+              </>
+            }
+          />
         </Routes>
       </Router>
     </AuthProvider>
