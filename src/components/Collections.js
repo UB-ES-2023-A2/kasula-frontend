@@ -67,11 +67,11 @@ function Collections() {
   };
 
   return (
-    <Container>
+    <Container className="pb-4">
       <h1 className="py-4 text-center text-uppercase">
         {user.username + "'s collections"}
       </h1>
-      <Container className="bg-normal p-4">
+      <Container className="bg-normal p-4 min-vh-100">
         <span className="d-flex">
           <span
             className="ms-auto colorless-span-button"
