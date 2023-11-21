@@ -131,7 +131,7 @@ function RecipeDetail() {
           </div> */}
         </Offcanvas.Header>
         <Offcanvas.Body style={{ backgroundColor: '#ffb79fe0' }}>
-          <Reviews />
+          <Reviews id={id}/>
         </Offcanvas.Body>
       </Offcanvas>
     </Container>

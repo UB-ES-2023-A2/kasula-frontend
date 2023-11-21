@@ -6,11 +6,11 @@ import {
   Star
 } from "react-bootstrap-icons";
 
-const PostReview = ({ show, onHide }) => {
+const PostReview = ({ id, show, onHide }) => {
   const [username, setUsername] = useState('');
   const [review, setReview] = useState('');
   const [difficulty, setDifficulty] = useState(1);
-  const [data, setData] = useState(null);
+  const [data2, setData2] = useState(null);
   const [image, setImage] = useState(null);
   const { token } = useAuth();
 
@@ -23,11 +23,12 @@ const PostReview = ({ show, onHide }) => {
     })
         .then((response) => response.json())
         .then((data) => {
-          setData(data);
+          setData2(data);
           setUsername(data?.username);
+          console.log(">>>>IdPostReview:", id)
         })
         .catch((error) => console.error("Error:", error));
-  }, [])
+  }, [id])
 
   const handleFileChange = (event) => {
     const selectedImage= event.target.files[0];
@@ -50,28 +51,26 @@ const PostReview = ({ show, onHide }) => {
     console.log(">>>>formD1: ", reviewData)
     console.log(">>>>formD: ", formData)
 
-    // try {
-    //   const response = await fetch(process.env.REACT_APP_API_URL + "/reviews", {
-    //     method: "POST",
-    //     headers: {
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //     body: formData,
-    //   });
+     try {
+      console.log(">>>ID: ", id)
+       const response = await fetch(process.env.REACT_APP_API_URL + `/review/${id}`, {
+         method: "POST",
+         headers: {
+           Authorization: `Bearer ${token}`,
+         },
+         body: formData,
+       });
 
-    //   const data = await response.json();
-
-    //   if (response.ok) {
-    //     setSubmitMessage("Recipe posted successfully", data);
-    //     setPostRecipeSuccess(true);
-    //     onClose();
-    //   } else {
-    //     setSubmitMessage("Error posting recipe: " + JSON.stringify(data));
-    //   }
-    // } catch (error) {
-    //   setSubmitMessage(JSON.stringify(error));
-    //   setPostRecipeSuccess(false);
-    // }
+       const data = await response.json();
+       console.log(">>>DATA despues del post:", data)
+       if (response.ok) {
+         console.log(">>>Post hecho: ", data)
+       } else{
+        console.log(">>>Response KO: ", data)
+       }
+     } catch (error) {
+       console.log("HA FALLADO EL POST")
+     }
     setReview('');
     setImage(null);
 

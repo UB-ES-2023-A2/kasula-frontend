@@ -3,7 +3,8 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import PostReview from "./PostReview";
 
 
-function Reviews(){
+function Reviews(props){
+    const { id } = props;
     const [reviews, setReviews] = useState(null);
     const [showModal, setShowModal] = useState(false);
 
@@ -20,6 +21,7 @@ function Reviews(){
         text: "Excellent recipe"}
        ]
         setReviews(mockReviews);
+        console.log(">>>>ID in Reviews: ", id)
     }, [])
 
     const handleOpenModal = () => {
@@ -36,6 +38,7 @@ function Reviews(){
         <Row className="mt-2">
         <Button className="fs-6 mx-auto" onClick={handleOpenModal}>Post review</Button>
         <PostReview
+          id={id}
           show={showModal}
           onHide={handleCloseModal}
         //   recipeImage={gyozas}
