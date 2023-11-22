@@ -25,7 +25,6 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
         .then((data) => {
           setData2(data);
           setUsername(data?.username);
-          console.log(">>>>IdPostReview:", id)
         })
         .catch((error) => console.error("Error:", error));
   }, [id])
@@ -48,11 +47,7 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
     if (image) {
       formData.append("file", image);
     }
-    console.log(">>>>formD1: ", reviewData)
-    console.log(">>>>formD: ", formData)
-
      try {
-      console.log(">>>ID: ", id)
        const response = await fetch(process.env.REACT_APP_API_URL + `/review/${id}`, {
          method: "POST",
          headers: {
@@ -62,7 +57,6 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
        });
 
        const data = await response.json();
-       console.log(">>>DATA despues del post:", data)
        if (response.ok) {
          console.log(">>>Post hecho: ", data)
        } else{
