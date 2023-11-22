@@ -66,7 +66,7 @@ function RecipeDetail() {
                       <Button
                       variant="link"
                       className="text-decoration-none fs-3 text-reset my-2"
-                      onClick={() => navigate("/login")}
+                      onClick={() => navigate("/")}
                         ><ArrowLeft></ArrowLeft>
                       </Button>
                     </Col>
