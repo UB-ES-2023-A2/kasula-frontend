@@ -13,6 +13,7 @@ import "../css/Transitions.css";
 
 //Assets
 import chefIcon from "../assets/icons/chef.png";
+import gyoza from "../assets/gyozas.jpg";
 
 function UserFeed() {
   const [recipes, setRecipes] = useState([]);
@@ -40,7 +41,7 @@ function UserFeed() {
               <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
                 <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="text-decoration-none">
                   <Card className="mt-5 shadow" id="recipes-list">
-                    <Card.Img className="object-fit-cover" variant="top" src={recipe.images[0]} alt={recipe.name} height={300}/>
+                    <Card.Img className="object-fit-cover" variant="top" src={recipe.main_image ?? gyoza} height={300}/>
                     <Card.Body>
                       <Card.Title className="overflow-hidden text-nowrap">{recipe.name}</Card.Title>
                         <h5><Image src={chefIcon} style={{height:'24px', width: '24px'}} fluid/> {Array(recipe.difficulty || 0).fill().map((_, index) => (
