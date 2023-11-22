@@ -47,7 +47,7 @@ function RecipeDetail() {
         <ImageModal
           show={showModal}
           onHide={handleCloseModal}
-          recipeImage={(recipe.images.length > 0 ? recipe.images[0] : gyozas) ?? gyozas}
+          recipeImage={recipe.main_image ?? gyozas}
           recipeName={recipe.name}
         />
         <Container>
@@ -59,8 +59,7 @@ function RecipeDetail() {
                   <Col xs={12} md={6} lg={6} className="p-4">
                     <Col xs={12}>
                       <Image
-                        src={(recipe.images.length > 0 ? recipe.images[0] : gyozas) ?? gyozas}
-                        alt={recipe.name}
+                        src={recipe.main_image ?? gyozas}
                         className="img-fluid shadow mb-3"
                         onClick={handleOpenModal}
                         style={{ cursor: "pointer" }}

@@ -70,7 +70,7 @@ function KasulaNavbar() {
 
   const handleClosePostRecipeSuccessfulModal = () => {
     setShowPostRecipe(false);
-    window.location.reload();
+    //window.location.reload();
   };
 
   const handleLogout = () => {
