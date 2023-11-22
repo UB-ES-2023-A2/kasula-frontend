@@ -7,7 +7,7 @@ import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css"; 
 import { Container, Row, Col, Image, Offcanvas, Button } from "react-bootstrap";
-import { StarFill, Stopwatch, Lightning } from "react-bootstrap-icons";
+import { StarFill, Stopwatch, Lightning, FolderSymlinkFill } from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
 import Reviews from "./Reviews";
 
@@ -67,7 +67,7 @@ function RecipeDetail() {
                       />
                       <h2 style={{ marginBottom: '1rem' }}>{recipe.name}</h2>
                     </Col>
-                    <Col md={12}>
+                    <Col md={6}>
                       <div className="mt-5 pb-3 pt-2 bg-light box-shadow">
                         <h4>Más información</h4>
                         <div className="d-flex align-items-center my-2 mx-3">
@@ -89,8 +89,14 @@ function RecipeDetail() {
                       </div>
                     </Col>
                   </Col>
-                  <Col xs={12} md={6} lg={4} className="p-4">
+                  <Col xs={12} md={6} className="p-4">
                     <Row>
+                      <Col xs={12} className="d-flex mb-4">
+                        <div className="ms-auto colorless-span-button" role="button">
+                          <span className="fs-6 me-2">Add to collection</span>
+                          <FolderSymlinkFill className="fs-4" />
+                        </div>
+                      </Col>
                       <Col xs={12}>
                         <div className="mb-3 py-2 bg-light box-shadow">
                           <h3>Ingredientes</h3>
