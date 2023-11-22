@@ -5,10 +5,7 @@ import {
   Container,
   Row,
   Col,
-  Image,
-  Offcanvas,
-  Button,
-  Table,
+  Modal,
   Card,
 } from "react-bootstrap";
 import {
@@ -19,6 +16,7 @@ import {
   FolderPlus,
 } from "react-bootstrap-icons";
 import "../css/common.css";
+import CollectionCreate from "./CollectionCreate";
 
 function Collections() {
   const { token } = useAuth();
@@ -27,6 +25,10 @@ function Collections() {
     localStorage.getItem("logged") === "true"
   );
   const [collections, setCollections] = useState([]);
+  const [createCollectionModal, setCreateCollectionModal] = useState({
+    title: "Create Collection",
+    show: false,
+  });
 
   const navigate = useNavigate();
 
@@ -66,6 +68,16 @@ function Collections() {
       );
   };
 
+  const handleCloseModal = (setModalState, modalState, shouldReload) => {
+    setModalState({
+      ...modalState,
+      show: false
+  });
+    if (shouldReload) {
+      window.location.reload();
+    }
+  }
+
   return (
     <Container className="pb-4">
       <h1 className="py-4 text-center text-uppercase">
@@ -76,9 +88,14 @@ function Collections() {
           <span
             className="ms-auto colorless-span-button"
             role="button"
-            onClick={() => {}}
+            onClick={() => 
+              {setCreateCollectionModal({
+              ...createCollectionModal,
+              show: true
+              })
+            }}
           >
-            <span className="me-2">New Collection</span>
+            <span className="me-3">New Collection</span>
             <FolderPlus className="fs-2" />
           </span>
         </span>
@@ -145,6 +162,20 @@ function Collections() {
             </Col>
           ))}
       </Container>
+      <Modal
+        show={createCollectionModal.show}
+        size="lg"
+        onHide={() => handleCloseModal(setCreateCollectionModal, createCollectionModal, false)}
+      >
+        <Modal.Header closeButton className="bg-normal">
+          <Modal.Title className="fs-3 fw-semi-bold">{createCollectionModal.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+          <CollectionCreate
+            onClose={() => handleCloseModal(setCreateCollectionModal, createCollectionModal, true)}
+          ></CollectionCreate>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 }
