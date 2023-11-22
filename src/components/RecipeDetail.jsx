@@ -7,7 +7,7 @@ import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css"; 
 import { Container, Row, Col, Image, Offcanvas, Button } from "react-bootstrap";
-import { StarFill, Stopwatch, Lightning, FolderSymlinkFill } from "react-bootstrap-icons";
+import { StarFill, Stopwatch, Lightning, FolderSymlinkFill, Heart, HeartFill } from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
 import Reviews from "./Reviews";
 
@@ -17,6 +17,7 @@ function RecipeDetail() {
   const [recipe, setRecipe] = useState({images: []});
   const [showModal, setShowModal] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
 
   useEffect(() => {
