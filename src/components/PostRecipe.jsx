@@ -58,7 +58,8 @@ const RecipePost = ({ onClose }) => {
   const instructionRef = useRef(null);
   const ingredientUnitRef = useRef(null);
   const navigate = useNavigate();
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]); // Cambiado para manejar múltiples imágenes
+  const [imagePreviews, setImagePreviews] = useState([]);
   const [showPostRecipeConfirmation, setShowPostRecipeConfirmation] =
     useState(false);
   const [postSuccess, setPostRecipeSuccess] = useState(false);
@@ -226,12 +227,12 @@ const RecipePost = ({ onClose }) => {
 
     const formData = new FormData();
     formData.append("recipe", JSON.stringify(recipeData));
-    if (image) {
-      formData.append("file", image);
-    }
+    images.forEach((image, index) => {
+      formData.append("files", image);
+    });
 
     try {
-      const response = await fetch(process.env.REACT_APP_API_URL + "/recipe/", {
+      const response = await fetch('http://127.0.0.1:8080' + "/recipe/", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -257,10 +258,12 @@ const RecipePost = ({ onClose }) => {
   };
 
   const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    setImage(file);
-    const imageUrl = URL.createObjectURL(file);
-    setImagePreviewUrl(imageUrl);
+    const files = event.target.files;
+    if (files) {
+      const fileArray = Array.from(files).map((file) => URL.createObjectURL(file));
+      setImagePreviews((prevImages) => prevImages.concat(fileArray));
+      Array.from(files).forEach(file => setImages(prevImages => [...prevImages, file])); 
+    }
   };
 
   const handlePostRecipeConfirmationClose = () => {
@@ -268,6 +271,11 @@ const RecipePost = ({ onClose }) => {
     if (postSuccess) {
       navigate("/");
     }
+  };
+
+  const removeImage = (indexToRemove) => {
+    setImagePreviews((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
+    setImages((prevImages) => prevImages.filter((_, index) => index !== indexToRemove));
   };
 
   return (
@@ -507,13 +515,10 @@ const RecipePost = ({ onClose }) => {
                   <Row>
                     <Col xs={6} md={6} lg={6}>
                       <Row>
-                        <Form.Group controlId="formFile" className="mb-3">
-                          <Form.Label>Upload an image</Form.Label>
-                          <Form.Control
-                            type="file"
-                            onChange={handleImageUpload}
-                          />
-                        </Form.Group>
+                      <Form.Group controlId="formFileMultiple" className="mb-3">
+                        <Form.Label>Upload images</Form.Label>
+                        <Form.Control type="file" multiple onChange={handleImageUpload} />
+                      </Form.Group>
                       </Row>
                     </Col>
                     <Col xs={6} md={6} lg={6}>
@@ -535,7 +540,7 @@ const RecipePost = ({ onClose }) => {
                     </Col>
                     <Col xs={6} md={6} lg={6}>
                       <Row>
-                          {imagePreviewUrl && <img src={imagePreviewUrl} alt="Uploaded" />}
+                      
                       </Row>
                     </Col>
                     <Col xs={6}>
