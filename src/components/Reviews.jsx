@@ -7,7 +7,7 @@ import LikesReview from "./LikesReview";
 
 
 function Reviews(props) {
-  const { id } = props;
+  const { id, reloadReviews } = props;
   const [reviews, setReviews] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -19,7 +19,7 @@ function Reviews(props) {
         setReviews(data);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
-  }, []); // Cambié [likes] a [] para evitar un bucle infinito
+  }, [reloadReviews]); 
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -28,38 +28,6 @@ function Reviews(props) {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-
-//   const handleLike = async (reviewId) => {
-//     try {
-//       const response = await fetch(
-//         `${process.env.REACT_APP_API_URL}/review/like/${id}/${reviewId}`,
-//         {
-//           method: "PATCH",
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       );
-  
-//       const data = await response.json();
-//       if (!response.ok) {
-//         console.error("Error al enviar el like:", data);
-//         return;
-//       }
-  
-//       // Actualiza el estado localmente usando el callback
-//       setReviews(prevReviews => {
-//         const updatedReviews = [...prevReviews];
-//         const index = updatedReviews.findIndex((review) => review._id === reviewId);
-//         if (index !== -1) {
-//           updatedReviews[index].likes = (updatedReviews[index].likes || 0) + 1;
-//         }
-//         return updatedReviews;
-//       });
-//     } catch (error) {
-//       console.error("Error en la solicitud de like:", error);
-//     }
-//   };
 
   return (
     <Container className="flex-column justify-content-between align-items-center">
@@ -71,8 +39,7 @@ function Reviews(props) {
           id={id}
           show={showModal}
           onHide={handleCloseModal}
-          //   recipeImage={gyozas}
-          //   recipeName={"Gyozas"}
+          reloadReviews={reloadReviews}
         />
       </Row>
 
@@ -131,6 +98,7 @@ function Reviews(props) {
                                 reviewId={review._id}
                                 initialLikes={review.likes || 0}
                                 likedBy={review.liked_by}
+                                reloadReviews={reloadReviews}
                                 />
                             </div>
                           </div>

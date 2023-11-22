@@ -5,7 +5,7 @@ import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "./AuthContext";
 
 
-function LikesReview({ recipeId, reviewId, initialLikes, likedBy }) {
+function LikesReview({ recipeId, reviewId, initialLikes, likedBy, reloadReviews }) {
   const [likes, setLikes] = useState(initialLikes);
   const [hasLiked, setHasLiked] = useState(false);
   const currentUserUsername = localStorage.getItem('currentUser');
@@ -43,6 +43,7 @@ function LikesReview({ recipeId, reviewId, initialLikes, likedBy }) {
     } catch (error) {
       console.error("Error en la solicitud de like:", error);
     }
+    reloadReviews();
   };
 
   return (

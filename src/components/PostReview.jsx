@@ -6,7 +6,7 @@ import {
   Star
 } from "react-bootstrap-icons";
 
-const PostReview = ({ id, show, onHide }) => {
+const PostReview = ({ id, show, onHide, reloadReviews }) => {
   const [username, setUsername] = useState('');
   const [review, setReview] = useState('');
   const [difficulty, setDifficulty] = useState(1);
@@ -75,6 +75,7 @@ const PostReview = ({ id, show, onHide }) => {
     setImage(null);
 
     onHide();
+    reloadReviews();
   };
 
   const renderStars = (amount) => {

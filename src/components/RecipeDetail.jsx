@@ -17,7 +17,7 @@ function RecipeDetail() {
   const [recipe, setRecipe] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
-
+  const [reloadReviews, setReloadReviews] = useState(null); 
 
   useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
@@ -28,7 +28,12 @@ function RecipeDetail() {
       })
       .catch((error) => console.error("Error al obtener receta:", error));
   }, [id]);
-  
+
+
+  const reloadReviewsFunction = () => {
+    setReloadReviews(!reloadReviews);
+  };
+
   const handleOpenModal = () => {
     setShowModal(true);
   };
@@ -40,7 +45,6 @@ function RecipeDetail() {
   const handleToggleReviews = () => {
     setShowReviews(!showReviews);
   };
-  
 
   return (
       <Container fluid className="min-vh-100">
@@ -131,7 +135,7 @@ function RecipeDetail() {
           </div> */}
         </Offcanvas.Header>
         <Offcanvas.Body style={{ backgroundColor: '#ffb79fe0' }}>
-          <Reviews id={id}/>
+          <Reviews id={id} reloadReviews={reloadReviewsFunction}/>
         </Offcanvas.Body>
       </Offcanvas>
     </Container>
