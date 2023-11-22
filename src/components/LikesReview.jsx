@@ -1,5 +1,6 @@
 // LikesReview.js
 import React, { useState } from "react";
+import {Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "./AuthContext";
@@ -47,16 +48,20 @@ function LikesReview({ recipeId, reviewId, initialLikes, likedBy, reloadReviews 
   };
 
   return (
-    <div className="d-flex align-items-center">
-      <span className="mr-4">{likes}</span>
-      <FontAwesomeIcon
-        className="ml-4"
-        icon={faThumbsUp}
-        onClick={handleLikeClick}
-        style={{ cursor: "pointer" }}
-      />
-    </div>
-  );
+    <Row>
+      <Col sm={3}>
+        <FontAwesomeIcon
+          icon={faThumbsUp}
+          onClick={handleLikeClick}
+          style={{ cursor: "pointer" }}
+        />
+      </Col>
+      <Col sm={8}>
+        <span className="">{likes} likes</span>
+      </Col>
+      <Col sm={1}></Col>
+    </Row>  
+       );
 }
 
 export default LikesReview;

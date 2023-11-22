@@ -19,7 +19,7 @@ function Reviews(props) {
         setReviews(data);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
-  }, [reloadReviews]); 
+  }, [id, reloadReviews]); 
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -68,7 +68,7 @@ function Reviews(props) {
                     <Col sm={7}>
                       <Row>
                         <Col sm={12}>
-                          <div className="d-flex align-items-center my-2">
+                          <div className="d-flex align-items-center mt-3 mb-2">
                             <h5>
                               <Image
                                 src={chefIcon}
@@ -91,16 +91,14 @@ function Reviews(props) {
                           </div>
                         </Col>
                         <Col sm={12}>
-                          <div className="d-flex align-items-center">
-                            <div className="d-flex align-items-center">
-                                <LikesReview
-                                recipeId={id}
-                                reviewId={review._id}
-                                initialLikes={review.likes || 0}
-                                likedBy={review.liked_by}
-                                reloadReviews={reloadReviews}
-                                />
-                            </div>
+                          <div className="d-flex align-items-cente mx-1">
+                            <LikesReview
+                            recipeId={id}
+                            reviewId={review._id}
+                            initialLikes={review.likes || 0}
+                            likedBy={review.liked_by}
+                            reloadReviews={reloadReviews}
+                            />
                           </div>
                         </Col>
                       </Row>

@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import "../css/common.css";
 import "../css/Transitions.css";
 import chefIcon from "../assets/icons/chef.png"
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css"; 
 import { Container, Row, Col, Image, Offcanvas, Button } from "react-bootstrap";
-import { StarFill, Stopwatch, Lightning } from "react-bootstrap-icons";
+import { StarFill, Stopwatch, Lightning, ArrowLeft} from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
 import Reviews from "./Reviews";
-
 
 function RecipeDetail() {
   const { id } = useParams();
@@ -18,6 +17,8 @@ function RecipeDetail() {
   const [showModal, setShowModal] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const [reloadReviews, setReloadReviews] = useState(null); 
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
@@ -61,7 +62,15 @@ function RecipeDetail() {
               <Container className="mt-5 text-center box-rounded shadow" style={{ backgroundColor: '#ffb79fe0'}}>
                 <Row>
                   <Col xs={12} md={6} lg={6} className="p-4">
-                    <Col xs={12}>
+                    {/* <Col sm={1}>
+                      <Button
+                      variant="link"
+                      className="text-decoration-none fs-3 text-reset my-2"
+                      onClick={() => navigate("/login")}
+                        ><ArrowLeft></ArrowLeft>
+                      </Button>
+                      </Col> */}
+                    <Col xs={11}>
                       <Image
                         src={recipe.image ?? gyozas}
                         alt={recipe.name}
