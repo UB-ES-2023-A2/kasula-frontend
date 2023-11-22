@@ -123,7 +123,7 @@ function PasswordChange() {
   const requestPasswordChange = async () => {
     try {
       const response = await fetch(
-        process.env.REACT_APP_API_URL + "/user/password_recovery/"
+        'http://127.0.0.1:8000' + "/user/password_recovery/"
           .concat(email)
           .concat("?verification_code=")
           .concat(verificationCode),

@@ -11,7 +11,7 @@ const UploadFile = ({myParentCallback}) => {
    const handleUpload = () => {
      const formData = new FormData();
      formData.append('file', selectedFile);
-     axios.post(process.env.REACT_APP_API_URL + '/recipe/uploadfile', formData)
+     axios.post('http://127.0.0.1:8000' + '/recipe/uploadfile', formData)
        .then((response) => {
          myParentCallback(response.data.file_url);
        })

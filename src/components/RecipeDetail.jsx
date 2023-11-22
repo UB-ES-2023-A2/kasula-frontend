@@ -19,7 +19,7 @@ function RecipeDetail() {
 
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
+    fetch('http://127.0.0.1:8000' + `/recipe/${id}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
