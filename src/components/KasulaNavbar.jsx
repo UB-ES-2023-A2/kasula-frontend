@@ -68,7 +68,7 @@ function KasulaNavbar() {
 
   const handleClosePostRecipeSuccessfulModal = () => {
     setShowPostRecipe(false);
-    window.location.reload();
+    //window.location.reload();
   };
 
   const handleLogout = () => {
@@ -178,7 +178,7 @@ function KasulaNavbar() {
       </Modal>
       <Modal show={showModal} size="sm" onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Tancar la sessió</Modal.Title>
+          <Modal.Title>Log Out</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Row>
@@ -188,13 +188,13 @@ function KasulaNavbar() {
           </Row>
           <Row>
             <Col className="text-center">
-              <p className="ms-0">Segur que vols tancar sessió?</p>
+              <p className="ms-0">Are you sure you want to Log Out?</p>
             </Col>
           </Row>
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
           <Button variant="danger" onClick={handleLogout}>
-            Tancar
+            Log Out
           </Button>
         </Modal.Footer>
       </Modal>
