@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import "../css/common.css";
 
 //Bootstrap
 import {
@@ -51,6 +52,7 @@ function KasulaNavbar() {
       .then((data) => {
         console.log("User data:", data);
         setUser(data);
+        {window.localStorage.setItem("currentUser", data.username)}
       })
       .catch((error) => console.error("Error al obtener recetas:", error));
   };
@@ -102,7 +104,7 @@ function KasulaNavbar() {
               <>
                 <Nav className="me-auto fs-5">
                   <Nav.Link href="/">Feed</Nav.Link>
-                  <Nav.Link href="#collections">Collections</Nav.Link>
+                  <Nav.Link href="/collections">Collections</Nav.Link>
                 </Nav>
                 <Button
                   className="me-4 fs-5 border-0"
@@ -123,8 +125,7 @@ function KasulaNavbar() {
                           width={30}
                           height={30}
                         />
-                        <span>{user.username}</span>
-                        {window.localStorage.setItem("currentUser", user.username)}
+                        <span className="min-width-container">{user.username}</span>
                       </>
                     }
                     id="basic-nav-dropdown"
