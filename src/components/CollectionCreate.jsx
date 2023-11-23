@@ -5,7 +5,7 @@ import { useAuth } from "./AuthContext";
 //React Components
 import { Container, Row, Col, Button, Form } from "react-bootstrap";
 
-const CollectionCreate = ({ onClose, onMessage }) => {
+const CollectionCreate = ({ onClose, onMessage, recipe_id }) => {
   const { token } = useAuth();
   const [collection, setCollection] = useState({
     name: "",
@@ -20,7 +20,7 @@ const CollectionCreate = ({ onClose, onMessage }) => {
     },
   });
 
-  const requestCreateCollection = async () => {
+  const requestCreateCollection = async (request_body) => {
     try {
       const response = await fetch(
         process.env.REACT_APP_API_URL + "collection/",
@@ -30,11 +30,7 @@ const CollectionCreate = ({ onClose, onMessage }) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            name: collection.name,
-            description: collection.description,
-            //image: collection.image,
-          }),
+          body: request_body,
         }
       );
       const data = await response.json();
@@ -71,7 +67,20 @@ const CollectionCreate = ({ onClose, onMessage }) => {
     event.preventDefault();
     performValidations(true);
     if (allValid()) {
-      requestCreateCollection();
+      if (recipe_id) {
+        requestCreateCollection(
+          JSON.stringify({
+            ...collection,
+            recipe_ids: [recipe_id],
+          })
+        );
+      } else {
+        requestCreateCollection(
+          JSON.stringify({
+            ...collection,
+          })
+        );
+      }
     }
   };
 

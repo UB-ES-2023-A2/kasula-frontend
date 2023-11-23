@@ -90,7 +90,7 @@ function CollectionView() {
                       <Card.Footer>By {recipe.username}</Card.Footer>
                     </Card>
                   </Link>
-                  <span className="fs-3 colorless-span-button position-absolute top-0 end-0" role="button" onClick={
+                  <span className="fs-3 colorless-span-button position-absolute top-0 end-0 mx-2" role="button" onClick={
                     () => {
                       fetch(process.env.REACT_APP_API_URL + `/collection/${id}/remove_recipe/${recipe._id}`, {
                         method: 'PUT',
@@ -106,7 +106,7 @@ function CollectionView() {
                         .catch((error) => console.error("Error al obtener recetas:", error));
                     }
                   }>
-                    <X />
+                    <X className="rounded-circle highlighter" />
                   </span>
                 </div>
               </CSSTransition>

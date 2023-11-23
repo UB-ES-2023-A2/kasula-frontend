@@ -1,27 +1,63 @@
 import React, { useState, useEffect } from "react";
 import "../css/common.css";
 import "../css/Transitions.css";
-import chefIcon from "../assets/icons/chef.png"
+import chefIcon from "../assets/icons/chef.png";
 import { useParams } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { CSSTransition } from "react-transition-group";
-import gyozas from '../assets/gyozas.jpg';
-import "bootstrap/dist/css/bootstrap.min.css"; 
-import { Container, Row, Col, Image, Offcanvas, Button } from "react-bootstrap";
-import { StarFill, Stopwatch, Lightning, FolderSymlinkFill, Heart, HeartFill } from "react-bootstrap-icons";
+import gyozas from "../assets/gyozas.jpg";
+import "bootstrap/dist/css/bootstrap.min.css";
+import {
+  Container,
+  Row,
+  Col,
+  Image,
+  Offcanvas,
+  Button,
+  Dropdown,
+  Modal,
+  Toast,
+} from "react-bootstrap";
+import {
+  StarFill,
+  Stopwatch,
+  Lightning,
+  FolderSymlinkFill,
+  Heart,
+  HeartFill,
+} from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
 import Reviews from "./Reviews";
-
+import CollectionCreate from "./CollectionCreate";
+import AddRecipeToCollection from "./AddRecipeToCollection";
 
 function RecipeDetail() {
   const { token } = useAuth();
   const [user, setUser] = useState({});
   const { id } = useParams();
-  const [recipe, setRecipe] = useState({images: []});
-  const [showModal, setShowModal] = useState(false);
+  const [recipe, setRecipe] = useState({ images: [] });
   const [showReviews, setShowReviews] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
+  const [imageModal, setImageModal] = useState({
+    show: false,
+  });
+
+  const [createCollectionModal, setCreateCollectionModal] = useState({
+    show: false,
+    title: "Create new collection",
+  });
+
+  const [addToCollectionModal, setAddToCollectionModal] = useState({
+    show: false,
+    title: "Add to collection",
+  });
+
+  const [toastData, setToastData] = useState({
+    message: "",
+    variant: "",
+    show: false,
+  });
 
   useEffect(() => {
     getRecipe();
@@ -54,14 +90,16 @@ function RecipeDetail() {
       .catch((error) => console.error("Error al obtener receta:", error));
   };
 
-
   const getIsLiked = (user) => {
-    fetch(process.env.REACT_APP_API_URL + `collection/favorites/${user.username}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    fetch(
+      process.env.REACT_APP_API_URL + `collection/favorites/${user.username}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log("Favorites: ", data.recipe_ids);
@@ -74,12 +112,16 @@ function RecipeDetail() {
 
   const setLiked = () => {
     setIsLiked(true);
-    fetch(process.env.REACT_APP_API_URL + `collection/favorites/add_recipe/${recipe._id}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    fetch(
+      process.env.REACT_APP_API_URL +
+        `collection/favorites/add_recipe/${recipe._id}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -91,12 +133,16 @@ function RecipeDetail() {
   };
 
   const setUnliked = () => {
-    fetch(process.env.REACT_APP_API_URL + `/collection/favorites/remove_recipe/${recipe._id}`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    fetch(
+      process.env.REACT_APP_API_URL +
+        `/collection/favorites/remove_recipe/${recipe._id}`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -104,60 +150,98 @@ function RecipeDetail() {
       })
       .catch((error) => console.error("Error al obtener receta:", error));
   };
-  
-  const handleOpenModal = () => {
-    setShowModal(true);
-  };
-  
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
 
   const handleToggleReviews = () => {
     setShowReviews(!showReviews);
   };
-  
+
+  const handleCloseModal = (setModalState, modalState) => {
+    setModalState({
+      ...modalState,
+      show: false,
+    });
+  };
+
+  const CustomToggle = React.forwardRef(({ onClick }, ref) => (
+    <div
+      className="p-2 me-2 btn-normal"
+      role="button"
+      ref={ref}
+      id="collection-dropdown"
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+    >
+      <span className="fs-6 me-2">Add to collection</span>
+      <FolderSymlinkFill className="fs-4" />
+    </div>
+  ));
 
   return (
-      <Container fluid className="min-vh-100">
-        <ImageModal
-          show={showModal}
-          onHide={handleCloseModal}
-          recipeImage={recipe.main_image ?? gyozas}
-          recipeName={recipe.name}
-        />
-        <Container>
-          <Row>
-            <Col sm={12}>
+    <Container fluid className="min-vh-100">
+      <ImageModal
+        show={imageModal.show}
+        onHide={() => handleCloseModal(setImageModal, imageModal)}
+        recipeImage={recipe.main_image ?? gyozas}
+        recipeName={recipe.name}
+      />
+      <Container>
+        <Row>
+          <Col sm={12}>
             <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-              <Container className="mt-5 text-center box-rounded shadow" style={{ backgroundColor: '#ffb79fe0'}}>
+              <Container className="mt-5 text-center box-rounded shadow bg-normal">
                 <Row>
                   <Col xs={12} md={6} lg={6} className="p-4">
                     <Col xs={12}>
                       <Image
                         src={recipe.main_image ?? gyozas}
                         className="img-fluid shadow mb-3"
-                        onClick={handleOpenModal}
+                        onClick={() => setImageModal({ show: true })}
                         style={{ cursor: "pointer" }}
                         fluid
                       />
-                      <h2 style={{ marginBottom: '1rem' }}>{recipe.name}</h2>
+                      <h2 style={{ marginBottom: "1rem" }}>{recipe.name}</h2>
                     </Col>
-                    <Col md={6}>
+                    <Col xs={12}>
                       <div className="mt-5 pb-3 pt-2 bg-light box-shadow">
                         <h4>Más información</h4>
                         <div className="d-flex align-items-center my-2 mx-3">
-                          <h5><Image src={chefIcon} style={{height:'24px', width: '24px'}} fluid/> {Array(recipe.difficulty || 0).fill().map((_, index) => (
-                              <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
-                            ))}</h5>
+                          <h5>
+                            <Image
+                              src={chefIcon}
+                              style={{ height: "24px", width: "24px" }}
+                              fluid
+                            />{" "}
+                            {Array(recipe.difficulty || 0)
+                              .fill()
+                              .map((_, index) => (
+                                <span
+                                  key={index}
+                                  className="fs-5 ms-1 text-center"
+                                >
+                                  <StarFill
+                                    style={{ color: "gold" }}
+                                  ></StarFill>
+                                </span>
+                              ))}
+                          </h5>
                         </div>
                         <div className="d-flex align-items-center my-2 mx-3">
-                          <h5><Stopwatch/></h5>
-                          <span className="fs-6 fw-bold ms-2 text-muted">{recipe.cooking_time} min</span>
+                          <h5>
+                            <Stopwatch />
+                          </h5>
+                          <span className="fs-6 fw-bold ms-2 text-muted">
+                            {recipe.cooking_time} min
+                          </span>
                         </div>
                         <div className="d-flex align-items-center mt-2 mx-3">
-                          <h5><Lightning/></h5>
-                          <span className="fs-6 fw-bold ms-2 text-muted">{recipe.energy ?? 'No info of'} kcal</span>
+                          <h5>
+                            <Lightning />
+                          </h5>
+                          <span className="fs-6 fw-bold ms-2 text-muted">
+                            {recipe.energy ?? "No info of"} kcal
+                          </span>
                         </div>
                         <Button className="mt-3" onClick={handleToggleReviews}>
                           Toggle Reviews
@@ -169,28 +253,69 @@ function RecipeDetail() {
                     <Row>
                       <Col xs={12} className="d-flex mb-4">
                         <div className="ms-auto d-flex">
-                          <div className="me-3" role="button" onClick={isLiked ? setUnliked : setLiked}>
+                          <Dropdown>
+                            <Dropdown.Toggle
+                              as={CustomToggle}
+                              variant="null"
+                              id="dropdown-basic"
+                            />
+                            <Dropdown.Menu>
+                              <Dropdown.Item
+                                eventKey={1}
+                                onClick={() => {
+                                  setAddToCollectionModal({
+                                    show: true,
+                                    title: "Add to collection",
+                                  });
+                                }}
+                              >
+                                Add to existing collection
+                              </Dropdown.Item>
+                              <Dropdown.Item
+                                eventKey={2}
+                                onClick={() => {
+                                  setCreateCollectionModal({
+                                    show: true,
+                                    title: "Create new collection",
+                                  });
+                                }}
+                              >
+                                Add to new collection
+                              </Dropdown.Item>
+                            </Dropdown.Menu>
+                          </Dropdown>
+                          <div
+                            className="p-2"
+                            role="button"
+                            onClick={isLiked ? setUnliked : setLiked}
+                          >
                             <span>
                               {isLiked ? (
-                                <HeartFill className="fs-4" style={{color: "red"}} />
+                                <HeartFill
+                                  className="fs-4"
+                                  style={{ color: "red" }}
+                                />
                               ) : (
                                 <Heart className="fs-4" />
                               )}
                             </span>
-                          </div>
-                          <div className="colorless-span-button" role="button">
-                            <span className="fs-6 me-2">Add to collection</span>
-                            <FolderSymlinkFill className="fs-4" />
                           </div>
                         </div>
                       </Col>
                       <Col xs={12}>
                         <div className="mb-3 py-2 bg-light box-shadow">
                           <h3>Ingredientes</h3>
-                          <ul className='text-start'>
-                            {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
-                              <li className='mb-2 fs-6 fw-bold text-muted' key={index}>{ingredient.name} - {ingredient.quantity} {ingredient.unit}</li>
-                            ))}
+                          <ul className="text-start">
+                            {recipe.ingredients &&
+                              recipe.ingredients.map((ingredient, index) => (
+                                <li
+                                  className="mb-2 fs-6 fw-bold text-muted"
+                                  key={index}
+                                >
+                                  {ingredient.name} - {ingredient.quantity}{" "}
+                                  {ingredient.unit}
+                                </li>
+                              ))}
                           </ul>
                         </div>
                       </Col>
@@ -198,11 +323,15 @@ function RecipeDetail() {
                         <div className="mb-3 bg-danger py-2 text-white box-shadow">
                           <h3>Pasos</h3>
                           <ol className="text-start">
-                            {recipe.instructions && recipe.instructions.map((instruction, index) => (
-                              <li className='mb-2 fs-6 fw-bold text-white' key={index}>
-                                {instruction.body}
-                              </li>
-                            ))}
+                            {recipe.instructions &&
+                              recipe.instructions.map((instruction, index) => (
+                                <li
+                                  className="mb-2 fs-6 fw-bold text-white"
+                                  key={index}
+                                >
+                                  {instruction.body}
+                                </li>
+                              ))}
                           </ol>
                         </div>
                       </Col>
@@ -211,21 +340,93 @@ function RecipeDetail() {
                 </Row>
               </Container>
             </CSSTransition>
-            </Col>
-          </Row>
-        </Container>
+          </Col>
+        </Row>
+      </Container>
       {/* Offcanvas para mostrar los comentarios */}
-      <Offcanvas show={showReviews} onHide={() => setShowReviews(false)} placement="end">
-        <Offcanvas.Header closeButton style={{ backgroundColor: '#ffb79fe0' }}>
+      <Offcanvas
+        show={showReviews}
+        onHide={() => setShowReviews(false)}
+        placement="end"
+      >
+        <Offcanvas.Header closeButton style={{ backgroundColor: "#ffb79fe0" }}>
           {/* <div> */}
           <Offcanvas.Title className="fs-2 mt-3">Reviews</Offcanvas.Title>
           {/* <Button className="fs-6 mt-2" onClick={handleOpenModal}>Post review</Button>
           </div> */}
         </Offcanvas.Header>
-        <Offcanvas.Body style={{ backgroundColor: '#ffb79fe0' }}>
-          <Reviews id={id}/>
+        <Offcanvas.Body style={{ backgroundColor: "#ffb79fe0" }}>
+          <Reviews id={id} />
         </Offcanvas.Body>
       </Offcanvas>
+      <Modal
+        show={createCollectionModal.show}
+        size="lg"
+        onHide={() =>
+          handleCloseModal(setCreateCollectionModal, createCollectionModal)
+        }
+      >
+        <Modal.Header closeButton className="bg-normal">
+          <Modal.Title className="fs-3 fw-semi-bold">
+            {createCollectionModal.title}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+          <CollectionCreate
+            onClose={() =>
+              handleCloseModal(setCreateCollectionModal, createCollectionModal)
+            }
+            onMessage={(message, variant) => {
+              setToastData({
+                message: message,
+                variant: variant,
+                show: true,
+              });
+            }}
+            recipe_id={id}
+          ></CollectionCreate>
+        </Modal.Body>
+      </Modal>
+      <Modal
+        show={addToCollectionModal.show}
+        size="md"
+        onHide={() =>
+          handleCloseModal(setAddToCollectionModal, addToCollectionModal)
+        }
+      >
+        <Modal.Body className="p-0">
+          <AddRecipeToCollection
+            onClose={() =>
+              handleCloseModal(setAddToCollectionModal, addToCollectionModal)
+            }
+            onMessage={(message, variant) => {
+              setToastData({
+                message: message,
+                variant: variant,
+                show: true,
+              });
+            }}
+            recipe_id={id}
+          ></AddRecipeToCollection>
+        </Modal.Body>
+      </Modal>
+      <Toast
+        onClose={() => {
+          setToastData({
+            message: "",
+            variant: "",
+            show: false,
+          });
+        }}
+        bg={toastData.variant}
+        text={"white"}
+        show={toastData.show}
+        delay={3000}
+        autohide
+        className="position-fixed bottom-0 end-0 m-3"
+      >
+        <Toast.Body>{toastData.message}</Toast.Body>
+      </Toast>
     </Container>
   );
 }

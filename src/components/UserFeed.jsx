@@ -55,7 +55,7 @@ function UserFeed() {
               </CSSTransition>
             </Col>
           ))
-        ) : ( <div className="alert alert-warning" role="alert">There are currently no Recipes</div> )
+        ) : ( <div className="alert alert-warning" role="alert">There are currently no recipes</div> )
         }
       </Row>
     </Container>
