@@ -52,6 +52,7 @@ function KasulaNavbar() {
       .then((data) => {
         console.log("User data:", data);
         setUser(data);
+        {window.localStorage.setItem("currentUser", data.username)}
       })
       .catch((error) => console.error("Error al obtener recetas:", error));
   };

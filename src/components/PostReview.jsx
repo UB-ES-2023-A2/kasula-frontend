@@ -6,7 +6,7 @@ import {
   Star
 } from "react-bootstrap-icons";
 
-const PostReview = ({ id, show, onHide }) => {
+const PostReview = ({ id, show, onHide, reloadReviews }) => {
   const [username, setUsername] = useState('');
   const [review, setReview] = useState('');
   const [difficulty, setDifficulty] = useState(1);
@@ -25,7 +25,6 @@ const PostReview = ({ id, show, onHide }) => {
         .then((data) => {
           setData2(data);
           setUsername(data?.username);
-          console.log(">>>>IdPostReview:", id)
         })
         .catch((error) => console.error("Error:", error));
   }, [id])
@@ -48,11 +47,7 @@ const PostReview = ({ id, show, onHide }) => {
     if (image) {
       formData.append("file", image);
     }
-    console.log(">>>>formD1: ", reviewData)
-    console.log(">>>>formD: ", formData)
-
      try {
-      console.log(">>>ID: ", id)
        const response = await fetch(process.env.REACT_APP_API_URL + `/review/${id}`, {
          method: "POST",
          headers: {
@@ -62,7 +57,6 @@ const PostReview = ({ id, show, onHide }) => {
        });
 
        const data = await response.json();
-       console.log(">>>DATA despues del post:", data)
        if (response.ok) {
          console.log(">>>Post hecho: ", data)
        } else{
@@ -75,6 +69,7 @@ const PostReview = ({ id, show, onHide }) => {
     setImage(null);
 
     onHide();
+    reloadReviews();
   };
 
   const renderStars = (amount) => {

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import "../css/common.css";
 import "../css/Transitions.css";
 import chefIcon from "../assets/icons/chef.png";
-import { useParams } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { CSSTransition } from "react-transition-group";
 import gyozas from "../assets/gyozas.jpg";
-import "bootstrap/dist/css/bootstrap.min.css";
 import {
   Container,
   Row,
@@ -30,6 +29,7 @@ import ImageModal from "./ImageModal";
 import Reviews from "./Reviews";
 import CollectionCreate from "./CollectionCreate";
 import AddRecipeToCollection from "./AddRecipeToCollection";
+import Reviews from "./Reviews";
 
 function RecipeDetail() {
   const { token } = useAuth();
@@ -47,6 +47,9 @@ function RecipeDetail() {
     show: false,
     title: "Create new collection",
   });
+  
+  const [reloadReviews, setReloadReviews] = useState(null); 
+  const navigate = useNavigate();
 
   const [addToCollectionModal, setAddToCollectionModal] = useState({
     show: false,
@@ -88,6 +91,14 @@ function RecipeDetail() {
         setRecipe(data);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
+  };
+
+  const reloadReviewsFunction = () => {
+    setReloadReviews(!reloadReviews);
+  };
+
+  const handleOpenModal = () => {
+    setShowModal(true);
   };
 
   const getIsLiked = (user) => {
@@ -192,8 +203,16 @@ function RecipeDetail() {
             <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
               <Container className="mt-5 text-center box-rounded shadow bg-normal">
                 <Row>
-                  <Col xs={12} md={6} lg={6} className="p-4">
-                    <Col xs={12}>
+                  <Col xs={12} md={1} lg={1} className="p-4">
+                    <Button
+                    variant="link"
+                    className="text-decoration-none fs-3 text-reset my-2"
+                    onClick={() => navigate("/")}
+                      ><ArrowLeft></ArrowLeft>
+                    </Button>
+                  </Col>
+                  <Col xs={12} md={5} lg={5} className="p-4">
+                    <Col xs={11}>
                       <Image
                         src={recipe.main_image ?? gyozas}
                         className="img-fluid shadow mb-3"
@@ -355,8 +374,8 @@ function RecipeDetail() {
           {/* <Button className="fs-6 mt-2" onClick={handleOpenModal}>Post review</Button>
           </div> */}
         </Offcanvas.Header>
-        <Offcanvas.Body style={{ backgroundColor: "#ffb79fe0" }}>
-          <Reviews id={id} />
+        <Offcanvas.Body style={{ backgroundColor: '#ffb79fe0' }}>
+          <Reviews id={id} reloadReviews={reloadReviewsFunction}/>
         </Offcanvas.Body>
       </Offcanvas>
       <Modal
