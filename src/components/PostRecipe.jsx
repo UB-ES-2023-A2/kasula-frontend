@@ -227,8 +227,10 @@ const RecipePost = ({ onClose }) => {
     const formData = new FormData();
     formData.append("recipe", JSON.stringify(recipeData));
     if (image) {
-      formData.append("file", image);
+      formData.append("files", image);
+      console.log(formData);
     }
+    
 
     try {
       const response = await fetch(process.env.REACT_APP_API_URL + "/recipe/", {
@@ -244,7 +246,7 @@ const RecipePost = ({ onClose }) => {
       if (response.ok) {
         setSubmitMessage("Recipe posted successfully", data);
         setPostRecipeSuccess(true);
-        onClose();
+        //onClose();
       } else {
         setSubmitMessage("Error posting recipe: " + JSON.stringify(data));
       }
