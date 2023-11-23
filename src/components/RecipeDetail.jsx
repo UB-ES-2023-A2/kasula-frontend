@@ -19,7 +19,7 @@ function RecipeDetail() {
 
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000' + `/recipe/${id}`)
+    fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -49,7 +49,7 @@ function RecipeDetail() {
         <ImageModal
           show={showModal}
           onHide={handleCloseModal}
-          recipeImage={recipe.images[0] ?? gyozas}
+          recipeImage={recipe.main_image ?? gyozas}
           recipeName={recipe.name}
         />
         <Container>
@@ -61,7 +61,7 @@ function RecipeDetail() {
                   <Col xs={12} md={6} lg={6} className="p-4">
                     <Col xs={12}>
                       <Image
-                        src={recipe.images[0] ?? gyozas}
+                        src={recipe.main_image ?? gyozas}
                         alt={recipe.name}
                         className="img-fluid shadow mb-3"
                         onClick={handleOpenModal}

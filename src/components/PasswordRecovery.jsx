@@ -39,7 +39,7 @@ function PasswordRecovery() {
   const checkEmailExistance = async () => {
     try {
       const response = await fetch(
-        'http://127.0.0.1:8000' + "/user/check_email/".concat(email),
+        process.env.REACT_APP_API_URL + "/user/check_email/".concat(email),
         {
           method: "GET",
           headers: {
@@ -75,7 +75,7 @@ function PasswordRecovery() {
   const sendEmailRequest = async () => {
     try {
       const response = await fetch(
-        'http://127.0.0.1:8000' + "/user/password_recovery/",
+        process.env.REACT_APP_API_URL + "/user/password_recovery/",
         {
           method: "POST",
           headers: {
