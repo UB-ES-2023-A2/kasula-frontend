@@ -64,7 +64,7 @@ function Root() {
             }
           />
           <Route
-            path="/collections/:id"
+            path="/collections/:id/:name"
             element={
               <>
                 <KasulaNavbar></KasulaNavbar>

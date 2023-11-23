@@ -173,7 +173,7 @@ function Collections() {
                       <Col xs={12} className="d-flex my-0">
                         <Link
                           className="ms-auto"
-                          to={`/collections/${collection._id}`}
+                          to={`/collections/${collection._id}/${collection.name}`}
                         >
                           <span
                             className="colorless-span-button fs-4"

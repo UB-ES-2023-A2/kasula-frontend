@@ -51,3 +51,11 @@
 .colorless-span-button:hover {
     color: rgb(0, 0, 0);
 }
+
+.transition-03s {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.transition-03s:hover {
+    transform: translateY(-10px);
+}
