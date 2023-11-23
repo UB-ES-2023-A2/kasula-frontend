@@ -1,4 +1,4 @@
-name: Ple-release Azure Static Web Apps CI/CD deploymnet
+name: Develop Azure Static Web Apps CI/CD deploymnet
 
 on:
   push:
