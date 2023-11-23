@@ -10,3 +10,14 @@
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);   
   color: #333;
 }
+
+/* UserProfile.css */
+
+.hover-effect {
+  transition: background-color 0.3s ease;
+}
+
+.hover-effect:hover {
+  background-color: #f0f0f0; /* Slightly darker background on hover */
+  cursor: pointer;
+}

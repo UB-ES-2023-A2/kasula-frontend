@@ -15,9 +15,6 @@ import logo from "../assets/logo.png";
 import { StarFill, Pencil, ExclamationTriangleFill, X} from "react-bootstrap-icons";
 import { Container, Row, Col, Card, Button, Form, Image, Modal, Dropdown, ListGroup } from "react-bootstrap";
 
-// MDBReact components
-import { MDBCard, MDBCardBody, MDBCardText } from 'mdb-react-ui-kit';
-
 // CSS
 import "../css/common.css";
 import "../css/UserProfile.css";
@@ -148,7 +145,7 @@ const UserProfile = () => {
   const fetchUserDetails = async (usernames, setUserDetails) => {
     const userDetails = await Promise.all(
       usernames.map(async (username) => {
-        const response = await fetch(`http://127.0.0.1:8080/user/${username}`);
+        const response = await fetch(process.env.REACT_APP_API_URL`/user/${username}`);
         return response.json();
       })
     );
@@ -271,7 +268,7 @@ const UserProfile = () => {
         formData.append("file", file);
   
         try {
-          const response = await fetch(`http://127.0.0.1:8080/user/${userId}`, {
+          const response = await fetch(process.env.REACT_APP_API_URL + `/user/${userId}`, {
             method: 'PUT',
             headers: {
               'Authorization': `Bearer ${token}`,
@@ -303,7 +300,7 @@ const UserProfile = () => {
     setShowRemoveRecipeModal(false);
 
     try {
-        const response = await fetch(`http://127.0.0.1:8080/recipe/${selectedRecipeId}`, {
+        const response = await fetch(process.env.REACT_APP_API_URL + `/recipe/${selectedRecipeId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -339,7 +336,7 @@ const UserProfile = () => {
   };
 
   const getRecipes = () => {
-    fetch(`http://127.0.0.1:8080/recipe/user/${userName}`, {
+    fetch(process.env.REACT_APP_API_URL + `/recipe/user/${userName}`, {
       headers: {
         'Authorization': `Bearer ${token}`, 
       },
@@ -492,7 +489,7 @@ const UserProfile = () => {
 
   const handleFollow = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8080/user/follow/${userName}`, {
+      const response = await fetch(process.env.REACT_APP_API_URL + `/user/follow/${userName}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -515,7 +512,7 @@ const UserProfile = () => {
   
   const handleUnfollow = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8080/user/unfollow/${userName}`, {
+      const response = await fetch(process.env.REACT_APP_API_URL + `/user/unfollow/${userName}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -540,41 +537,63 @@ const UserProfile = () => {
   return (
     <div>
         <Container>
-          {/* Profile Form */}
+          {}
           <Row>
             <Col sm={2}></Col>
-            <Col sm={8} className="form-container mt-5 pt-3 pb-2rounded shadow-sm">
+            <Col sm={8} className="form-container mt-5 pt-3 pb-2 rounded shadow-sm">
               <Row>
-                <Col sm={2}>
+                <Col sm={2} className="pl-1">
                 <div className="image-container" 
                     style={{ position: 'relative' }}
                     onMouseEnter={() => setShowDropdown(true)}
                     onMouseLeave={() => setShowDropdown(false)}>
-
-                  <Image 
-                    src={profilePicture ? profilePicture : defaultProfile} 
-                    alt="Profile" 
-                    fluid 
-                    roundedCircle 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
+                    <Image 
+                      src={profilePicture ? profilePicture : defaultProfile} 
+                      alt="Profile" 
+                      fluid 
+                      roundedCircle 
+                      style={{ 
+                        width: '100px',  
+                        height: '100px', 
+                        objectFit: 'cover', 
+                        borderRadius: '50%' 
+                      }}
+                    />
                   {showDropdown && adminMode && (
-                    <Dropdown align="end" className="edit-button" style={{ position: 'absolute', top: 0, right: 0 }}>
-                      <Dropdown.Toggle as={Button} variant="light" size="sm">
+                    <Dropdown align="end" as={Button} variant="light" size="sm" className="edit-button" style={{ position: 'absolute', top: 0, right: 0 }} onClick={handleImageUpload}>
                         <Pencil/>
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <Dropdown.Item as="button" onClick={handleImageUpload}>Upload new file</Dropdown.Item>
-                      </Dropdown.Menu>
                     </Dropdown>
                   )}
                 </div>
                 </Col>
-                <Col sm={7}>
+                <Col sm={6}>
                 <Row>
                       <h3 style={profileTextStyle}>@{userName}</h3>
                       <div style={bioBoxStyle}>{userBio}</div>
-                      <Row className="mt-1">
+                </Row>
+                <Col sm={5} className="d-flex justify-content-around align-items-center rounded-3 p-2 mb-2"
+                    style={{ backgroundColor: '#ffffff' }}>
+                    
+                    {/* Followers Section */}
+                    <div className="text-center hover-effect" onClick={handleShowFollowersModal}>
+                      <p className="small text-muted mb-1">Followers</p>
+                      <p className="mb-0">{userFollowers.length}</p>
+                    </div>
+
+                    {/* Vertical Divider */}
+                    <div style={{ borderLeft: '1px solid #dee2e6', height: '30px', alignSelf: 'center' }}></div>
+
+                    {/* Following Section */}
+                    <div className="text-center hover-effect" onClick={handleShowFollowingModal}>
+                      <p className="small text-muted mb-1">Following</p>
+                      <p className="mb-0">{userFollowing.length}</p>
+                    </div>
+                </Col>
+
+                <Row className="mt-2 justify-content-center">
+                  <Col sm={8}></Col>
+                </Row>
+                <Row className="mt-1">
                           <Col sm={4}>
                             {adminMode && (
                               <Button variant="danger" onClick={handleEditToggle}>
@@ -595,21 +614,6 @@ const UserProfile = () => {
                             )}
                           </Col>
                       </Row>
-                </Row>
-                <Row className="mt-2 justify-content-center">
-                <Col sm={4} className="d-flex justify-content-around align-items-center rounded-3 p-2 mb-2"
-                    style={{ backgroundColor: '#ffffff' }}>
-                    <div className="text-center" onClick={handleShowFollowersModal} style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
-                      <p className="small text-muted mb-1">Followers</p>
-                      <p className="mb-0">{userFollowers.length}</p>
-                    </div>
-                    <div className="text-center" onClick={handleShowFollowingModal} style={{ cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}>
-                      <p className="small text-muted mb-1">Following</p>
-                      <p className="mb-0">{userFollowing.length}</p>
-                    </div>
-                </Col>
-                  <Col sm={8}></Col>
-                </Row>
                 </Col>
             </Row>
             <Row>
@@ -655,6 +659,9 @@ const UserProfile = () => {
               ) : ( 
                   <div className="alert alert-warning" role="alert">There are currently no Recipes</div> 
               )}
+          </Row>
+          <Row className="my-2"> 
+            {}
           </Row>
 
             </Col>
@@ -770,60 +777,68 @@ const UserProfile = () => {
 
     <Modal show={showFollowersModal} onHide={handleCloseFollowersModal}>
       <Modal.Header closeButton>
-        <Modal.Title>Followers</Modal.Title>
+        <Modal.Title>
+          Followers
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {followerDetails.map((follower, index) => (
-          <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-            <Card key={index} className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(follower._id)}>
-              <Card.Body>
-                <Row>
-                  <Col sm={2}>
-                  <Image 
-                    src={follower.profile_picture ? follower.profile_picture : defaultProfile} 
-                    roundedCircle 
-                    style={{ width: '30px', marginRight: '10px' }} 
-                  />
-                  </Col>
-                  <Col >
-                    <Card.Title style={{ cursor: 'pointer' }}>{follower.username}</Card.Title>
-                  </Col>
-                </Row>
-                {}
-              </Card.Body>
-            </Card>
-          </CSSTransition>
-        ))}
+        {followerDetails.length > 0 ? (
+          followerDetails.map((follower, index) => (
+            <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
+              <Card className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(follower._id)}>
+                <Card.Body>
+                  <Row>
+                    <Col sm={2}>
+                      <Image 
+                        src={follower.profile_picture ? follower.profile_picture : defaultProfile} 
+                        roundedCircle 
+                        style={{ width: '30px', marginRight: '10px' }} 
+                      />
+                    </Col>
+                    <Col>
+                      <Card.Title style={{ cursor: 'pointer' }}>{follower.username}</Card.Title>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </CSSTransition>
+          ))
+        ) : (
+          <p>There are no users to display.</p>
+        )}
       </Modal.Body>
-
     </Modal>
+
 
     <Modal show={showFollowingModal} onHide={handleCloseFollowingModal}>
       <Modal.Header closeButton>
         <Modal.Title>Following</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {followingDetails.map((following, index) => (
-          <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-            <Card key={index} className="mb-0 shadow" id="followers-list" onClick={() => handleNavigate(following._id)}>
-              <Card.Body>
-                <Row>
-                  <Col sm={2}>
-                  <Image 
-                    src={following.profile_picture ? following.profile_picture : defaultProfile} 
-                    roundedCircle 
-                    style={{ width: '30px', marginRight: '10px' }} 
-                  />
-                  </Col>
-                  <Col >
-                    <Card.Title>{following.username}</Card.Title>
-                  </Col>
-                </Row>
-                {}
-              </Card.Body>
-            </Card>
-          </CSSTransition>
-        ))}
+        {followingDetails.length > 0 ? (
+          followingDetails.map((follower, index) => (
+            <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
+              <Card className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(follower._id)}>
+                <Card.Body>
+                  <Row>
+                    <Col sm={2}>
+                      <Image 
+                        src={follower.profile_picture ? follower.profile_picture : defaultProfile} 
+                        roundedCircle 
+                        style={{ width: '30px', marginRight: '10px' }} 
+                      />
+                    </Col>
+                    <Col>
+                      <Card.Title style={{ cursor: 'pointer' }}>{follower.username}</Card.Title>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </CSSTransition>
+          ))
+        ) : (
+          <p>There are no users to display.</p>
+        )}
       </Modal.Body>
     </Modal>
 
