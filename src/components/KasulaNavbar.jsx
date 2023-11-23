@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import "../css/common.css";
 
 //Bootstrap
 import {
@@ -69,7 +70,7 @@ function KasulaNavbar() {
 
   const handleClosePostRecipeSuccessfulModal = () => {
     setShowPostRecipe(false);
-    window.location.reload();
+    //window.location.reload();
   };
 
   const handleLogout = () => {
@@ -81,7 +82,7 @@ function KasulaNavbar() {
   return (
     <>
       <Navbar expand="lg" className="bg-normal sticky-top">
-        <Container>
+        <Container fluid>
           <Navbar.Brand>
             <Link to="/">
               <Image
@@ -102,7 +103,7 @@ function KasulaNavbar() {
               <>
                 <Nav className="me-auto fs-5">
                   <Nav.Link href="/">Feed</Nav.Link>
-                  <Nav.Link href="#collections">Collections</Nav.Link>
+                  <Nav.Link href="/collections">Collections</Nav.Link>
                 </Nav>
                 <Button
                   className="me-4 fs-5 border-0"
@@ -123,7 +124,7 @@ function KasulaNavbar() {
                           width={30}
                           height={30}
                         />
-                        <span>{user.username}</span>
+                        <span className="min-width-container">{user.username}</span>
                       </>
                     }
                     id="basic-nav-dropdown"
@@ -179,7 +180,7 @@ function KasulaNavbar() {
       </Modal>
       <Modal show={showModal} size="sm" onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Tancar la sessió</Modal.Title>
+          <Modal.Title>Log Out</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Row>
@@ -189,13 +190,13 @@ function KasulaNavbar() {
           </Row>
           <Row>
             <Col className="text-center">
-              <p className="ms-0">Segur que vols tancar sessió?</p>
+              <p className="ms-0">Are you sure you want to Log Out?</p>
             </Col>
           </Row>
         </Modal.Body>
         <Modal.Footer className="justify-content-center">
           <Button variant="danger" onClick={handleLogout}>
-            Tancar
+            Log Out
           </Button>
         </Modal.Footer>
       </Modal>
