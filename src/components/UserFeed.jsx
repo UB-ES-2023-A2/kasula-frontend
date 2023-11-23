@@ -47,7 +47,10 @@ function UserFeed() {
                         <h5><Image src={chefIcon} style={{height:'24px', width: '24px'}} fluid/> {Array(recipe.difficulty || 0).fill().map((_, index) => (
                             <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
                           ))}</h5>
-                        Rated:
+                        <div className="d-flex">
+                          <StarFill className="mx-1 mt-1" style={{color: 'red'}}></StarFill>
+                          <span>{recipe.average_rating || 0}</span>
+                        </div>
                     </Card.Body>
                     <Card.Footer>By {recipe.username}</Card.Footer>
                   </Card>

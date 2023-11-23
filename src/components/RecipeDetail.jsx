@@ -18,6 +18,7 @@ import {
   Toast,
 } from "react-bootstrap";
 import {
+  ArrowLeft,
   StarFill,
   Stopwatch,
   Lightning,
@@ -29,7 +30,6 @@ import ImageModal from "./ImageModal";
 import Reviews from "./Reviews";
 import CollectionCreate from "./CollectionCreate";
 import AddRecipeToCollection from "./AddRecipeToCollection";
-import Reviews from "./Reviews";
 
 function RecipeDetail() {
   const { token } = useAuth();
@@ -47,8 +47,8 @@ function RecipeDetail() {
     show: false,
     title: "Create new collection",
   });
-  
-  const [reloadReviews, setReloadReviews] = useState(null); 
+
+  const [reloadReviews, setReloadReviews] = useState(null);
   const navigate = useNavigate();
 
   const [addToCollectionModal, setAddToCollectionModal] = useState({
@@ -95,10 +95,6 @@ function RecipeDetail() {
 
   const reloadReviewsFunction = () => {
     setReloadReviews(!reloadReviews);
-  };
-
-  const handleOpenModal = () => {
-    setShowModal(true);
   };
 
   const getIsLiked = (user) => {
@@ -205,10 +201,11 @@ function RecipeDetail() {
                 <Row>
                   <Col xs={12} md={1} lg={1} className="p-4">
                     <Button
-                    variant="link"
-                    className="text-decoration-none fs-3 text-reset my-2"
-                    onClick={() => navigate("/")}
-                      ><ArrowLeft></ArrowLeft>
+                      variant="link"
+                      className="text-decoration-none fs-3 text-reset my-2"
+                      onClick={() => navigate("/")}
+                    >
+                      <ArrowLeft></ArrowLeft>
                     </Button>
                   </Col>
                   <Col xs={12} md={5} lg={5} className="p-4">
@@ -374,8 +371,8 @@ function RecipeDetail() {
           {/* <Button className="fs-6 mt-2" onClick={handleOpenModal}>Post review</Button>
           </div> */}
         </Offcanvas.Header>
-        <Offcanvas.Body style={{ backgroundColor: '#ffb79fe0' }}>
-          <Reviews id={id} reloadReviews={reloadReviewsFunction}/>
+        <Offcanvas.Body style={{ backgroundColor: "#ffb79fe0" }}>
+          <Reviews id={id} reloadReviews={reloadReviewsFunction} />
         </Offcanvas.Body>
       </Offcanvas>
       <Modal

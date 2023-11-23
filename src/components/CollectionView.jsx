@@ -85,7 +85,10 @@ function CollectionView() {
                               </span>
                             ))}
                         </h5>
-                        Rated:
+                        <div className="d-flex">
+                          <StarFill className="mx-1 mt-1" style={{color: 'red'}}></StarFill>
+                          <span>{recipe.average_rating || 0}</span>
+                        </div>
                       </Card.Body>
                       <Card.Footer>By {recipe.username}</Card.Footer>
                     </Card>
