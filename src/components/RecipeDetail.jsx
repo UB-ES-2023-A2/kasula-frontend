@@ -76,7 +76,6 @@ function RecipeDetail() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("User data:", data);
         setUser(data);
         getIsLiked(data);
       })
@@ -87,7 +86,6 @@ function RecipeDetail() {
     fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data);
         setRecipe(data);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
@@ -221,7 +219,14 @@ function RecipeDetail() {
                     </Col>
                     <Col xs={12}>
                       <div className="mt-5 pb-3 pt-2 bg-light box-shadow">
-                        <h4>Más información</h4>
+                        <h4>More information</h4>
+                        <div className="d-flex align-items-center my-2 mx-3">
+                          <StarFill
+                            className="mx-2"
+                            style={{ color: "red" }}
+                          ></StarFill>
+                          <span>{recipe.average_rating || 0}</span>
+                        </div>
                         <div className="d-flex align-items-center my-2 mx-3">
                           <h5>
                             <Image
@@ -320,7 +325,7 @@ function RecipeDetail() {
                       </Col>
                       <Col xs={12}>
                         <div className="mb-3 py-2 bg-light box-shadow">
-                          <h3>Ingredientes</h3>
+                          <h3>Ingredients</h3>
                           <ul className="text-start">
                             {recipe.ingredients &&
                               recipe.ingredients.map((ingredient, index) => (
@@ -337,7 +342,7 @@ function RecipeDetail() {
                       </Col>
                       <Col xs={12}>
                         <div className="mb-3 bg-danger py-2 text-white box-shadow">
-                          <h3>Pasos</h3>
+                          <h3>Steps</h3>
                           <ol className="text-start">
                             {recipe.instructions &&
                               recipe.instructions.map((instruction, index) => (
@@ -366,10 +371,7 @@ function RecipeDetail() {
         placement="end"
       >
         <Offcanvas.Header closeButton style={{ backgroundColor: "#ffb79fe0" }}>
-          {/* <div> */}
           <Offcanvas.Title className="fs-2 mt-3">Reviews</Offcanvas.Title>
-          {/* <Button className="fs-6 mt-2" onClick={handleOpenModal}>Post review</Button>
-          </div> */}
         </Offcanvas.Header>
         <Offcanvas.Body style={{ backgroundColor: "#ffb79fe0" }}>
           <Reviews id={id} reloadReviews={reloadReviewsFunction} />
