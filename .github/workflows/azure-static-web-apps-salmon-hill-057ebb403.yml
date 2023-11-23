@@ -1,13 +1,13 @@
-name: Ple-release Azure Static Web Apps CI/CD deploymnet
+name: Develop Azure Static Web Apps CI/CD deploymnet
 
 on:
   push:
     branches:
-      - pre-release
+      - develop
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - pre-release
+      - develop
 
 env:
   CI: false
