@@ -61,15 +61,15 @@ function RecipeDetail() {
             <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
               <Container className="mt-5 text-center box-rounded shadow" style={{ backgroundColor: '#ffb79fe0'}}>
                 <Row>
-                  <Col xs={12} md={6} lg={6} className="p-4">
-                    <Col sm={1}>
-                      <Button
-                      variant="link"
-                      className="text-decoration-none fs-3 text-reset my-2"
-                      onClick={() => navigate("/")}
-                        ><ArrowLeft></ArrowLeft>
-                      </Button>
-                    </Col>
+                  <Col xs={12} md={1} lg={1} className="p-4">
+                    <Button
+                    variant="link"
+                    className="text-decoration-none fs-3 text-reset my-2"
+                    onClick={() => navigate("/")}
+                      ><ArrowLeft></ArrowLeft>
+                    </Button>
+                  </Col>
+                  <Col xs={12} md={5} lg={5} className="p-4">
                     <Col xs={11}>
                       <Image
                         src={recipe.image ?? gyozas}
