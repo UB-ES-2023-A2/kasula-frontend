@@ -2,38 +2,38 @@ import React, { useState, useEffect } from "react";
 import "../css/common.css";
 import "../css/Transitions.css";
 import chefIcon from "../assets/icons/chef.png"
-import logo from "../assets/logo.png";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css"; 
-import { Container, Row, Col, Image } from "react-bootstrap";
-import { StarFill, Stopwatch, Lightning, CloudFog } from "react-bootstrap-icons";
+import { Container, Row, Col, Image, Offcanvas, Button } from "react-bootstrap";
+import { StarFill, Stopwatch, Lightning, ArrowLeft} from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
-
+import Reviews from "./Reviews";
 
 function RecipeDetail() {
   const { id } = useParams();
   const [recipe, setRecipe] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [showReviews, setShowReviews] = useState(false);
+  const [reloadReviews, setReloadReviews] = useState(null); 
+  const navigate = useNavigate();
 
 
   useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setRecipe(data);
-
-        // Log the value of recipe.image
-        console.log(">>>>data:", data);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
   }, [id]);
-  
-  function getImage(filename) {
-    return gyozas;
-  }  
+
+
+  const reloadReviewsFunction = () => {
+    setReloadReviews(!reloadReviews);
+  };
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -42,7 +42,10 @@ function RecipeDetail() {
   const handleCloseModal = () => {
     setShowModal(false);
   };
-  
+
+  const handleToggleReviews = () => {
+    setShowReviews(!showReviews);
+  };
 
   return (
       <Container fluid className="min-vh-100">
@@ -58,8 +61,16 @@ function RecipeDetail() {
             <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
               <Container className="mt-5 text-center box-rounded shadow" style={{ backgroundColor: '#ffb79fe0'}}>
                 <Row>
-                  <Col xs={12} md={6} lg={6} className="p-4">
-                    <Col xs={12}>
+                  <Col xs={12} md={1} lg={1} className="p-4">
+                    <Button
+                    variant="link"
+                    className="text-decoration-none fs-3 text-reset my-2"
+                    onClick={() => navigate("/")}
+                      ><ArrowLeft></ArrowLeft>
+                    </Button>
+                  </Col>
+                  <Col xs={12} md={5} lg={5} className="p-4">
+                    <Col xs={11}>
                       <Image
                         src={recipe.main_image ?? gyozas}
                         className="img-fluid shadow mb-3"
@@ -85,6 +96,9 @@ function RecipeDetail() {
                           <h5><Lightning/></h5>
                           <span className="fs-6 fw-bold ms-2 text-muted">{recipe.energy ?? 'No info of'} kcal</span>
                         </div>
+                        <Button className="mt-3" onClick={handleToggleReviews}>
+                          Toggle Reviews
+                        </Button>
                       </div>
                     </Col>
                   </Col>
@@ -120,7 +134,19 @@ function RecipeDetail() {
             </Col>
           </Row>
         </Container>
-      </Container>
+      {/* Offcanvas para mostrar los comentarios */}
+      <Offcanvas show={showReviews} onHide={() => setShowReviews(false)} placement="end">
+        <Offcanvas.Header closeButton style={{ backgroundColor: '#ffb79fe0' }}>
+          {/* <div> */}
+          <Offcanvas.Title className="fs-2 mt-3">Reviews</Offcanvas.Title>
+          {/* <Button className="fs-6 mt-2" onClick={handleOpenModal}>Post review</Button>
+          </div> */}
+        </Offcanvas.Header>
+        <Offcanvas.Body style={{ backgroundColor: '#ffb79fe0' }}>
+          <Reviews id={id} reloadReviews={reloadReviewsFunction}/>
+        </Offcanvas.Body>
+      </Offcanvas>
+    </Container>
   );
 }
 

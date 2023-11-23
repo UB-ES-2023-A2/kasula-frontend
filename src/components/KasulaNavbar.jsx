@@ -123,6 +123,7 @@ function KasulaNavbar() {
                           height={30}
                         />
                         <span>{user.username}</span>
+                        {window.localStorage.setItem("currentUser", user.username)}
                       </>
                     }
                     id="basic-nav-dropdown"
