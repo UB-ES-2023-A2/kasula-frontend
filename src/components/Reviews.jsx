@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import PostReview from "./PostReview";
 import chefIcon from "../assets/icons/chef.png";
-import { StarFill } from "react-bootstrap-icons";
+import { StarFill, PatchCheck } from "react-bootstrap-icons";
 import LikesReview from "./LikesReview";
 
 
@@ -10,12 +10,12 @@ function Reviews(props) {
   const { id, reloadReviews } = props;
   const [reviews, setReviews] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const isLogged = window.localStorage.getItem("logged");
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/review/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(">>DATA: ", data);
         setReviews(data);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
@@ -31,18 +31,20 @@ function Reviews(props) {
 
   return (
     <Container className="flex-column justify-content-between align-items-center">
-      <Row className="mt-2">
-        <Button className="fs-6 mx-auto" onClick={handleOpenModal}>
-          Post review
-        </Button>
-        <PostReview
-          id={id}
-          show={showModal}
-          onHide={handleCloseModal}
-          reloadReviews={reloadReviews}
-        />
-      </Row>
-
+      {isLogged === 'true' ? 
+        <Row className="mt-2">
+          <Button className="fs-6 mx-auto" onClick={handleOpenModal}>
+            Post review
+          </Button>
+          <PostReview
+            id={id}
+            show={showModal}
+            onHide={handleCloseModal}
+            reloadReviews={reloadReviews}
+          /> 
+        </Row>
+      : null}
+  
       <Col sm={12} className="mt-4 mx-auto">
         <Container>
           <ul className="list-unstyled">
@@ -70,11 +72,9 @@ function Reviews(props) {
                         <Col sm={12}>
                           <div className="d-flex align-items-center mt-3 mb-2">
                             <h5>
-                              <Image
-                                src={chefIcon}
-                                style={{ height: "24px", width: "24px" }}
-                                fluid
-                              />{" "}
+                              <PatchCheck
+                                style={{ color: "red", marginLeft: '1px' }}
+                              ></PatchCheck>{" "}
                               {Array(review.rating || 0)
                                 .fill()
                                 .map((_, index) => (
