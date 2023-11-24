@@ -52,10 +52,10 @@ function Reviews(props) {
               reviews.map((review, index) => (
                 <li key={index} className="mb-3 p-2 fs-6 bg-light box-shadow">
                   <Row>
-                    <Col sm={3} className="fw-bold">
+                    <Col sm={2} className="fw-bold">
                       {review.username}:{" "}
                     </Col>
-                    <Col sm={9}>{review.comment}</Col>
+                    <Col sm={10}>{review.comment}</Col>
                     <Col sm={5} className="mt-2">
                       <Image
                         src={review.image}

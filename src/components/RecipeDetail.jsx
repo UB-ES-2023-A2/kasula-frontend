@@ -220,14 +220,14 @@ function RecipeDetail() {
                     <Col xs={12}>
                       <div className="mt-5 pb-3 pt-2 bg-light box-shadow">
                         <h4>More information</h4>
-                        <div className="d-flex align-items-center my-2 mx-3">
+                        <div className="d-flex align-items-center mt-4 mb-3 mx-2">
                           <StarFill
                             className="mx-2"
-                            style={{ color: "red" }}
+                            style={{ color: "red",fontSize: "24px"}}
                           ></StarFill>
                           <span>{recipe.average_rating || 0}</span>
                         </div>
-                        <div className="d-flex align-items-center my-2 mx-3">
+                        <div className="d-flex align-items-center mt-2 mb-1 mx-3">
                           <h5>
                             <Image
                               src={chefIcon}
@@ -248,7 +248,7 @@ function RecipeDetail() {
                               ))}
                           </h5>
                         </div>
-                        <div className="d-flex align-items-center my-2 mx-3">
+                        <div className="d-flex align-items-center mb-1 mx-3">
                           <h5>
                             <Stopwatch />
                           </h5>
