@@ -56,12 +56,12 @@ function Root() {
           <Route
             path="userprofile/:userId"
             element={
-              <Container className="my-0 pt-0 pb-4 px-0 min-vh-100">
+              <>
                 <KasulaNavbar></KasulaNavbar>
-                <Container className="min-vh-100">
+                <Container fluid className="bg-lightest min-vh-100">
                   <UserProfile></UserProfile>
                 </Container>
-              </Container>
+              </>
             }
           ></Route>
           <Route
