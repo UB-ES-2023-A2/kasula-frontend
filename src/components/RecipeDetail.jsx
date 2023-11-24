@@ -226,7 +226,7 @@ function RecipeDetail() {
                             className="mx-2"
                             style={{ color: "red",fontSize: "24px"}}
                           ></StarFill>
-                          <span>{recipe.average_rating.toFixed(2) || 0}</span>
+                          <span>{recipe.average_rating.toFixed(1) || 0}</span>
                         </div>
                         <div className="d-flex align-items-center mt-2 mb-1 mx-3">
                           <h5>
