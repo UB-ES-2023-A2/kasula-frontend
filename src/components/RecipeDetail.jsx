@@ -112,7 +112,7 @@ function RecipeDetail() {
   };
 
   const handleNavigate = (userId) => {
-    window.location.href = `/UserProfile/${userId}`;
+    navigate(`/UserProfile/${userId}`);
   };
 
   const reloadReviewsFunction = () => {

@@ -20,7 +20,7 @@ import "../css/common.css";
 import "../css/UserProfile.css";
 
 const UserProfile = () => {
-  const { token } = useAuth();
+  const { token, logout, isLogged } = useAuth();
   const navigate = useNavigate();
   const [operationSuccess, setOperationSuccess] = useState(false);
 
@@ -62,6 +62,8 @@ const UserProfile = () => {
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false);
   const [showUnfollowModal, setShowUnfollowModal] = useState(false);
+  const [showLoginRedirectModal, setShowLoginRedirectModal] = useState(false);
+
 
 
   const [confirmationMessage, setConfirmationMessage] = useState("");
@@ -153,9 +155,7 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    if (!token) {
-      navigate("/login");
-    } else {
+    if (isLogged) {
       fetchMyUserData();
     }
   }, [token, navigate]);
@@ -488,6 +488,11 @@ const UserProfile = () => {
   }, [userFollowers]);
 
   const handleFollow = async () => {
+    if (isLogged) {
+      setShowLoginRedirectModal(true);
+      return;
+    }
+
     try {
       const response = await fetch(process.env.REACT_APP_API_URL + `/user/follow/${userName}`, {
         method: 'POST',
@@ -856,6 +861,22 @@ const UserProfile = () => {
         </Button>
       </Modal.Footer>
     </Modal>
+
+    <Modal show={showLoginRedirectModal} onHide={() => setShowLoginRedirectModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Required log in</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>You need to log in to follow this user.</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowLoginRedirectModal(false)}>
+          Cancel
+        </Button>
+        <Button variant="primary" onClick={() => navigate("/login")}>
+          Log in
+        </Button>
+      </Modal.Footer>
+    </Modal>
+
 
     </div>
   );
