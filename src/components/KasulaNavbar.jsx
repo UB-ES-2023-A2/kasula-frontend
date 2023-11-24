@@ -131,15 +131,6 @@ function KasulaNavbar() {
                     <NavDropdown.Item href={`/UserProfile/${user._id}`}>
                       My Information
                     </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.1">
-                      My Recipes
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.2">
-                      Followed Users
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.3">
-                      Followers
-                    </NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item
                       role="button"

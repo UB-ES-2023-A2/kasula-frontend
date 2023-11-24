@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "./AuthContext";
 import "../css/common.css";
 import "../css/Transitions.css";
 import chefIcon from "../assets/icons/chef.png"
 import { useParams, useNavigate } from "react-router-dom";
+import defaultProfile from "../assets/defaultProfile.png";
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css"; 
-import { Container, Row, Col, Image, Offcanvas, Button } from "react-bootstrap";
+import { Container, Card, Row, Col, Image, Offcanvas, Button } from "react-bootstrap";
 import { StarFill, Stopwatch, Lightning, ArrowLeft} from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
 import Reviews from "./Reviews";
 
 function RecipeDetail() {
+  const { token } = useAuth();
   const { id } = useParams();
-  const [recipe, setRecipe] = useState({});
+  const [recipe, setRecipe] = useState([]);
+  const [userId, setUserId] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userImage, setUserImage] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const [reloadReviews, setReloadReviews] = useState(null); 
@@ -24,12 +30,39 @@ function RecipeDetail() {
     fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data);
         setRecipe(data);
+        setUserId(data.user_id)
+        fetchUserData(data.user_id);
       })
       .catch((error) => console.error("Error al obtener receta:", error));
+      
   }, [id]);
 
+  const fetchUserData = async (userId) => {
+    try {
+      const response = await fetch(process.env.REACT_APP_API_URL + '/user/' + userId, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+      const data = await response.json();
+
+      setUserId(data.user_id);
+      setUserName(data.username);
+      setUserImage(data.profile_picture || '');
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  const handleNavigate = (userId) => {
+    window.location.href = `/UserProfile/${userId}`;
+  };
 
   const reloadReviewsFunction = () => {
     setReloadReviews(!reloadReviews);
@@ -81,6 +114,23 @@ function RecipeDetail() {
                       <h2 style={{ marginBottom: '1rem' }}>{recipe.name}</h2>
                     </Col>
                     <Col md={12}>
+                      <div className="mb-3 py-2 bg-light box-shadow" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(recipe.user_id)}>
+                          <Row>
+                          <Col sm={4}>
+                            <Card.Title style={{ cursor: 'pointer' }}>{'Author:'}</Card.Title>
+                            </Col>
+                            <Col sm={2}>
+                              <Image 
+                                src={userImage ? userImage : defaultProfile} 
+                                roundedCircle 
+                                style={{ width: '30px', marginRight: '10px' }} 
+                              />
+                            </Col>
+                            <Col sm={2}>
+                              <Card.Title style={{ cursor: 'pointer' }}>{userName}</Card.Title>
+                            </Col>
+                          </Row>
+                      </div>
                       <div className="mt-5 pb-3 pt-2 bg-light box-shadow">
                         <h4>Más información</h4>
                         <div className="d-flex align-items-center my-2 mx-3">

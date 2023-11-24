@@ -145,7 +145,7 @@ const UserProfile = () => {
   const fetchUserDetails = async (usernames, setUserDetails) => {
     const userDetails = await Promise.all(
       usernames.map(async (username) => {
-        const response = await fetch(process.env.REACT_APP_API_URL`/user/${username}`);
+        const response = await fetch(process.env.REACT_APP_API_URL + `/user/${username}`);
         return response.json();
       })
     );
@@ -221,7 +221,7 @@ const UserProfile = () => {
     formData.append('user', JSON.stringify(userProfile));
 
     try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/user/${userId}`, {
+        const response = await fetch(process.env.REACT_APP_API_URL + `/user/${userId}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`
