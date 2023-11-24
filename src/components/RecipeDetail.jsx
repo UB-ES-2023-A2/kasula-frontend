@@ -133,7 +133,7 @@ function RecipeDetail() {
 
   const getIsLiked = (user) => {
     fetch(
-      process.env.REACT_APP_API_URL + `collection/favorites/${user.username}`,
+      process.env.REACT_APP_API_URL + `/collection/favorites/${user.username}`,
       {
         method: "GET",
         headers: {
@@ -155,7 +155,7 @@ function RecipeDetail() {
     setIsLiked(true);
     fetch(
       process.env.REACT_APP_API_URL +
-        `collection/favorites/add_recipe/${recipe._id}`,
+        `/collection/favorites/add_recipe/${recipe._id}`,
       {
         method: "PATCH",
         headers: {
