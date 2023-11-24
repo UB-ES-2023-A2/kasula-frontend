@@ -14,6 +14,8 @@ function Reviews(props) {
   const [showModalImage, setShowModalImage] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null); 
   const isLogged = window.localStorage.getItem("logged");
+  const currentUserUsername = localStorage.getItem('currentUser');
+
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/review/${id}`)
@@ -107,12 +109,13 @@ function Reviews(props) {
                         <Col sm={12}>
                           <div className="d-flex align-items-cente mx-1">
                             <LikesReview
+                            reviewUsername={review.username}
                             recipeId={id}
                             reviewId={review._id}
                             initialLikes={review.likes || 0}
                             likedBy={review.liked_by}
                             reloadReviews={reloadReviews}
-                            />
+                            /> 
                           </div>
                         </Col>
                       </Row>

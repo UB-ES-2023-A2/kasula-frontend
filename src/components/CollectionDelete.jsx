@@ -11,7 +11,7 @@ const CollectionDelete = ({ onClose, onMessage, collection_id }) => {
   const requestDeleteCollection = async () => {
     try {
       const response = await fetch(
-        process.env.REACT_APP_API_URL + "collection/" + collection_id + "/",
+        process.env.REACT_APP_API_URL + "/collection/" + collection_id + "/",
         {
           method: "DELETE",
           headers: {

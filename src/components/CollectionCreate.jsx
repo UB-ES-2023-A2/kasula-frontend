@@ -23,7 +23,7 @@ const CollectionCreate = ({ onClose, onMessage, recipe_id }) => {
   const requestCreateCollection = async (request_body) => {
     try {
       const response = await fetch(
-        process.env.REACT_APP_API_URL + "collection/",
+        process.env.REACT_APP_API_URL + "/collection/",
         {
           method: "POST",
           headers: {

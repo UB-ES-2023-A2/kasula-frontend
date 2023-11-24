@@ -6,16 +6,17 @@ import { faThumbsUp, faHeart } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "./AuthContext";
 
 
-function LikesReview({ recipeId, reviewId, initialLikes, likedBy, reloadReviews }) {
+function LikesReview({ reviewUsername, recipeId, reviewId, initialLikes, likedBy, reloadReviews }) {
   const [likes, setLikes] = useState(initialLikes);
   const [hasLiked, setHasLiked] = useState(false);
   const currentUserUsername = localStorage.getItem('currentUser');
   const [hasLikedByUser, setHasLikedByUser] = useState(likedBy.includes(currentUserUsername));
   const { token } = useAuth();
   const isLogged = window.localStorage.getItem("logged");
+  const isOwnerReview = currentUserUsername === reviewUsername;
 
   const handleLikeClick = async () => {
-    if(isLogged === 'true'){
+    if(isLogged === 'true' && !isOwnerReview){
         if (hasLiked || hasLikedByUser) {
           likes > 0 ? setLikes(likes - 1) : setLikes(0);  
           setHasLiked(false);  
@@ -65,7 +66,7 @@ function LikesReview({ recipeId, reviewId, initialLikes, likedBy, reloadReviews 
       reloadReviews()}
   };
 
-  const cursorStyle = isLogged === 'true' ? { cursor: "pointer" } : { cursor: "not-allowed" };
+  const cursorStyle = isLogged === 'true' && !isOwnerReview ? { cursor: "pointer" } : { cursor: "not-allowed" };
 
   return (
     <Row>
