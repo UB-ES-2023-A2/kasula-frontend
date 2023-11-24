@@ -88,7 +88,7 @@ function KasulaNavbar() {
                 width="96"
                 height="96"
                 className="d-inline-block align-top"
-                alt="React Bootstrap logo"
+                alt="Brand logo"
               />
             </Link>
           </Navbar.Brand>
@@ -116,11 +116,11 @@ function KasulaNavbar() {
                       <>
                         <Image
                           className="me-2"
-                          src={chef} // replace with the actual image source
-                          alt={chef}
+                          src={isLogged && user.profile_picture ? user.profile_picture : chef}
+                          alt="User profile"
                           roundedCircle
-                          width={30}
-                          height={30}
+                          width={40}
+                          height={50}
                         />
                         <span>{user.username}</span>
                         {window.localStorage.setItem("currentUser", user.username)}
