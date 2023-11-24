@@ -49,6 +49,7 @@ function RecipeDetail() {
   });
 
   const [reloadReviews, setReloadReviews] = useState(null);
+  const [reloadRecipeDetail, setreloadRecipeDetail] = useState(null);
   const navigate = useNavigate();
 
   const [addToCollectionModal, setAddToCollectionModal] = useState({
@@ -65,7 +66,7 @@ function RecipeDetail() {
   useEffect(() => {
     getRecipe();
     getLoggedUser();
-  }, [id]);
+  }, [id, reloadReviews]);
 
   const getLoggedUser = () => {
     fetch(process.env.REACT_APP_API_URL + "/user/me", {
