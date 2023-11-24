@@ -1,12 +1,9 @@
 #recipes-list {
-  background-color: white;
-  transition: transform 0.3s, box-shadow 0.3s;  
   color: #333;
 }
 
 #recipes-list:hover {
   background-color: #ffb9b9;
-  transform: translateY(-10px);  
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);   
   color: #333;
 }
