@@ -37,6 +37,11 @@ import AddRecipeToCollection from "./AddRecipeToCollection";
 function RecipeDetail() {
   const { token, isLogged } = useAuth();
   const [username, setUsername] = useState(localStorage.getItem("currentUser"));
+  const [userId, setUserId] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userImage, setUserImage] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [user, setUser] = useState({});
   const { id } = useParams();
   const [recipe, setRecipe] = useState({ images: [] });
   const [showReviews, setShowReviews] = useState(false);
