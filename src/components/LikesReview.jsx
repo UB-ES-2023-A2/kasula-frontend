@@ -12,64 +12,60 @@ function LikesReview({ recipeId, reviewId, initialLikes, likedBy, reloadReviews 
   const currentUserUsername = localStorage.getItem('currentUser');
   const [hasLikedByUser, setHasLikedByUser] = useState(likedBy.includes(currentUserUsername));
   const { token } = useAuth();
-
+  const isLogged = window.localStorage.getItem("logged");
 
   const handleLikeClick = async () => {
-
-
-    if (hasLiked || hasLikedByUser) {
-      console.log(">>>By: ", hasLikedByUser)
-      console.log(">>>List: ", likedBy)
-      likes > 0 ? setLikes(likes - 1) : setLikes(0);  
-      setHasLiked(false);  
-      setHasLikedByUser(false);    
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/review/unlike/${recipeId}/${reviewId}`,
-          {
-            method: "PATCH",
-            headers: {
-              Authorization: `Bearer ${token}`,
-          },
-          }
-        );
-  
-        const data = await response.json();
-        if (!response.ok) {
-          console.error("Error al enviar el dislike:", data);
-        }
-      } catch (error) {
-        console.error("Error en la solicitud de dislike:", error);
-      }
-    }else{
+    if(isLogged === 'true'){
+        if (hasLiked || hasLikedByUser) {
+          likes > 0 ? setLikes(likes - 1) : setLikes(0);  
+          setHasLiked(false);  
+          setHasLikedByUser(false);    
+          try {
+            const response = await fetch(
+              `${process.env.REACT_APP_API_URL}/review/unlike/${recipeId}/${reviewId}`,
+              {
+                method: "PATCH",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+              },
+              }
+            );
       
-      console.log(">>>By2: ", hasLikedByUser)
-      console.log(">>>List2: ", likedBy)
-      setLikes(likes + 1);
-      setHasLiked(true);
-      setHasLikedByUser(true);    
-    // Realiza la lógica para enviar el like a la base de datos
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/review/like/${recipeId}/${reviewId}`,
-        {
-          method: "PATCH",
-          headers: {
-            Authorization: `Bearer ${token}`,
-        },
-        }
-      );
+            const data = await response.json();
+            if (!response.ok) {
+              console.error("Error al enviar el dislike:", data);
+            }
+          } catch (error) {
+            console.error("Error en la solicitud de dislike:", error);
+          }
+        }else{
+          setLikes(likes + 1);
+          setHasLiked(true);
+          setHasLikedByUser(true);    
+        // Realiza la lógica para enviar el like a la base de datos
+        try {
+          const response = await fetch(
+            `${process.env.REACT_APP_API_URL}/review/like/${recipeId}/${reviewId}`,
+            {
+              method: "PATCH",
+              headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            }
+          );
 
-      const data = await response.json();
-      if (!response.ok) {
-        console.error("Error al enviar el like:", data);
+          const data = await response.json();
+          if (!response.ok) {
+            console.error("Error al enviar el like:", data);
+          }
+        } catch (error) {
+          console.error("Error en la solicitud de like:", error);
+        }
       }
-    } catch (error) {
-      console.error("Error en la solicitud de like:", error);
-    }
-  }
-    reloadReviews();
+      reloadReviews()}
   };
+
+  const cursorStyle = isLogged === 'true' ? { cursor: "pointer" } : { cursor: "not-allowed" };
 
   return (
     <Row>
@@ -77,7 +73,7 @@ function LikesReview({ recipeId, reviewId, initialLikes, likedBy, reloadReviews 
         <FontAwesomeIcon
           icon={faHeart}
           onClick={handleLikeClick}
-          style={{ cursor: "pointer" }}
+          style={cursorStyle}
         />
       </Col>
       <Col sm={8}>
