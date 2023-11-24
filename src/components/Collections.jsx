@@ -50,7 +50,7 @@ function Collections() {
 
   const getCollectionsData = (username) => {
     console.log(username);
-    fetch(process.env.REACT_APP_API_URL + `collection/user/${username}`)
+    fetch(process.env.REACT_APP_API_URL + `/collection/user/${username}`)
       .then((response) => response.json())
       .then((data) => {
         console.log("Collections data:", data);
