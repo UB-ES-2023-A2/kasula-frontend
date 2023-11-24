@@ -26,17 +26,13 @@ import logo from "../assets/logo.png";
 import chef from "../assets/chef.png";
 
 function KasulaNavbar() {
-  const { token } = useAuth();
+  const { token, logout, isLogged } = useAuth();
   const [user, setUser] = useState({});
-  const [isLogged, setIsLogged] = useState(
-    localStorage.getItem("logged") === "true"
-  );
   const [showModal, setShowModal] = useState(false);
   const [showPostRecipe, setShowPostRecipe] = useState(false);
 
   useEffect(() => {
-    setIsLogged(localStorage.getItem("logged") === "true");
-    if (localStorage.getItem("logged") === "true") {
+    if (isLogged()) {
       getLoggedUserData();
     }
   }, []);
@@ -75,8 +71,8 @@ function KasulaNavbar() {
 
   const handleLogout = () => {
     localStorage.setItem("logged", "false"); // This will update the localStorage
-    setIsLogged(false); // This will update the state within the app
     handleCloseModal(); // This will close the modal
+    logout(); // This will remove the token from the localStorage
   };
 
   return (
@@ -99,19 +95,19 @@ function KasulaNavbar() {
             aria-controls="navbar-nav"
           />
           <Navbar.Collapse id="navbar-nav">
-            {isLogged ? (
-              <>
                 <Nav className="me-auto fs-5">
                   <Nav.Link href="/">Feed</Nav.Link>
                   <Nav.Link href="/collections">Collections</Nav.Link>
                 </Nav>
-                <Button
-                  className="me-4 fs-5 border-0"
-                  id="positiveButton"
-                  onClick={() => setShowPostRecipe(true)}
-                >
-                  <PlusLg></PlusLg> Recipe
-                </Button>
+                {isLogged() && (
+                  <>
+                  <Button
+                    className="me-4 fs-5 border-0"
+                    id="positiveButton"
+                    onClick={() => setShowPostRecipe(true)}
+                  >
+                    <PlusLg></PlusLg> Recipe
+                  </Button>
                 <Nav className="fs-5 me-4">
                   <NavDropdown
                     title={
@@ -137,21 +133,22 @@ function KasulaNavbar() {
                       role="button"
                       onClick={() => handleOpenModal()}
                       href="#action/3.4"
-                    >
-                      Logout
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                </Nav>
-              </>
-            ) : (
-              <Link
-                to="/login"
-                className="btn ms-auto me-4 fs-5 border-0"
-                id="mainButton"
-              >
-                Log In
-              </Link>
-            )}
+                      >
+                        Logout
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  </Nav>
+                  </>
+                )}
+              {!isLogged() && (
+                <Link
+                  to="/login"
+                  className="btn ms-auto me-4 fs-5 border-0"
+                  id="mainButton"
+                >
+                  Log In
+                </Link>
+              )}
           </Navbar.Collapse>
         </Container>
       </Navbar>

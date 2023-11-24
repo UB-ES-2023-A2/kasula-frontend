@@ -35,7 +35,8 @@ import CollectionCreate from "./CollectionCreate";
 import AddRecipeToCollection from "./AddRecipeToCollection";
 
 function RecipeDetail() {
-  const { token } = useAuth();
+  const { token, isLogged } = useAuth();
+  const [username, setUsername] = useState(localStorage.getItem("currentUser"));
   const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [userImage, setUserImage] = useState('');
@@ -72,23 +73,10 @@ function RecipeDetail() {
 
   useEffect(() => {
     getRecipe();
-    getLoggedUser();
+    if (isLogged()) {
+      getIsLiked(username);
+    }
   }, [id, reloadReviews]);
-
-  const getLoggedUser = () => {
-    fetch(process.env.REACT_APP_API_URL + "/user/me", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setUser(data);
-        getIsLiked(data);
-      })
-      .catch((error) => console.error("Error al obtener recetas:", error));
-  };
 
   const getRecipe = () => {
     fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
@@ -131,9 +119,9 @@ function RecipeDetail() {
     setReloadReviews(!reloadReviews);
   };
 
-  const getIsLiked = (user) => {
+  const getIsLiked = (username) => {
     fetch(
-      process.env.REACT_APP_API_URL + `/collection/favorites/${user.username}`,
+      process.env.REACT_APP_API_URL + `/collection/favorites/${username}`,
       {
         method: "GET",
         headers: {
@@ -339,10 +327,14 @@ function RecipeDetail() {
                               <Dropdown.Item
                                 eventKey={1}
                                 onClick={() => {
-                                  setAddToCollectionModal({
-                                    show: true,
-                                    title: "Add to collection",
-                                  });
+                                  if (!isLogged()) {
+                                    navigate("/login");
+                                  } else {
+                                    setAddToCollectionModal({
+                                      show: true,
+                                      title: "Add to collection",
+                                    }); 
+                                  }
                                 }}
                               >
                                 Add to existing collection
@@ -350,10 +342,14 @@ function RecipeDetail() {
                               <Dropdown.Item
                                 eventKey={2}
                                 onClick={() => {
-                                  setCreateCollectionModal({
-                                    show: true,
-                                    title: "Create new collection",
-                                  });
+                                  if (!isLogged()) {
+                                    navigate("/login");
+                                  } else {
+                                    setCreateCollectionModal({
+                                      show: true,
+                                      title: "Create new collection",
+                                    });
+                                  }
                                 }}
                               >
                                 Add to new collection
@@ -363,7 +359,13 @@ function RecipeDetail() {
                           <div
                             className="p-2"
                             role="button"
-                            onClick={isLiked ? setUnliked : setLiked}
+                            onClick={() => {
+                              if (!isLogged()) {
+                                navigate("/login");
+                              } else {
+                                isLiked ? setUnliked() : setLiked();
+                              }
+                            }}
                           >
                             <span>
                               {isLiked ? (

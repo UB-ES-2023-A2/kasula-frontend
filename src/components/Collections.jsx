@@ -15,11 +15,8 @@ import CollectionEdit from "./CollectionEdit";
 import CollectionDelete from "./CollectionDelete";
 
 function Collections() {
-  const { token } = useAuth();
-  const [user, setUser] = useState({});
-  const [isLogged, setIsLogged] = useState(
-    localStorage.getItem("logged") === "true"
-  );
+  const { isLogged } = useAuth();
+  const [username] = useState(localStorage.getItem("currentUser"));
   const [collections, setCollections] = useState([]);
   const [createCollectionModal, setCreateCollectionModal] = useState({
     title: "Create Collection",
@@ -44,31 +41,16 @@ function Collections() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setIsLogged(localStorage.getItem("logged") === "true");
-    if (localStorage.getItem("logged") === "true") {
-      getLoggedUserData();
+    if (!isLogged()) {
+      navigate("/login");
     }
+    getCollectionsData(localStorage.getItem("currentUser"));
   }, []);
 
-  const getLoggedUserData = () => {
-    fetch(process.env.REACT_APP_API_URL + "/user/me", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("User data:", data);
-        setUser(data);
-        getCollectionsData(data);
-      })
-      .catch((error) => console.error("Error when getting user:", error));
-  };
 
-  const getCollectionsData = (user) => {
-    console.log(user);
-    fetch(process.env.REACT_APP_API_URL + `/collection/user/${user.username}`)
+  const getCollectionsData = (username) => {
+    console.log(username);
+    fetch(process.env.REACT_APP_API_URL + `collection/user/${username}`)
       .then((response) => response.json())
       .then((data) => {
         console.log("Collections data:", data);
@@ -85,14 +67,14 @@ function Collections() {
       show: false,
     });
     if (shouldReload) {
-      getCollectionsData(user);
+      getCollectionsData(username);
     }
   };
 
   return (
     <Container className="pb-4">
       <h1 className="py-4 text-center text-uppercase">
-        {user.username + "'s collections"}
+        {username + "'s collections"}
       </h1>
       <Container className="bg-lighter p-4">
         <span className="d-flex">
@@ -100,10 +82,15 @@ function Collections() {
             className="ms-auto colorless-span-button"
             role="button"
             onClick={() => {
-              setCreateCollectionModal({
-                ...createCollectionModal,
-                show: true,
-              });
+              if (isLogged()) {
+                setCreateCollectionModal({
+                  ...createCollectionModal,
+                  show: true,
+                });
+              }
+              else {
+                navigate("/login");
+              }
             }}
           >
             <span className="me-3">New Collection</span>
@@ -133,11 +120,15 @@ function Collections() {
                           className="colorless-span-button me-3"
                           role="button"
                           onClick={() => {
-                            setEditCollectionModal({
-                              ...editCollectionModal,
-                              show: true,
-                              collection_to_edit: collection,
-                            });
+                            if (isLogged()) {
+                              setEditCollectionModal({
+                                ...editCollectionModal,
+                                show: true,
+                                collection_to_edit: collection,
+                              });
+                            } else {
+                              navigate("/login");
+                            }
                             console.log(collection);
                           }}
                         >
@@ -147,11 +138,15 @@ function Collections() {
                           className="colorless-span-button"
                           role="button"
                           onClick={() => {
-                            setDeleteCollectionModal({
-                              ...deleteCollectionModal,
-                              show: true,
-                              collection_to_delete: collection,
-                            });
+                            if (isLogged()) {
+                              setDeleteCollectionModal({
+                                ...deleteCollectionModal,
+                                show: true,
+                                collection_to_delete: collection,
+                              });
+                            } else {
+                              navigate("/login");
+                            }
                           }}
                         >
                           <TrashFill />

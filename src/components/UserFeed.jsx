@@ -43,7 +43,7 @@ function UserFeed() {
                   <Card className="mt-5 shadow transition-03s" id="recipes-list">
                     <Card.Img className="object-fit-cover" variant="top" src={recipe.main_image ?? gyoza} height={300}/>
                     <Card.Body>
-                      <Card.Title className="overflow-hidden text-nowrap">{recipe.name}</Card.Title>
+                      <Card.Title className="overflow-hidden text-nowrap pb-1">{recipe.name}</Card.Title>
                         <h5><Image src={chefIcon} style={{height:'24px', width: '24px'}} fluid/> {Array(recipe.difficulty || 0).fill().map((_, index) => (
                             <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
                           ))}</h5>

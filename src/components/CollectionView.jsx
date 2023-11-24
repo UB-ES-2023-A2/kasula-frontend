@@ -18,12 +18,18 @@ import chefIcon from "../assets/icons/chef.png";
 import gyoza from "../assets/gyozas.jpg";
 
 function CollectionView() {
-  const { token } = useAuth();
+  const { token, isLogged } = useAuth();
   const { id, name } = useParams();
   const [recipes, setRecipes] = useState([]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    getRecipes();
+    if (!isLogged()) {
+      navigate("/login");
+    } else {
+      getRecipes();
+    }
   }, [id, name]);
 
   const getRecipes = () => {
