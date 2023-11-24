@@ -87,10 +87,10 @@ function CollectionView() {
                         </h5>
                         <div className="d-flex">
                           <StarFill className="mx-1 mt-1" style={{color: 'red'}}></StarFill>
-                          <span>{recipe.average_rating.toFixed(1) || 0}</span>
+                          <span>{recipe?.average_rating?.toFixed(1) || 0}</span>
                         </div>
                       </Card.Body>
-                      <Card.Footer>By {recipe.username}</Card.Footer>
+                      <Card.Footer>By {recipe?.username}</Card.Footer>
                     </Card>
                   </Link>
                   <span className="fs-3 colorless-span-button position-absolute top-0 end-0 mx-2" role="button" onClick={
