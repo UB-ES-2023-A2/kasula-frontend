@@ -4,12 +4,15 @@ import PostReview from "./PostReview";
 import chefIcon from "../assets/icons/chef.png";
 import { StarFill, PatchCheck } from "react-bootstrap-icons";
 import LikesReview from "./LikesReview";
+import ImageModal from "./ImageModal";
 
 
 function Reviews(props) {
   const { id, reloadReviews } = props;
   const [reviews, setReviews] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showModalImage, setShowModalImage] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null); 
   const isLogged = window.localStorage.getItem("logged");
 
   useEffect(() => {
@@ -21,7 +24,17 @@ function Reviews(props) {
       .catch((error) => console.error("Error al obtener receta:", error));
   }, [id, reloadReviews]); 
 
-  const handleOpenModal = () => {
+  const handleOpenModalImage = (image) => {
+    setSelectedImage(image);
+    setShowModalImage(true);
+  };
+
+  const handleCloseModalImage = () => {
+    setSelectedImage(null);
+    setShowModalImage(false);
+  };
+
+  const handleOpenModal = (image) => {
     setShowModal(true);
   };
 
@@ -44,7 +57,6 @@ function Reviews(props) {
           /> 
         </Row>
       : null}
-  
       <Col sm={12} className="mt-4 mx-auto">
         <Container>
           <ul className="list-unstyled">
@@ -60,10 +72,12 @@ function Reviews(props) {
                       <Image
                         src={review.image}
                         alt={review.user}
+                        onClick={() => handleOpenModalImage(review.image)}
                         style={{
                           width: "112px",
                           height: "96px",
                           borderRadius: "20%",
+                          cursor: "pointer"
                         }}
                       />
                     </Col>
@@ -112,6 +126,12 @@ function Reviews(props) {
           </ul>
         </Container>
       </Col>
+      <ImageModal
+        show={showModalImage}
+        onHide={handleCloseModalImage}
+        recipeImage={selectedImage}
+        recipeName={selectedImage ? "Image" : null} // Puedes cambiar esto según tus necesidades
+      />
     </Container>
   );
 }
