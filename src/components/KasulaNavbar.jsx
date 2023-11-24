@@ -26,7 +26,7 @@ import logo from "../assets/logo.png";
 import chef from "../assets/chef.png";
 
 function KasulaNavbar() {
-  const { token, logout } = useAuth();
+  const { token, logout, isLogged } = useAuth();
   const [user, setUser] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showPostRecipe, setShowPostRecipe] = useState(false);
@@ -51,10 +51,6 @@ function KasulaNavbar() {
         {window.localStorage.setItem("currentUser", data.username)}
       })
       .catch((error) => console.error("Error al obtener recetas:", error));
-  };
-
-  const isLogged = () => {
-    return localStorage.getItem("token") !== null;
   };
 
   const handleOpenModal = () => {
