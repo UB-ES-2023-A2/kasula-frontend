@@ -31,7 +31,7 @@ const CollectionEdit = ({ onClose, onMessage, collection_to_edit }) => {
   const requestEditCollection = async (request_body) => {
     try {
       const response = await fetch(
-        process.env.REACT_APP_API_URL + "collection/" + collection.id + "/",
+        process.env.REACT_APP_API_URL + "/collection/" + collection.id + "/",
         {
           method: "PUT",
           headers: {

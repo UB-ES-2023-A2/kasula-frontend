@@ -46,7 +46,6 @@ function KasulaNavbar() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("User data:", data);
         setUser(data);
         {window.localStorage.setItem("currentUser", data.username)}
       })
@@ -87,7 +86,7 @@ function KasulaNavbar() {
                 width="96"
                 height="96"
                 className="d-inline-block align-top"
-                alt="React Bootstrap logo"
+                alt="Brand logo"
               />
             </Link>
           </Navbar.Brand>
@@ -109,40 +108,31 @@ function KasulaNavbar() {
                   >
                     <PlusLg></PlusLg> Recipe
                   </Button>
-                  <Nav className="fs-5 me-4">
-                    <NavDropdown
-                      title={
-                        <>
-                          <Image
-                            className="me-2"
-                            src={chef} // replace with the actual image source
-                            alt={chef}
-                            roundedCircle
-                            width={30}
-                            height={30}
-                          />
-                          <span className="min-width-container">{user.username}</span>
-                        </>
-                      }
-                      id="basic-nav-dropdown"
-                    >
-                      <NavDropdown.Item href="#action/3.2">
-                        My Information
-                      </NavDropdown.Item>
-                      <NavDropdown.Item href="#action/3.1">
-                        My Recipes
-                      </NavDropdown.Item>
-                      <NavDropdown.Item href="#action/3.2">
-                        Followed Users
-                      </NavDropdown.Item>
-                      <NavDropdown.Item href="#action/3.3">
-                        Followers
-                      </NavDropdown.Item>
-                      <NavDropdown.Divider />
-                      <NavDropdown.Item
-                        role="button"
-                        onClick={() => handleOpenModal()}
-                        href="#action/3.4"
+                <Nav className="fs-5 me-4">
+                  <NavDropdown
+                    title={
+                      <>
+                        <Image
+                          className="me-2"
+                          src={isLogged && user.profile_picture ? user.profile_picture : chef}
+                          alt="User profile"
+                          roundedCircle
+                          width={40}
+                          height={50}
+                        />
+                        <span className="min-width-container">{user.username}</span>
+                      </>
+                    }
+                    id="basic-nav-dropdown"
+                  >
+                    <NavDropdown.Item href={`/UserProfile/${user._id}`}>
+                      My Information
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item
+                      role="button"
+                      onClick={() => handleOpenModal()}
+                      href="#action/3.4"
                       >
                         Logout
                       </NavDropdown.Item>

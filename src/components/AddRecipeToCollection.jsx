@@ -46,7 +46,7 @@ const AddRecipeToCollection = ({ onClose, onMessage, recipe_id }) => {
   };
 
   const requestAddRecipeToCollection = (collection_id) => {
-    fetch(process.env.REACT_APP_API_URL + `collection/${collection_id}/add_recipe/${recipe_id}`, {
+    fetch(process.env.REACT_APP_API_URL + `/collection/${collection_id}/add_recipe/${recipe_id}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,

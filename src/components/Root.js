@@ -13,6 +13,7 @@ import PasswordRecovery from "./PasswordRecovery";
 import PasswordChange from "./PasswordChange";
 import UserFeed from "./UserFeed";
 import RecipeDetail from "./RecipeDetail";
+import UserProfile from "./UserProfile";
 import Collections from "./Collections";
 import CollectionView from "./CollectionView";
 
@@ -52,6 +53,17 @@ function Root() {
           ></Route>
           <Route path="/passwordrecovery" element={<PasswordRecovery />} />
           <Route path="/passwordrecovery/set" element={<PasswordChange />} />
+          <Route
+            path="userprofile/:userId"
+            element={
+              <Container className="my-0 pt-0 pb-4 px-0 min-vh-100">
+                <KasulaNavbar></KasulaNavbar>
+                <Container className="min-vh-100">
+                  <UserProfile></UserProfile>
+                </Container>
+              </Container>
+            }
+          ></Route>
           <Route
             path="/collections"
             element={
