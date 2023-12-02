@@ -55,7 +55,7 @@ function CollectionView() {
         </span>
       </Link>
       {loading ? (
-        <Container className="d-flex justify-content-center align-items-center">
+        <Container className="d-flex justify-content-center align-items-center mt-5">
           <Spinner animation="border" variant="secondary" />
         </Container>
       ) : (
