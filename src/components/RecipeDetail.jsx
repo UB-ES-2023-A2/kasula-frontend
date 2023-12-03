@@ -36,7 +36,8 @@ import AddRecipeToCollection from "./AddRecipeToCollection";
 
 function RecipeDetail() {
   const { token, isLogged } = useAuth();
-  const [username, setUsername] = useState(localStorage.getItem("currentUser"));
+  const [myUserId, setMyUserId] = useState('');
+  const [myUserName, setMyUserName] = useState(localStorage.getItem("currentUser"));
   const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [userImage, setUserImage] = useState('');
@@ -46,6 +47,13 @@ function RecipeDetail() {
   const [recipe, setRecipe] = useState({ images: [] });
   const [showReviews, setShowReviews] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [adminMode, setadminMode] = useState(false);
+  const [showUnfollowModal, setShowUnfollowModal] = useState(false);
+  const [showLoginRedirectModal, setShowLoginRedirectModal] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(null);
+  const [userFollowers, setUserFollowers] = useState([]);
 
   const [imageModal, setImageModal] = useState({
     show: false,
@@ -74,9 +82,17 @@ function RecipeDetail() {
   useEffect(() => {
     getRecipe();
     if (isLogged()) {
-      getIsLiked(username);
+      getIsLiked(userName);
     }
   }, [id, reloadReviews]);
+
+  useEffect(() => {
+    if(myUserName == userName){
+      setadminMode(true);
+    }else{
+      setIsFollowing(userFollowers.includes(myUserName));
+    }
+  }, [userName, userFollowers]);
 
   const getRecipe = () => {
     fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
@@ -106,12 +122,16 @@ function RecipeDetail() {
       setUserId(data.user_id);
       setUserName(data.username);
       setUserImage(data.profile_picture || '');
+      setUserFollowers(data.followers || []);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
 
-  const handleNavigate = (userId) => {
+  const handleNavigate = (event, userId) => {
+    if (event) {
+      event.stopPropagation();
+    }
     navigate(`/UserProfile/${userId}`);
   };
 
@@ -207,6 +227,68 @@ function RecipeDetail() {
     </div>
   ));
 
+  const handleFollow = async () => {
+    if (!isLogged()) {
+      setShowLoginRedirectModal(true);
+      return;
+    }
+  
+    try {
+      const response = await fetch(process.env.REACT_APP_API_URL + `/user/follow/${userName}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+  
+      if (response.ok) {
+        setConfirmationMessage(`You're now following ${userName}.`);
+        setIsFollowing(true);
+        setToastData({
+          message: `You're now following ${userName}.`,
+          variant: 'success', 
+          show: true,
+        });
+      } else {
+        throw new Error('There was an error following the user.');
+      }
+    } catch (error) {
+      console.error('Error following user:', error);
+      setConfirmationMessage(error.toString());
+      setShowConfirmation(true);
+    }
+  };  
+  
+  const handleUnfollow = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_API_URL + `/user/unfollow/${userName}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+  
+      if (response.ok) {
+        setConfirmationMessage("You have unfollowed the user.");
+        setIsFollowing(false)
+        setToastData({
+          message: `You' have unfollowed ${userName}.`,
+          variant: 'secondary', 
+          show: true,
+        });
+      } else {
+        throw new Error('There was an error unfollowing the user.');
+      }
+    } catch (error) {
+      console.error('Error unfollowing user:', error);
+      setConfirmationMessage(error.toString());
+      setShowConfirmation(true);
+    }
+    setShowUnfollowModal(false);
+  };
+
   return (
     <Container fluid className="min-vh-100">
       <ImageModal
@@ -240,25 +322,6 @@ function RecipeDetail() {
                         fluid
                       />
                       <h2 style={{ marginBottom: "1rem" }}>{recipe.name}</h2>
-                    </Col>
-                    <Col md={12}>
-                      <div className="mb-3 py-2 bg-light box-shadow" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(recipe.user_id)}>
-                          <Row>
-                          <Col sm={4}>
-                            <Card.Title style={{ cursor: 'pointer' }}>{'Author:'}</Card.Title>
-                            </Col>
-                            <Col sm={2}>
-                              <Image 
-                                src={userImage ? userImage : defaultProfile} 
-                                roundedCircle 
-                                style={{ width: '30px', marginRight: '10px' }} 
-                              />
-                            </Col>
-                            <Col sm={2}>
-                              <Card.Title style={{ cursor: 'pointer' }}>{userName}</Card.Title>
-                            </Col>
-                          </Row>
-                      </div>
                     </Col>
                     <Col xs={12}>
                       <div className="mt-5 pb-3 pt-2 bg-light box-shadow">
@@ -315,7 +378,36 @@ function RecipeDetail() {
                   </Col>
                   <Col xs={12} md={6} className="p-4">
                     <Row>
-                      <Col xs={12} className="d-flex mb-4">
+                      <Col xs={6} className="d-flex mb-4">
+                          <div className="mb-3 py-2 bg-light box-shadow" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(null, recipe.user_id)}>
+                              <Row>
+                                <Col sm={2} >
+                                  <Image 
+                                    src={userImage ? userImage : defaultProfile} 
+                                    roundedCircle 
+                                    style={{ width: '40px', marginRight: '10px' }} 
+                                  />
+                                </Col>
+                                <Col sm={4}>
+                                  <h3 style={{ cursor: 'pointer' }}>{userName}</h3>
+                                </Col>
+                                <Col sm={4} className="d-flex align-items-center">
+                                  {!adminMode && (
+                                    <Button
+                                      variant={isFollowing ? 'info' : 'primary'}
+                                      onClick={(e) => {
+                                        isFollowing ? setShowUnfollowModal(true) : handleFollow();
+                                        e.stopPropagation();
+                                      }}
+                                    >
+                                      {isFollowing ? 'Following' : 'Follow'}
+                                    </Button>
+                                  )}
+                                </Col>
+                              </Row>
+                          </div>
+                        </Col>
+                        <Col xs={6} className="d-flex mb-4">
                         <div className="ms-auto d-flex">
                           <Dropdown>
                             <Dropdown.Toggle
@@ -502,6 +594,37 @@ function RecipeDetail() {
       >
         <Toast.Body>{toastData.message}</Toast.Body>
       </Toast>
+
+      <Modal show={showUnfollowModal} onHide={() => setShowUnfollowModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Unfollow User</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>Do you want to unfollow this user?</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowUnfollowModal(false)}>
+          Cancel
+        </Button>
+        <Button variant="danger" onClick={handleUnfollow}>
+          Unfollow
+        </Button>
+      </Modal.Footer>
+    </Modal>
+
+    <Modal show={showLoginRedirectModal} onHide={() => setShowLoginRedirectModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Required log in</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>You need to log in to follow this user.</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowLoginRedirectModal(false)}>
+          Cancel
+        </Button>
+        <Button variant="primary" onClick={() => navigate("/login")}>
+          Log in
+        </Button>
+      </Modal.Footer>
+    </Modal>
+
     </Container>
   );
 }
