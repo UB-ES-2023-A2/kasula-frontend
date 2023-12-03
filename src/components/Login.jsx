@@ -137,7 +137,7 @@ function Login() {
               <Col sm={1}>
                 <Button
                   variant="link"
-                  className="text-decoration-none fs-3 text-reset my-2"
+                  className="text-decoration-none fs-3 text-reset my-2 colorless-span-button"
                   onClick={() => navigate("/")}
                 >
                   <ArrowLeft></ArrowLeft>

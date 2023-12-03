@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import "../css/common.css";
 
 //Bootstrap
 import {
@@ -25,17 +26,13 @@ import logo from "../assets/logo.png";
 import chef from "../assets/chef.png";
 
 function KasulaNavbar() {
-  const { token } = useAuth();
+  const { token, logout, isLogged } = useAuth();
   const [user, setUser] = useState({});
-  const [isLogged, setIsLogged] = useState(
-    localStorage.getItem("logged") === "true"
-  );
   const [showModal, setShowModal] = useState(false);
   const [showPostRecipe, setShowPostRecipe] = useState(false);
 
   useEffect(() => {
-    setIsLogged(localStorage.getItem("logged") === "true");
-    if (localStorage.getItem("logged") === "true") {
+    if (isLogged()) {
       getLoggedUserData();
     }
   }, []);
@@ -49,8 +46,8 @@ function KasulaNavbar() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("User data:", data);
         setUser(data);
+        {window.localStorage.setItem("currentUser", data.username)}
       })
       .catch((error) => console.error("Error al obtener recetas:", error));
   };
@@ -74,8 +71,8 @@ function KasulaNavbar() {
 
   const handleLogout = () => {
     localStorage.setItem("logged", "false"); // This will update the localStorage
-    setIsLogged(false); // This will update the state within the app
     handleCloseModal(); // This will close the modal
+    logout(); // This will remove the token from the localStorage
   };
 
   return (
@@ -89,7 +86,7 @@ function KasulaNavbar() {
                 width="96"
                 height="96"
                 className="d-inline-block align-top"
-                alt="React Bootstrap logo"
+                alt="Brand logo"
               />
             </Link>
           </Navbar.Brand>
@@ -98,68 +95,60 @@ function KasulaNavbar() {
             aria-controls="navbar-nav"
           />
           <Navbar.Collapse id="navbar-nav">
-            {isLogged ? (
-              <>
                 <Nav className="me-auto fs-5">
                   <Nav.Link href="/">Feed</Nav.Link>
-                  <Nav.Link href="#collections">Collections</Nav.Link>
+                  <Nav.Link href="/collections">Collections</Nav.Link>
                 </Nav>
-                <Button
-                  className="me-4 fs-5 border-0"
-                  id="positiveButton"
-                  onClick={() => setShowPostRecipe(true)}
-                >
-                  <PlusLg></PlusLg> Recipe
-                </Button>
+                {isLogged() && (
+                  <>
+                  <Button
+                    className="me-4 fs-5 border-0"
+                    id="positiveButton"
+                    onClick={() => setShowPostRecipe(true)}
+                  >
+                    <PlusLg></PlusLg> Recipe
+                  </Button>
                 <Nav className="fs-5 me-4">
                   <NavDropdown
                     title={
                       <>
                         <Image
                           className="me-2"
-                          src={chef} // replace with the actual image source
-                          alt={chef}
+                          src={isLogged && user.profile_picture ? user.profile_picture : chef}
+                          alt="User profile"
                           roundedCircle
-                          width={30}
-                          height={30}
+                          width={40}
+                          height={50}
                         />
-                        <span>{user.username}</span>
+                        <span className="min-width-container">{user.username}</span>
                       </>
                     }
                     id="basic-nav-dropdown"
                   >
-                    <NavDropdown.Item href="#action/3.2">
+                    <NavDropdown.Item href={`/UserProfile/${user._id}`}>
                       My Information
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.1">
-                      My Recipes
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.2">
-                      Followed Users
-                    </NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.3">
-                      Followers
                     </NavDropdown.Item>
                     <NavDropdown.Divider />
                     <NavDropdown.Item
                       role="button"
                       onClick={() => handleOpenModal()}
                       href="#action/3.4"
-                    >
-                      Logout
-                    </NavDropdown.Item>
-                  </NavDropdown>
-                </Nav>
-              </>
-            ) : (
-              <Link
-                to="/login"
-                className="btn ms-auto me-4 fs-5 border-0"
-                id="mainButton"
-              >
-                Log In
-              </Link>
-            )}
+                      >
+                        Logout
+                      </NavDropdown.Item>
+                    </NavDropdown>
+                  </Nav>
+                  </>
+                )}
+              {!isLogged() && (
+                <Link
+                  to="/login"
+                  className="btn ms-auto me-4 fs-5 border-0"
+                  id="mainButton"
+                >
+                  Log In
+                </Link>
+              )}
           </Navbar.Collapse>
         </Container>
       </Navbar>
