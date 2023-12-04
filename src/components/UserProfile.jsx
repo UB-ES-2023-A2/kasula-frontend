@@ -49,6 +49,7 @@ const UserProfile = () => {
   const [isFollowing, setIsFollowing] = useState(null);
   const [followerDetails, setFollowerDetails] = useState([]);
   const [followingDetails, setFollowingDetails] = useState([]);
+  const [suggestedUsers, setSuggestedUsers] = useState([]);
 
 
   const [adminMode, setadminMode] = useState(false);
@@ -154,9 +155,29 @@ const UserProfile = () => {
     setUserDetails(userDetails);
   };
 
+  const fetchSuggestedUsers = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_API_URL + `/user/new/discover`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch suggested users');
+      }
+      const data = await response.json();
+      setSuggestedUsers(data);
+    } catch (error) {
+      console.error('Error fetching suggested users:', error);
+    }
+  };
+
   useEffect(() => {
     if (isLogged) {
       fetchMyUserData();
+      fetchSuggestedUsers();
     }
   }, [token, navigate]);
 
@@ -484,11 +505,10 @@ const UserProfile = () => {
 
   useEffect(() => {
     setIsFollowing(userFollowers.includes(myUserName));
-    console.error(userFollowers)
   }, [userFollowers]);
 
   const handleFollow = async () => {
-    if (isLogged) {
+    if (!isLogged) {
       setShowLoginRedirectModal(true);
       return;
     }
@@ -820,30 +840,60 @@ const UserProfile = () => {
         <Modal.Title>Following</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {followingDetails.length > 0 ? (
-          followingDetails.map((follower, index) => (
-            <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
-              <Card className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(follower._id)}>
+        {userFollowing.length > 0 ? (
+        followingDetails.map((following, index) => (
+          <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
+              <Card className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(following._id)}>
                 <Card.Body>
                   <Row>
                     <Col sm={2}>
                       <Image 
-                        src={follower.profile_picture ? follower.profile_picture : defaultProfile} 
+                        src={following.profile_picture ? following.profile_picture : defaultProfile} 
                         roundedCircle 
                         style={{ width: '30px', marginRight: '10px' }} 
                       />
                     </Col>
                     <Col>
-                      <Card.Title style={{ cursor: 'pointer' }}>{follower.username}</Card.Title>
+                      <Card.Title style={{ cursor: 'pointer' }}>{following.username}</Card.Title>
                     </Col>
                   </Row>
                 </Card.Body>
               </Card>
             </CSSTransition>
-          ))
+        ))
+      ) : (
+        adminMode ? (
+          <>
+            <p>Discover creators that match your taste!</p>
+            {suggestedUsers.length > 0 ? (
+              suggestedUsers.map((user, index) => (
+              <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
+              <Card className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(user._id)}>
+                <Card.Body>
+                  <Row>
+                    <Col sm={2}>
+                      <Image 
+                        src={user.profile_picture ? user.profile_picture : defaultProfile} 
+                        roundedCircle 
+                        style={{ width: '30px', marginRight: '10px' }} 
+                      />
+                    </Col>
+                    <Col>
+                      <Card.Title style={{ cursor: 'pointer' }}>{user.username}</Card.Title>
+                    </Col>
+                  </Row>
+                </Card.Body>
+              </Card>
+            </CSSTransition>
+              ))
+            ) : (
+              <p>Loading...</p> 
+            )}
+          </>
         ) : (
-          <p>There are no users to display.</p>
-        )}
+          <p>You are not following anyone yet.</p>
+        )
+      )}
       </Modal.Body>
     </Modal>
 

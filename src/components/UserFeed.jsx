@@ -11,6 +11,7 @@ function UserFeed() {
   const [FollowingRecipes, setFollowingRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [feedType, setFeedType] = useState("forYou");
+  const [maxRecipesPerUser, setMaxRecipesperUser] = useState(2);
 
   useEffect(() => {
     getUserFollowing();
@@ -44,7 +45,7 @@ function UserFeed() {
     const allFollowingRecipes = [];
     for (const following of myUserFollowing) {
       try {
-        const response = await fetch(process.env.REACT_APP_API_URL + '/recipe/user/' + following + '?limit=2', {
+        const response = await fetch(process.env.REACT_APP_API_URL + '/recipe/user/' + following, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -55,8 +56,8 @@ function UserFeed() {
           throw new Error('Failed to fetch recipes for following');
         }
         const followingRecipes = await response.json();
-  
-        allFollowingRecipes.push(...followingRecipes);
+        allFollowingRecipes.push(...followingRecipes.slice(0, maxRecipesPerUser));
+        console.error(followingRecipes)
       } catch (error) {
         console.error('Error fetching recipes for following:', error);
       }
@@ -93,20 +94,23 @@ function UserFeed() {
     <Container>
       <Row></Row>
       <div className="d-flex justify-content-center mt-3">
-        <ButtonGroup className="mb-3">
-          <Button 
-            variant={feedType === "forYou" ? "danger" : "secondary"} 
-            onClick={() => setFeedType("forYou")}
-          >
-            For You
-          </Button>
-          <Button 
-            variant={feedType === "following" ? "danger" : "secondary"} 
-            onClick={() => setFeedType("following")}
-          >
-            Following
-          </Button>
-        </ButtonGroup>
+      <ButtonGroup className="mb-3">
+        <Button 
+          style={feedType === "forYou" ? { backgroundColor: '#FFC1AC', borderColor: '#FFC1AC', color: '#000' } : null}
+          variant={feedType === "forYou" ? "light" : "light"} 
+          onClick={() => setFeedType("forYou")}
+        >
+          For You
+        </Button>
+        <Button 
+          style={feedType === "following" ? { backgroundColor: '#FFC1AC', borderColor: '#FFC1AC', color: '#000' } : null}
+          variant={feedType === "following" ? "light" : "light"} 
+          onClick={() => setFeedType("following")}
+        >
+          Following
+        </Button>
+      </ButtonGroup>
+
       </div>
       {loading ? (
         <Container className="d-flex justify-content-center align-items-center min-vh-100">
