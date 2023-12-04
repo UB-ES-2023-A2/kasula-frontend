@@ -1,21 +1,29 @@
 import { useAuth } from "./AuthContext";
+import { useNavigate, useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import RecipeList from "./RecipeList";
-import { Container, Spinner, ButtonGroup, Button, Row } from "react-bootstrap";
+import { Container, Spinner, ButtonGroup, Button, Row, Modal } from "react-bootstrap";
 
 function UserFeed() {
   const [myUserName, setMyUserName] = useState(localStorage.getItem("currentUser"));
+  const navigate = useNavigate();
   const { token, logout, isLogged } = useAuth();
   const [myUserFollowing, setMyUserFollowing] = useState([]);
-  const [recipes, setRecipes] = useState([]);
-  const [FollowingRecipes, setFollowingRecipes] = useState([]);
+  const [recipesForYou, setRecipesForYou] = useState([]);
+  const [recipesFollowing, setRecipesFollowing] = useState([]);
+  const [followingRecipes, setFollowingRecipes] = useState([]);
+  const [logged, setLogged] = useState(false);
   const [loading, setLoading] = useState(true);
   const [feedType, setFeedType] = useState("forYou");
-  const [maxRecipesPerUser, setMaxRecipesperUser] = useState(2);
+  const [showLoginRedirectModal, setShowLoginRedirectModal] = useState(false);
 
   useEffect(() => {
     getUserFollowing();
   }, [feedType]);
+
+  useEffect(() => {
+    setLogged(isLogged);
+  }, [token]);
 
   useEffect(() => {
     getRecipes();
@@ -56,15 +64,19 @@ function UserFeed() {
           throw new Error('Failed to fetch recipes for following');
         }
         const followingRecipes = await response.json();
-        allFollowingRecipes.push(...followingRecipes.slice(0, maxRecipesPerUser));
+        allFollowingRecipes.push(...followingRecipes.slice(0, 2));
         console.error(followingRecipes)
       } catch (error) {
         console.error('Error fetching recipes for following:', error);
       }
     }
   
-    setRecipes(allFollowingRecipes);
+    setRecipesFollowing(allFollowingRecipes);
     setLoading(false);
+  };
+
+  const displayedRecipes = () => {
+    return feedType === "forYou" ? recipesForYou : recipesFollowing;
   };
 
   const getRecipes = () => {
@@ -79,7 +91,7 @@ function UserFeed() {
           const filteredRecipes = allRecipes.filter(recipe => 
             !myUserFollowing.includes(recipe.username)
           );
-          setRecipes(filteredRecipes);
+          setRecipesForYou(filteredRecipes);
           setLoading(false);
         })
         .catch((error) => { 
@@ -93,8 +105,8 @@ function UserFeed() {
   return (
     <Container>
       <Row></Row>
-      <div className="d-flex justify-content-center mt-3">
-      <ButtonGroup className="mb-3">
+      <div className="d-flex justify-content-center">
+      <ButtonGroup className="mt-5">
         <Button 
           style={feedType === "forYou" ? { backgroundColor: '#FFC1AC', borderColor: '#FFC1AC', color: '#000' } : null}
           variant={feedType === "forYou" ? "light" : "light"} 
@@ -105,7 +117,13 @@ function UserFeed() {
         <Button 
           style={feedType === "following" ? { backgroundColor: '#FFC1AC', borderColor: '#FFC1AC', color: '#000' } : null}
           variant={feedType === "following" ? "light" : "light"} 
-          onClick={() => setFeedType("following")}
+          onClick={() => {
+            if(logged==false) {
+              setShowLoginRedirectModal(true);
+            }else{
+              setFeedType("following");
+            }
+          }}
         >
           Following
         </Button>
@@ -117,8 +135,24 @@ function UserFeed() {
           <Spinner animation="border" variant="secondary"/>
         </Container>
       ) : ( 
-        <RecipeList recipes={recipes} /> 
+        <RecipeList recipes={displayedRecipes()} /> 
       )}
+
+    <Modal show={showLoginRedirectModal} onHide={() => setShowLoginRedirectModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Required log in</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>You need to log in to view the recipes of the people you follow.</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowLoginRedirectModal(false)}>
+          Cancel
+        </Button>
+        <Button variant="primary" onClick={() => navigate("/login")}>
+          Log in
+        </Button>
+      </Modal.Footer>
+    </Modal>
+
     </Container>
   );
 }

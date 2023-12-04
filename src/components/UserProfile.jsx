@@ -864,7 +864,7 @@ const UserProfile = () => {
       ) : (
         adminMode ? (
           <>
-            <p>Discover creators that match your taste!</p>
+            <p>You're not following anyone. Discover creators that match your taste!</p>
             {suggestedUsers.length > 0 ? (
               suggestedUsers.map((user, index) => (
               <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>

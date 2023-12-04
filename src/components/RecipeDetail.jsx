@@ -379,22 +379,22 @@ function RecipeDetail() {
                   <Col xs={12} md={6} className="p-4">
                     <Row>
                       <Col xs={6} className="d-flex mb-4">
-                          <div className="mb-3 py-2 bg-light box-shadow" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(null, recipe.user_id)}>
+                          <div className="mb-3 py-2" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(null, recipe.user_id)}>
                               <Row>
-                                <Col sm={2} >
+                                <Col sm={3} >
                                   <Image 
                                     src={userImage ? userImage : defaultProfile} 
                                     roundedCircle 
-                                    style={{ width: '40px', marginRight: '10px' }} 
+                                    style={{ width: '40px', height: '40px', marginRight: '10px' }} 
                                   />
                                 </Col>
-                                <Col sm={4}>
+                                <Col sm={5}>
                                   <h3 style={{ cursor: 'pointer' }}>{userName}</h3>
                                 </Col>
                                 <Col sm={4} className="d-flex align-items-center">
                                   {!adminMode && (
                                     <Button
-                                      variant={isFollowing ? 'info' : 'primary'}
+                                      variant={isFollowing ? 'info' : 'light'}
                                       onClick={(e) => {
                                         isFollowing ? setShowUnfollowModal(true) : handleFollow();
                                         e.stopPropagation();

@@ -26,5 +26,6 @@ export const useAuth = () => {
     if (context === undefined) {
         throw new Error('useAuth debe ser usado dentro de un AuthProvider');
     }
+    console.error("TOKEN?", context)
     return context;
 }
