@@ -63,7 +63,6 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct }
   };
 
   const handleConfirmDelete = () => {
-    // Aquí puedes agregar lógica adicional antes de confirmar la eliminación
     handleDeleteReview();
   };
 
