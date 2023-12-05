@@ -1,19 +1,21 @@
 // ModifyReview.js
 import React, { useState } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
+import { useAuth } from "./AuthContext";
 
-const ModifyReview = ({ reviewId, recipeId, onHide, reloadReviews }) => {
+const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct }) => {
   const [newComment, setNewComment] = useState('');
+  const { token } = useAuth();
 
   const handleUpdateReview = async () => {
-    // Realizar la lógica para actualizar la revisión usando el endpoint PUT
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/review/${recipeId}/${reviewId}`,
         {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ comment: newComment }),
         }
@@ -34,12 +36,15 @@ const ModifyReview = ({ reviewId, recipeId, onHide, reloadReviews }) => {
   };
 
   const handleDeleteReview = async () => {
-    // Realizar la lógica para eliminar la revisión usando el endpoint DELETE
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/review/${recipeId}/${reviewId}`,
         {
           method: 'DELETE',
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -57,32 +62,49 @@ const ModifyReview = ({ reviewId, recipeId, onHide, reloadReviews }) => {
     onHide();
   };
 
+  const handleConfirmDelete = () => {
+    // Aquí puedes agregar lógica adicional antes de confirmar la eliminación
+    handleDeleteReview();
+  };
+
   return (
-    <Modal show={true} onHide={onHide}>
+    <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
-        <Modal.Title>Modificar o eliminar revisión</Modal.Title>
+        <Modal.Title>{funct === 'Edit' ? 'Modificar' : 'Eliminar'} revisión</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form>
-          <Form.Group className="mb-3">
-            <Form.Label>Nuevo Comentario</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              placeholder="Escribe tu nuevo comentario aquí"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-            />
-          </Form.Group>
-        </Form>
+        {funct === 'Edit' ? (
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Nuevo Comentario</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Escribe tu nuevo comentario aquí"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        ) : (
+          <p>Are you sure you want to delete the review?</p>
+        )}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="danger" onClick={handleDeleteReview}>
-          Eliminar
-        </Button>
-        <Button variant="primary" onClick={handleUpdateReview}>
-          Actualizar
-        </Button>
+        {funct === 'Edit' ? (
+            <Button variant="primary" onClick={handleUpdateReview}>
+                Actualizar
+            </Button>
+        ) : (
+          <>
+            <Button variant="danger" onClick={handleConfirmDelete}>
+              Aceptar
+            </Button>
+            <Button variant="secondary" onClick={onHide}>
+              Cancelar
+            </Button>
+          </>
+        )}
       </Modal.Footer>
     </Modal>
   );
