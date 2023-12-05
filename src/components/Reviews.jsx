@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import PostReview from "./PostReview";
-import chefIcon from "../assets/icons/chef.png";
 import { StarFill, PatchCheck } from "react-bootstrap-icons";
 import LikesReview from "./LikesReview";
 import ImageModal from "./ImageModal";
