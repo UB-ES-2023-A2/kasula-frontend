@@ -65,7 +65,7 @@ function Reviews(props) {
       {isLogged === 'true' ? 
         <Row className="mt-2">
           {reviews && reviews.length > 0 ? (<>
-          <Button className="fs-6 mx-auto" onClick={handleOpenModal}>
+          <Button className="mx-auto fs-6 bg-danger fw-bold border-secondary text-white" onClick={handleOpenModal}>
             Post review
           </Button>
           <PostReview
@@ -160,7 +160,7 @@ function Reviews(props) {
               <div className="text-center mt-5">
                 <h4 className="mb-3">There are currently no reviews.</h4>
                 <p>Be the first one to post a review and share your thoughts!</p>
-                <Button className="fs-6 mx-auto" onClick={handleOpenModal}>
+                <Button className="mx-auto fs-6 bg-danger fw-bold border-secondary text-white" onClick={handleOpenModal}>
                   Post review
                 </Button>
                 <PostReview
