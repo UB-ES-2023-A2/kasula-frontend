@@ -84,10 +84,10 @@ function Reviews(props) {
               reviews.map((review, index) => (
                 <li key={index} className="mb-3 p-2 fs-6 bg-light box-shadow">
                   <Row>
-                    <Col sm={2} className="fw-bold">
+                    <Col sm={12} className="fw-bold">
                       {review.username}:{" "}
                     </Col>
-                    <Col sm={10}>{review.comment}</Col>
+                    <Col sm={12}>{review.comment}</Col>
                     <Col sm={5} className="mt-2">
                       <Image
                         src={review.image}
@@ -137,12 +137,12 @@ function Reviews(props) {
                             {currentUser === review.username && (
                               <>
                                 <PencilSquare
-                                  className="ms-2"
+                                  className="ms-2 mt-1"
                                   style={{ color: 'blue', cursor: 'pointer' }}
                                   onClick={() => handleOpenModalReview(review, 'Edit')}
                                 />
                                 <Trash
-                                  className="ms-2"
+                                  className="ms-2 mt-1"
                                   style={{ color: 'red', cursor: 'pointer' }}
                                   onClick={() => handleOpenModalReview(review, 'Trash')}
                                 />
