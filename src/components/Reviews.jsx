@@ -47,8 +47,7 @@ function Reviews(props) {
     setShowModal(false);
   };
 
-  const handleOpenModalReview = (image, review, funct) => {
-    setSelectedImage(image);
+  const handleOpenModalReview = (review, funct) => {
     setSelectedReview(review);
     setShowModalReview(true);
     setSelectedFunct(funct);
@@ -56,7 +55,6 @@ function Reviews(props) {
   };
 
   const handleCloseModalReview = () => {
-    setSelectedImage(null);
     setSelectedReview(null);
     setShowModalReview(false);
     setSelectedFunct(null);
@@ -139,12 +137,12 @@ function Reviews(props) {
                                 <PencilSquare
                                   className="ms-2"
                                   style={{ color: 'blue', cursor: 'pointer' }}
-                                  onClick={() => handleOpenModalReview(null, review, 'Edit')}
+                                  onClick={() => handleOpenModalReview(review, 'Edit')}
                                 />
                                 <Trash
                                   className="ms-2"
                                   style={{ color: 'red', cursor: 'pointer' }}
-                                  onClick={() => handleOpenModalReview(null, review, 'Trash')}
+                                  onClick={() => handleOpenModalReview(review, 'Trash')}
                                 />
                               </>
                             )} 
@@ -175,6 +173,7 @@ function Reviews(props) {
           onHide={handleCloseModalReview}
           reloadReviews={reloadReviews}
           funct={selectedFunct}
+          reviewInfo={selectedReview}
         />
       )}
     </Container>

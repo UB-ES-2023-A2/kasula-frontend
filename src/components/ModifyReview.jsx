@@ -2,9 +2,15 @@
 import React, { useState } from 'react';
 import { Button, Modal, Form } from 'react-bootstrap';
 import { useAuth } from "./AuthContext";
+import {
+  StarFill,
+  Star
+} from "react-bootstrap-icons";
 
-const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct }) => {
-  const [newComment, setNewComment] = useState('');
+const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct, reviewInfo }) => {
+  const [newComment, setNewComment] = useState(reviewInfo.comment);
+  const [newRating, setNewRating] = useState(reviewInfo.rating);
+  const [newImage, setNewImage] = useState(reviewInfo.file); // Para almacenar la nueva imagen
   const { token } = useAuth();
 
   const handleUpdateReview = async () => {
@@ -17,7 +23,7 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct }
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ comment: newComment }),
+          body: JSON.stringify({ comment: newComment, rating: newRating }),        
         }
       );
 
@@ -42,7 +48,6 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct }
         {
           method: 'DELETE',
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -62,6 +67,25 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct }
     onHide();
   };
 
+  const renderStars = (amount) => {
+    let stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span
+          key={i}
+          className={"difficulty-star "
+            .concat(i <= amount ? "active" : "inactive")
+            .concat(" ms-2 fs-4")}
+          role="button"
+          onClick={() => setNewRating(i)}
+        >
+          {i <= amount ? <StarFill /> : <Star />}
+        </span>
+      );
+    }
+    return stars;
+  };
+
   const handleConfirmDelete = () => {
     handleDeleteReview();
   };
@@ -75,7 +99,7 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct }
         {funct === 'Edit' ? (
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Nuevo Comentario</Form.Label>
+              <Form.Label>New Comment</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
@@ -84,23 +108,34 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct }
                 onChange={(e) => setNewComment(e.target.value)}
               />
             </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>New Rating</Form.Label>
+              <div>{renderStars(newRating)}</div>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>New Image</Form.Label>
+              <Form.Control
+                type="file"
+                onChange={(e) => setNewImage(e.target.files[0])}
+              />
+            </Form.Group>
           </Form>
         ) : (
-          <p>Are you sure you want to delete the review?</p>
+          <p>Are you sure delete review?</p>
         )}
       </Modal.Body>
       <Modal.Footer>
         {funct === 'Edit' ? (
-            <Button variant="primary" onClick={handleUpdateReview}>
-                Actualizar
-            </Button>
+          <Button variant="primary" onClick={handleUpdateReview}>
+            Update
+          </Button>
         ) : (
           <>
             <Button variant="danger" onClick={handleConfirmDelete}>
-              Aceptar
+              Accept
             </Button>
             <Button variant="secondary" onClick={onHide}>
-              Cancelar
+              Cancel
             </Button>
           </>
         )}
