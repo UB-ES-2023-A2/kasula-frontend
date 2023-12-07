@@ -431,7 +431,7 @@ function RecipeDetail() {
           <Offcanvas.Title className="fs-2 mt-3">Reviews</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body style={{ backgroundColor: "#ffb79fe0" }}>
-          <Reviews id={id} reloadReviews={reloadReviewsFunction} owner={username}/>
+          <Reviews id={id} reloadReviews={reloadReviewsFunction} owner={recipe.username}/>
         </Offcanvas.Body>
       </Offcanvas>
       <Modal
