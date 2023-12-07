@@ -64,7 +64,7 @@ function Reviews(props) {
     <Container className="flex-column justify-content-between align-items-center">
       {isLogged === 'true' ? 
         <Row className="mt-2">
-          {reviews && reviews.length > 0 && owner === currentUser ? (<>
+          {reviews && reviews.length > 0 && owner !== currentUser ? (<>
           <Button className="mx-auto fs-6 bg-danger fw-bold border-secondary text-white" onClick={handleOpenModal}>
             Post review
           </Button>
