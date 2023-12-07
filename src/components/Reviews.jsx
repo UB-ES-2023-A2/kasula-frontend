@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import PostReview from "./PostReview";
-import { StarFill, PatchCheck } from "react-bootstrap-icons";
+import { StarFill, PatchCheck, PencilSquare, Trash } from 'react-bootstrap-icons';
 import LikesReview from "./LikesReview";
 import ImageModal from "./ImageModal";
+import ModifyReview from "./ModifyReview";
 
 
 function Reviews(props) {
@@ -11,7 +12,10 @@ function Reviews(props) {
   const [reviews, setReviews] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showModalImage, setShowModalImage] = useState(false);
+  const [showModalReview, setShowModalReview] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null); 
+  const [selectedReview, setSelectedReview] = useState(null);
+  const [selectedFunct, setSelectedFunct] = useState(null);
   const isLogged = window.localStorage.getItem("logged");
   const currentUserUsername = localStorage.getItem('currentUser');
 
@@ -35,12 +39,25 @@ function Reviews(props) {
     setShowModalImage(false);
   };
 
-  const handleOpenModal = (image) => {
+  const handleOpenModal = () => {
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleOpenModalReview = (review, funct) => {
+    setSelectedReview(review);
+    setShowModalReview(true);
+    setSelectedFunct(funct);
+
+  };
+
+  const handleCloseModalReview = () => {
+    setSelectedReview(null);
+    setShowModalReview(false);
+    setSelectedFunct(null);
   };
 
   return (
@@ -114,7 +131,21 @@ function Reviews(props) {
                             initialLikes={review.likes || 0}
                             likedBy={review.liked_by}
                             reloadReviews={reloadReviews}
-                            /> 
+                            />
+                            {currentUserUsername === review.username && (
+                              <>
+                                <PencilSquare
+                                  className="ms-2"
+                                  style={{ color: 'blue', cursor: 'pointer' }}
+                                  onClick={() => handleOpenModalReview(review, 'Edit')}
+                                />
+                                <Trash
+                                  className="ms-2"
+                                  style={{ color: 'red', cursor: 'pointer' }}
+                                  onClick={() => handleOpenModalReview(review, 'Trash')}
+                                />
+                              </>
+                            )} 
                           </div>
                         </Col>
                       </Row>
@@ -134,6 +165,17 @@ function Reviews(props) {
         recipeImage={selectedImage}
         recipeName={selectedImage ? "Image" : null} // Puedes cambiar esto según tus necesidades
       />
+      {selectedReview && (
+        <ModifyReview
+          show={showModalReview}
+          reviewId={selectedReview._id}
+          recipeId={id}
+          onHide={handleCloseModalReview}
+          reloadReviews={reloadReviews}
+          funct={selectedFunct}
+          reviewInfo={selectedReview}
+        />
+      )}
     </Container>
   );
 }
