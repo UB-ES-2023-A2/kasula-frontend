@@ -11,7 +11,6 @@ function UserFeed() {
   const [myUserFollowing, setMyUserFollowing] = useState([]);
   const [recipesForYou, setRecipesForYou] = useState([]);
   const [recipesFollowing, setRecipesFollowing] = useState([]);
-  const [followingRecipes, setFollowingRecipes] = useState([]);
   const [logged, setLogged] = useState(false);
   const [loading, setLoading] = useState(true);
   const [feedType, setFeedType] = useState("forYou");

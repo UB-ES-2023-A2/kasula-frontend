@@ -175,13 +175,14 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
-    if (isLogged) {
+    if (token!=null) {
       fetchMyUserData();
       fetchSuggestedUsers();
     }
-  }, [token, navigate]);
+  }, [token]);
 
   useEffect(() => {
+    
     if(myUserId == userId){
       setadminMode(true);
     }
@@ -260,15 +261,16 @@ const UserProfile = () => {
         setUserName(updatedData.username);
         setUserMail(updatedData.email);
         setUserBio(updatedData.bio || '');
+        setOperationSuccess(true)
 
         setConfirmationMessage("Profile updated successfully");
     } catch (error) {
         console.error('Error updating user data:', error);
-        setConfirmationMessage("Failed to update profile");
+        setOperationSuccess(false)
+        setConfirmationMessage("Oops! Something went wrong.");
     }
 
     setShowConfirmation(true);
-    setOperationSuccess(true)
     setEditMode(false);
 };
 
@@ -298,14 +300,14 @@ const UserProfile = () => {
           });
   
           if (!response.ok) {
-            throw new Error('Failed to update user data');
+            throw new Error('Oops! Something went wrong.');
           }
   
           const data = await response.json();
           setConfirmationMessage("Profile updated successfully");
         } catch (error) {
           console.error('Error updating user data:', error);
-          setConfirmationMessage("Failed to update profile");
+          setConfirmationMessage("Oops! Something went wrong.");
         }
         setShowConfirmation(true);
       }
@@ -508,7 +510,7 @@ const UserProfile = () => {
   }, [userFollowers]);
 
   const handleFollow = async () => {
-    if (!isLogged) {
+    if (token==null) {
       setShowLoginRedirectModal(true);
       return;
     }
