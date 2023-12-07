@@ -14,6 +14,15 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct, 
   const { token } = useAuth();
 
   const handleUpdateReview = async () => {
+    const bodyData = {
+      comment: newComment,
+      rating: newRating,
+    };
+    if (newImage) {
+      bodyData.file = newImage;
+    }
+    console.log(">>>>NewImage: ", newImage)
+    
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/review/${recipeId}/${reviewId}`,
@@ -23,7 +32,8 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct, 
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ comment: newComment, rating: newRating }),        
+          body: JSON.stringify({ comment: newComment, rating: newRating }),  
+          file: newImage      
         }
       );
 
