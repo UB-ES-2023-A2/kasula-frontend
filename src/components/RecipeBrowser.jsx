@@ -118,8 +118,7 @@ function RecipeBrowser({ onSearch }) {
               ([key, value]) =>
                 value !== defaultFilters[key] ||
                 (key === "sortAscending" &&
-                  JSON.stringify(filtersOffCanvas.values) !==
-                    JSON.stringify(defaultFilters))
+                  filtersOffCanvas.values.sortBy !== "none")
             )
             .map(([key, value]) => (
               <Badge pill bg="secondary">
