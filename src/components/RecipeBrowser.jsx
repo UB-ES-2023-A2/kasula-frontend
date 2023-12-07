@@ -45,16 +45,7 @@ function RecipeBrowser({ onSearch }) {
   const [filtersOffCanvas, setFiltersOffCanvas] = useState({
     title: "Filters",
     show: false,
-    values: JSON.parse(
-      localStorage.getItem("filters") || {
-        sortBy: "none",
-        sortAscending: false,
-        maxDifficulty: 5,
-        maxTime: 180,
-        minRating: 0,
-        maxCalories: 5000,
-      }
-    ),
+    values: JSON.parse(localStorage.getItem("filters")) || defaultFilters,
   });
 
   const handleCloseOffcanvas = (
