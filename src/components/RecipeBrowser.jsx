@@ -10,9 +10,28 @@ import {
 import { Funnel, FunnelFill, X, SortUp, SortDown } from "react-bootstrap-icons";
 
 import RecipeFilters from "./RecipeFilters";
+import sort_options from "../assets/jsonData/sort_options.json";
 import "../css/common.css";
 
 function RecipeBrowser({ onSearch }) {
+  const keyParsing = {
+    sortBy: "Sort by:",
+    sortAscending: "",
+    maxDifficulty: "Difficulty:",
+    maxTime: "Time:",
+    minRating: "Rating:",
+    maxCalories: "Calories",
+  };
+
+  const valueParsing = {
+    sortBy: "",
+    sortAscending: "",
+    maxDifficulty: " stars or less",
+    maxTime: " min or less",
+    minRating: " stars or more",
+    maxCalories: " cal or less",
+  };
+
   const defaultFilters = {
     sortBy: "none",
     sortAscending: false,
@@ -122,12 +141,16 @@ function RecipeBrowser({ onSearch }) {
             )
             .map(([key, value]) => (
               <Badge pill bg="secondary">
-                {key}:{" "}
-                {value === true
-                  ? "Yes"
+                {keyParsing[key]}{" "}
+                {key === "sortBy"
+                  ? sort_options.fields.filter(
+                      (option) => option.name === value
+                    )[0].displayName
+                  : value === true
+                  ? "Ascending"
                   : value === false
-                  ? "No"
-                  : value.toString()}
+                  ? "Descending"
+                  : value.toString().concat(valueParsing[key])}
                 {key === "sortAscending" ? (
                   <div
                     className="ms-1 d-inline-block"
