@@ -64,6 +64,7 @@ function Reviews(props) {
     <Container className="flex-column justify-content-between align-items-center">
       {isLogged === 'true' ? 
         <Row className="mt-2">
+          {reviews && reviews.length > 0 ? (<>
           <Button className="fs-6 mx-auto" onClick={handleOpenModal}>
             Post review
           </Button>
@@ -73,12 +74,14 @@ function Reviews(props) {
             onHide={handleCloseModal}
             reloadReviews={reloadReviews}
           /> 
+          </>) : null}
         </Row>
       : null}
       <Col sm={12} className="mt-4 mx-auto">
         <Container>
           <ul className="list-unstyled">
-            {reviews ? (
+            {console.log(">>>>>REVIEWS:",reviews)}
+            {reviews  && reviews.length > 0 ? (
               reviews.map((review, index) => (
                 <li key={index} className="mb-3 p-2 fs-6 bg-light box-shadow">
                   <Row>
@@ -154,7 +157,19 @@ function Reviews(props) {
                 </li>
               ))
             ) : (
-              <span>Reviews not available</span>
+              <div className="text-center mt-5">
+                <h4 className="mb-3">There are currently no reviews.</h4>
+                <p>Be the first one to post a review and share your thoughts!</p>
+                <Button className="fs-6 mx-auto" onClick={handleOpenModal}>
+                  Post review
+                </Button>
+                <PostReview
+                  id={id}
+                  show={showModal}
+                  onHide={handleCloseModal}
+                  reloadReviews={reloadReviews}
+                /> 
+              </div>
             )}
           </ul>
         </Container>
