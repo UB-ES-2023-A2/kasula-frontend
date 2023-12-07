@@ -8,7 +8,7 @@ import ModifyReview from "./ModifyReview";
 
 
 function Reviews(props) {
-  const { id, reloadReviews } = props;
+  const { id, reloadReviews, owner } = props;
   const [reviews, setReviews] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showModalImage, setShowModalImage] = useState(false);
@@ -17,7 +17,7 @@ function Reviews(props) {
   const [selectedReview, setSelectedReview] = useState(null);
   const [selectedFunct, setSelectedFunct] = useState(null);
   const isLogged = window.localStorage.getItem("logged");
-  const currentUserUsername = localStorage.getItem('currentUser');
+  const currentUser = localStorage.getItem('currentUser');
 
 
   useEffect(() => {
@@ -64,7 +64,8 @@ function Reviews(props) {
     <Container className="flex-column justify-content-between align-items-center">
       {isLogged === 'true' ? 
         <Row className="mt-2">
-          <Button className="fs-6 mx-auto" onClick={handleOpenModal}>
+          {reviews && reviews.length > 0 && owner === currentUser ? (<>
+          <Button className="mx-auto fs-6 bg-danger fw-bold border-secondary text-white" onClick={handleOpenModal}>
             Post review
           </Button>
           <PostReview
@@ -73,19 +74,20 @@ function Reviews(props) {
             onHide={handleCloseModal}
             reloadReviews={reloadReviews}
           /> 
+          </>) : null}
         </Row>
       : null}
       <Col sm={12} className="mt-4 mx-auto">
         <Container>
           <ul className="list-unstyled">
-            {reviews ? (
+            {reviews  && reviews.length > 0 ? (
               reviews.map((review, index) => (
                 <li key={index} className="mb-3 p-2 fs-6 bg-light box-shadow">
                   <Row>
-                    <Col sm={2} className="fw-bold">
+                    <Col sm={12} className="fw-bold">
                       {review.username}:{" "}
                     </Col>
-                    <Col sm={10}>{review.comment}</Col>
+                    <Col sm={12}>{review.comment}</Col>
                     <Col sm={5} className="mt-2">
                       <Image
                         src={review.image}
@@ -132,15 +134,15 @@ function Reviews(props) {
                             likedBy={review.liked_by}
                             reloadReviews={reloadReviews}
                             />
-                            {currentUserUsername === review.username && (
+                            {currentUser === review.username && (
                               <>
                                 <PencilSquare
-                                  className="ms-2"
+                                  className="ms-2 mt-1"
                                   style={{ color: 'blue', cursor: 'pointer' }}
                                   onClick={() => handleOpenModalReview(review, 'Edit')}
                                 />
                                 <Trash
-                                  className="ms-2"
+                                  className="ms-2 mt-1"
                                   style={{ color: 'red', cursor: 'pointer' }}
                                   onClick={() => handleOpenModalReview(review, 'Trash')}
                                 />
@@ -153,8 +155,24 @@ function Reviews(props) {
                   </Row>
                 </li>
               ))
-            ) : (
-              <span>Reviews not available</span>
+            ) : ( owner !== currentUser ? 
+              (<div className="text-center mt-5">
+                <h4 className="mb-3">There are currently no reviews</h4>
+                <p>Be the first one to post a review and share your thoughts!</p>
+                <Button className="mx-auto fs-6 bg-danger fw-bold border-secondary text-white" onClick={handleOpenModal}>
+                  Post review
+                </Button>
+                <PostReview
+                  id={id}
+                  show={showModal}
+                  onHide={handleCloseModal}
+                  reloadReviews={reloadReviews}
+                /> 
+              </div>) : <div className="text-center mt-5">
+               <h4 className="mb-3">There are currently no reviews</h4>
+                {/* <p>Be the first one to post a review and share your thoughts!</p> */}
+                <p className="mb-3">You are the owner of the recipe you can't do reviews </p>
+                </div>
             )}
           </ul>
         </Container>
