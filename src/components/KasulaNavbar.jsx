@@ -115,6 +115,7 @@ function KasulaNavbar() {
             <Nav className="me-auto fs-5">
               <Nav.Link href="/">Feed</Nav.Link>
               <Nav.Link href="/collections">Collections</Nav.Link>
+              <Nav.Link href="/notifications">Notifications</Nav.Link>
             </Nav>
             {isLogged() && (
               <>

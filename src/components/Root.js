@@ -16,6 +16,7 @@ import RecipeDetail from "./RecipeDetail";
 import UserProfile from "./UserProfile";
 import Collections from "./Collections";
 import CollectionView from "./CollectionView";
+import Notifications from "./Notifications";
 
 //CSS
 import "../css/Transitions.css";
@@ -71,6 +72,17 @@ function Root() {
                 <KasulaNavbar></KasulaNavbar>
                 <Container fluid className="bg-lightest min-vh-100">
                   <Collections></Collections>
+                </Container>
+              </>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <>
+                <KasulaNavbar></KasulaNavbar>
+                <Container fluid className="bg-lightest min-vh-100">
+                  <Notifications></Notifications>
                 </Container>
               </>
             }
