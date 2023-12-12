@@ -80,7 +80,7 @@ function Reviews(props) {
       <Col sm={12} className="mt-4 mx-auto">
         <Container>
           <ul className="list-unstyled">
-            {reviews  && reviews.length > 0 ? (
+            {reviews && reviews.length > 0 ? (
               reviews.map((review, index) => (
                 <li key={index} className="mb-3 p-2 fs-6 bg-light box-shadow">
                   {review.image ? 
@@ -229,7 +229,6 @@ function Reviews(props) {
                 /> 
               </div>) : <div className="text-center mt-5">
                <h4 className="mb-3">There are currently no reviews</h4>
-                {/* <p>Be the first one to post a review and share your thoughts!</p> */}
                 <p className="mb-3">You are the owner of the recipe you can't do reviews </p>
                 </div>
             )}
@@ -240,7 +239,7 @@ function Reviews(props) {
         show={showModalImage}
         onHide={handleCloseModalImage}
         recipeImage={selectedImage}
-        recipeName={selectedImage ? "Image" : null} // Puedes cambiar esto según tus necesidades
+        recipeName={selectedImage ? "Image" : null} 
       />
       {selectedReview && (
         <ModifyReview

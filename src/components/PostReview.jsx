@@ -103,12 +103,12 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
 
   return (<>
     <Modal show={show} onHide={onHide}>
-      <Modal.Header closeButton>
-        <Modal.Title>Post a review</Modal.Title>
+      <Modal.Header closeButton style={{ backgroundColor: "#ffb79fe0", borderBottom: "1px white solid" }}>
+        <Modal.Title className='fw-bold'>Post a review</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body style={{ backgroundColor: "#ffb79fe0"}}>
         <Form>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 fw-bold">
             <Form.Label>Review</Form.Label>
             <Form.Control
               as="textarea"
@@ -119,18 +119,18 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 fw-bold">
             <Form.Label>Rating</Form.Label>
-            <div>{renderStars(difficulty)}</div>
+            <div className='bg-white pb-1'>{renderStars(difficulty)}</div>
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 fw-bold">
             <Form.Label>Select Image</Form.Label>
             <Form.Control type="file" onChange={handleFileChange} />
           </Form.Group>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer style={{ backgroundColor: "#ffb79fe0"}}>
         <Button variant="secondary" onClick={onHide}>
           Close
         </Button>
