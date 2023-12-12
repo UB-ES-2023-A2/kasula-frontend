@@ -129,13 +129,8 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
             {characterCount > 80 && (
               <div className="text-danger">You exceeded 80 characters.</div>
             )}
+            <div className="mt-2 text-muted">Num characters: {characterCount}</div>
           </Form.Group>
-
-          <Form.Group className="mb-3 fw-bold bg-white p-3">
-            <Form.Label>Rating</Form.Label>
-            <div>{renderStars(difficulty)}</div>
-          </Form.Group>
-
           <Form.Group className="mb-3 fw-bold">
             <Form.Label>Rating</Form.Label>
             <div className='bg-white pb-1'>{renderStars(difficulty)}</div>
