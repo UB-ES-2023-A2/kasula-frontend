@@ -83,6 +83,7 @@ function Reviews(props) {
             {reviews  && reviews.length > 0 ? (
               reviews.map((review, index) => (
                 <li key={index} className="mb-3 p-2 fs-6 bg-light box-shadow">
+                  {review.image ? 
                   <Row>
                     <Col sm={12} className="fw-bold">
                       {review.username}:{" "}
@@ -152,7 +153,65 @@ function Reviews(props) {
                         </Col>
                       </Row>
                     </Col>
-                  </Row>
+                  </Row> 
+                  : 
+                  <Row>
+                    <Col sm={12} className="fw-bold">
+                      {review.username}:{" "}
+                    </Col>
+                    <Col sm={5} className="mt-1" style={{ wordWrap: "break-word" }}>{review.comment}</Col>
+                    <Col sm={7}>
+                      <Row>
+                        <Col sm={12}>
+                          <div className="d-flex align-items-center mt-1">
+                            <h5>
+                              <PatchCheck
+                                style={{ color: "red", marginLeft: '1px' }}
+                              ></PatchCheck>{" "}
+                              {Array(review.rating || 0)
+                                .fill()
+                                .map((_, index) => (
+                                  <span
+                                    key={index}
+                                    className="fs-5 ms-1 text-center"
+                                  >
+                                    <StarFill
+                                      style={{ color: "gold" }}
+                                    ></StarFill>
+                                  </span>
+                                ))}
+                            </h5>
+                          </div>
+                        </Col>
+                        <Col sm={12}>
+                          <div className="d-flex align-items-cente mt-2 ms-1">
+                            <LikesReview
+                            reviewUsername={review.username}
+                            recipeId={id}
+                            reviewId={review._id}
+                            initialLikes={review.likes || 0}
+                            likedBy={review.liked_by}
+                            reloadReviews={reloadReviews}
+                            />
+                            {currentUser === review.username && (
+                              <>
+                                <PencilSquare
+                                  className="mt-1 ms-1"
+                                  style={{ color: 'blue', cursor: 'pointer' }}
+                                  onClick={() => handleOpenModalReview(review, 'Edit')}
+                                />
+                                <Trash
+                                  className="ms-2 mt-1"
+                                  style={{ color: 'red', cursor: 'pointer' }}
+                                  onClick={() => handleOpenModalReview(review, 'Trash')}
+                                />
+                              </>
+                            )} 
+                          </div>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>}
                 </li>
               ))
             ) : ( owner !== currentUser ? 
