@@ -17,6 +17,8 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
   const { token } = useAuth();
   const [error, setError] = useState(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [characterCount, setCharacterCount] = useState(0);
+
 
 
   useEffect(() => {
@@ -37,6 +39,12 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
   const handleFileChange = (event) => {
     const selectedImage= event.target.files[0];
     setImage(selectedImage);
+  };
+
+  const handleReviewChange = (e) => {
+    const inputReview = e.target.value;
+    setReview(inputReview);
+    setCharacterCount(inputReview.length);
   };
 
   const handlePostReview = async () => {
@@ -103,10 +111,10 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
 
   return (<>
     <Modal show={show} onHide={onHide}>
-      <Modal.Header closeButton style={{ backgroundColor: "#ffb79fe0", borderBottom: "1px white solid" }}>
-        <Modal.Title className='fw-bold'>Post a review</Modal.Title>
+      <Modal.Header closeButton className="fw-bold" style={{ backgroundColor: "#ffb79fe0" }}> 
+        <Modal.Title>Post a review</Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ backgroundColor: "#ffb79fe0"}}>
+      <Modal.Body style={{ backgroundColor: "#ffb79fe0" }}>
         <Form>
           <Form.Group className="mb-3 fw-bold">
             <Form.Label>Review</Form.Label>
@@ -115,8 +123,17 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
               rows={3}
               placeholder="Write your review here"
               value={review}
-              onChange={(e) => setReview(e.target.value)}
+              onChange={handleReviewChange}
+              style={{ borderColor: characterCount > 80 ? 'red' : null }}
             />
+            {characterCount > 80 && (
+              <div className="text-danger">You exceeded 80 characters.</div>
+            )}
+          </Form.Group>
+
+          <Form.Group className="mb-3 fw-bold bg-white p-3">
+            <Form.Label>Rating</Form.Label>
+            <div>{renderStars(difficulty)}</div>
           </Form.Group>
 
           <Form.Group className="mb-3 fw-bold">
@@ -134,7 +151,12 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
         <Button variant="secondary" onClick={onHide}>
           Close
         </Button>
-        <Button variant="primary" onClick={handlePostReview}>
+        <Button
+        className='bg-danger fw-bold border-secondary text-white'
+          variant="primary"
+          onClick={handlePostReview}
+          disabled={characterCount > 80}
+        >
           Post Review
         </Button>
       </Modal.Footer>
@@ -149,7 +171,7 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
        </Alert>
      </Modal.Body>
      <Modal.Footer>
-       <Button variant="primary" onClick={() => setShowErrorModal(false)}>
+       <Button variant="secondary" onClick={() => setShowErrorModal(false)}>
          Close
        </Button>
      </Modal.Footer>
