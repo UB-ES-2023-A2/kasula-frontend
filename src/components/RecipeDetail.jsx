@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import "../css/common.css";
 import "../css/Transitions.css";
+import RecipeCard from "./RecipeCard";
 import chefIcon from "../assets/icons/chef.png"
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import defaultProfile from "../assets/defaultProfile.png";
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
@@ -40,8 +41,7 @@ function RecipeDetail() {
   const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [userImage, setUserImage] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [user, setUser] = useState({});
+  const [similarRecipes, setSimilarRecipes] = useState('');
   const { id } = useParams();
   const [recipe, setRecipe] = useState({ images: [] });
   const [showReviews, setShowReviews] = useState(false);
@@ -73,6 +73,7 @@ function RecipeDetail() {
 
   useEffect(() => {
     getRecipe();
+    getSimilarRecipes();
     if (isLogged()) {
       getIsLiked(username);
     }
@@ -88,6 +89,17 @@ function RecipeDetail() {
       })
       .catch((error) => console.error("Error al obtener receta:", error));   
   };
+
+  const getSimilarRecipes = () => {
+    fetch(process.env.REACT_APP_API_URL + `/recipe/similar/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSimilarRecipes(data)
+        console.log(">><data: ", data)
+      })
+      .catch((error) => console.error("Error al obtener recetas similares:", error));   
+  };
+
 
   const fetchUserData = async (userId) => {
     try {
@@ -418,10 +430,31 @@ function RecipeDetail() {
                 </Row>
               </Container>
             </CSSTransition>
+            <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+              <Container className="mt-5 pb-3 text-center box-rounded shadow">
+                <Row>
+                  <Col sm={12}>
+                    <h4 className="py-4 bg-normal">Similar Recipes</h4>
+                  </Col>
+                  {similarRecipes.length > 0 ? similarRecipes?.map((recipe) => (
+                    <Col key={recipe._id} sm={4} className="mb-4 bg-lightest">
+                      <Link
+                        to={`/RecipeDetail/${recipe._id}`}
+                        className="text-decoration-none"
+                      >
+                        <RecipeCard recipe={recipe} />
+                      </Link>
+                    </Col>
+                  )): null}
+                </Row>
+              </Container>
+            </CSSTransition>   
           </Col>
         </Row>
       </Container>
-      {/* Offcanvas para mostrar los comentarios */}
+
+ 
+
       <Offcanvas
         show={showReviews}
         onHide={() => setShowReviews(false)}
