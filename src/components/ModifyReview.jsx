@@ -109,10 +109,10 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct, 
 
   return (
     <Modal show={show} onHide={onHide}>
-      <Modal.Header closeButton className="fw-bold" style={{ backgroundColor: "#ffb79fe0"}}>
+      <Modal.Header closeButton className="fw-bold bg-normal">
         <Modal.Title>{funct === 'Edit' ? 'Modify' : 'Delete'} review</Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ backgroundColor: "#ffb79fe0"}}>
+      <Modal.Body className="bg-lightest">
         {funct === 'Edit' ? (
           <Form>
             <Form.Group className="mb-3 fw-bold">
@@ -132,14 +132,14 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct, 
             </Form.Group>
             <Form.Group className="mb-3 fw-bold">
               <Form.Label>New Rating</Form.Label>
-              <div className='bg-white pb-1'>{renderStars(newRating)}</div>
+              <div>{renderStars(newRating)}</div>
             </Form.Group>
           </Form>
         ) : (
           <p className='fw-bold fs-4'>Are you sure delete review?</p>
         )}
       </Modal.Body>
-      <Modal.Footer style={{ backgroundColor: "#ffb79fe0"}}>
+      <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
         {funct === 'Edit' ? (
           <Button className='bg-danger fw-bold border-secondary text-white' variant="primary" onClick={handleUpdateReview} disabled={characterCount > 120}>
             Update

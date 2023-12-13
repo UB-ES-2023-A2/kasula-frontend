@@ -135,6 +135,13 @@ function KasulaNavbar() {
                     <Dropdown.Menu className="dropdown-menu-end">
                       <Dropdown.Item
                         eventKey={1}
+                        href={`/UserProfile/${user._id}`}
+                      >
+                        Profile
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item
+                        eventKey={2}
                         onClick={() => {
                           handleOpenModal();
                         }}
