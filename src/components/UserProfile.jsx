@@ -619,10 +619,19 @@ const handleVisibilityChange = async (newVisibility) => {
                   )}
                 </div>
                 </Col>
-                <Col sm={6}>
+                <Col sm={10}>
                 <Row>
                   <Col sm={6}>
                     <h3 style={profileTextStyle}>@{userName}</h3>
+                  </Col>
+                  <Col sm={3}></Col>
+                  <Col sm={2}></Col>
+                  <Col sm={1} className="d-flex justify-content-end">
+                    {adminMode && (
+                      <Button variant="clear" onClick={handleEditToggle}>
+                        <GearFill /> {/* Usando el ícono de engranaje */}
+                      </Button>
+                    )}
                   </Col>
                       <div style={bioBoxStyle}>{userBio}</div>
                 </Row>
@@ -649,13 +658,6 @@ const handleVisibilityChange = async (newVisibility) => {
                   <Col sm={8}></Col>
                 </Row>
                 <Row className="mt-1">
-                          <Col sm={4}>
-                            {adminMode && (
-                              <Button variant="danger" onClick={handleEditToggle}>
-                                Edit
-                              </Button>
-                            )}
-                          </Col>
                           </Row>
                           <Row>
                           <Col sm={4}>
@@ -663,6 +665,7 @@ const handleVisibilityChange = async (newVisibility) => {
                               <Button
                                 variant={isFollowing ? 'info' : 'primary'}
                                 onClick={isFollowing ? () => setShowUnfollowModal(true) : handleFollow}
+                                className="mb-3"
                               >
                                 {isFollowing ? 'Following' : 'Follow'}
                               </Button>
@@ -715,7 +718,7 @@ const handleVisibilityChange = async (newVisibility) => {
                   <div className="alert alert-warning" role="alert">There are currently no Recipes</div> 
                 )
               ) : (
-                <div className="alert alert-warning" role="alert">The user has a private profile</div> 
+                <div className="alert alert-warning" role="alert">The user has a private profile. You cannot see his recipes.</div> 
               )
             }
 

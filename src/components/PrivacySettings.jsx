@@ -69,7 +69,7 @@ const PrivacySettings = ({
                             />
                         </Form.Group>
                         {/* Botón para guardar cambios */}
-                        <Button variant="primary" onClick={handleSaveProfile} disabled={!usernameValid || !emailValid} >
+                        <Button className="mb-3" variant="primary" onClick={handleSaveProfile} disabled={!usernameValid || !emailValid} >
                             Save Changes
                         </Button>
                     </Form>
