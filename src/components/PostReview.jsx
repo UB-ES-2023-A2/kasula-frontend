@@ -111,10 +111,10 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
 
   return (<>
     <Modal show={show} onHide={onHide}>
-      <Modal.Header closeButton className="fw-bold" style={{ backgroundColor: "#ffb79fe0" }}> 
+      <Modal.Header closeButton className="fw-bold bg-normal"> 
         <Modal.Title>Post a review</Modal.Title>
       </Modal.Header>
-      <Modal.Body style={{ backgroundColor: "#ffb79fe0" }}>
+      <Modal.Body className="bg-lightest">
         <Form>
           <Form.Group className="mb-3 fw-bold">
             <Form.Label>Review</Form.Label>
@@ -133,7 +133,7 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
           </Form.Group>
           <Form.Group className="mb-3 fw-bold">
             <Form.Label>Rating</Form.Label>
-            <div className='bg-white pb-1'>{renderStars(difficulty)}</div>
+            <div>{renderStars(difficulty)}</div>
           </Form.Group>
 
           <Form.Group className="mb-3 fw-bold">
@@ -142,7 +142,7 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
           </Form.Group>
         </Form>
       </Modal.Body>
-      <Modal.Footer style={{ backgroundColor: "#ffb79fe0"}}>
+      <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
         <Button variant="secondary" onClick={onHide}>
           Close
         </Button>
