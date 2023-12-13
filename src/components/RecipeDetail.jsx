@@ -381,13 +381,18 @@ function RecipeDetail() {
                       <Col xs={6} className="d-flex mb-4">
                           <div className="mb-3 py-2" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(null, recipe.user_id)}>
                               <Row>
-                                <Col sm={3} >
-                                  <Image 
-                                    src={userImage ? userImage : defaultProfile} 
-                                    roundedCircle 
-                                    style={{ width: '40px', height: '40px', marginRight: '10px' }} 
-                                  />
-                                </Col>
+                              <Col sm={3}>
+                                <Image 
+                                  src={userImage ? userImage : defaultProfile} 
+                                  roundedCircle 
+                                  style={{ 
+                                    width: '40px', 
+                                    height: '40px', 
+                                    marginRight: '10px',
+                                    objectFit: 'cover' 
+                                  }} 
+                                />
+                              </Col>
                                 <Col sm={5}>
                                   <h3 style={{ cursor: 'pointer' }}>{userName}</h3>
                                 </Col>

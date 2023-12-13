@@ -1,157 +1,177 @@
-import { useAuth } from "./AuthContext";
-import { useNavigate, useParams } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 import RecipeList from "./RecipeList";
-import { Container, Spinner, ButtonGroup, Button, Row, Modal } from "react-bootstrap";
+import RecipeBrowser from "./RecipeBrowser";
+import { Container, Spinner, ButtonGroup, Button, Modal, Row, Col } from "react-bootstrap";
 
 function UserFeed() {
-  const [myUserName, setMyUserName] = useState(localStorage.getItem("currentUser"));
+  const {isLogged } = useAuth();
   const navigate = useNavigate();
-  const { token, logout, isLogged } = useAuth();
-  const [myUserFollowing, setMyUserFollowing] = useState([]);
-  const [recipesForYou, setRecipesForYou] = useState([]);
-  const [recipesFollowing, setRecipesFollowing] = useState([]);
-  const [logged, setLogged] = useState(false);
+  const numRecipes = isLogged() ? 24 : 9;
+  const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [feedType, setFeedType] = useState("forYou");
+  const [feedType, setFeedType] = useState(localStorage.getItem('feedType') || 'foryou');
   const [showLoginRedirectModal, setShowLoginRedirectModal] = useState(false);
 
-  useEffect(() => {
-    getUserFollowing();
-  }, [feedType]);
+  const loggedOutFilters = {
+    sortBy: "average_rating",
+    sortAscending: false,
+  };
+  const [filters, setFilters] = useState(isLogged() ? (JSON.parse(localStorage.getItem("filters"))) : loggedOutFilters);
+  const [recipeName, setRecipeName] = useState(null);
+  const [page, setPage] = useState(0);
+  const [finished, setFinished] = useState(isLogged() ? false : true);
 
   useEffect(() => {
-    setLogged(isLogged);
-  }, [token]);
+    if (!isLogged()) {
+      setFinished(true);
+      setPage(0);
+      setFilters(loggedOutFilters);
+      setRecipeName(null);
+      getRecipes(loggedOutFilters, null, 0, 9, true, feedType);
+    }
+  }, [isLogged]);
 
   useEffect(() => {
-    getRecipes();
-  }, [myUserFollowing]);
+    getRecipes(filters, recipeName, page, numRecipes, true, feedType);
+  }, []);
 
-  const getUserFollowing = async (userId) => {
+  const getRecipes = async (filters, recipeName, page, numRecipes, reset, feedType) => {
+    setLoading(true);
+    let url = buildRequestUrl(filters, recipeName, page, numRecipes, feedType);
     try {
-      const response = await fetch(process.env.REACT_APP_API_URL + '/user/' + myUserName, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-      });
+      const response = await fetch(url);
       if (!response.ok) {
-        throw new Error('Failed to fetch user data');
+        if (response.status === 400) {
+          setPage(page - 1);
+          setFinished(true);
+        }
+        throw new Error('Failed to fetch recipes');
       }
       const data = await response.json();
-      setMyUserFollowing(data.following || []);
+      if (reset) {
+        setRecipes(data)
+      } else {
+        setRecipes(recipes.concat(data));
+      }
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error('Error fetching recipes:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const getRecipesFollowing = async () => {
-    setLoading(true);
-    const allFollowingRecipes = [];
-    for (const following of myUserFollowing) {
-      try {
-        const response = await fetch(process.env.REACT_APP_API_URL + '/recipe/user/' + following, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch recipes for following');
-        }
-        const followingRecipes = await response.json();
-        allFollowingRecipes.push(...followingRecipes.slice(0, 2));
-        console.error(followingRecipes)
-      } catch (error) {
-        console.error('Error fetching recipes for following:', error);
+  const buildRequestUrl = (filters, recipeName, page, numRecipes, feedType) => {
+    let url = process.env.REACT_APP_API_URL + "/recipe/" + (filters || recipeName || page || numRecipes ? "magic?" : "");
+    if (filters) {
+      url += (filters.sortBy === 'none') ? '' : `sort_by=${filters.sortBy}&`;
+      url += (filters.sortBy === 'none') ? '' : `order=${filters.sortAscending}&`;
+      url += filters.maxDifficulty ? `max_difficulty=${filters.maxDifficulty}&` : '';
+      url += filters.maxTime ? `max_cooking_time=${filters.maxTime}&` : '';
+      url += filters.minRating ? `min_rating=${filters.minRating}&` : '';
+      url += filters.maxCalories ? `max_energy=${filters.maxCalories}&` : '';
+    }
+    if (recipeName) {
+      url += `search=${recipeName}&`;
+    }
+    if (page !== null && numRecipes !== null) {
+      url += `start=${page * numRecipes}&`;
+      url += `size=${numRecipes}&`;
+    }
+    url += `feedType=${feedType}`;
+    console.error(url)
+    return url;
+  };
+
+  const handleTabChange = (tab) => {
+    setPage(0);
+    setFeedType(tab);
+    setFinished(false);
+    localStorage.setItem('feedType', tab)
+    if (tab === "following") {
+      if(!isLogged()){
+        setShowLoginRedirectModal(true);
+      }else{
+        getRecipes(filters, recipeName, 0, numRecipes, true, 'following');
+      }
+    }else{
+      if(!isLogged()){
+        getRecipes(loggedOutFilters, null, 0, 9, true);
+      }else{
+        getRecipes(filters, recipeName, 0, numRecipes, true, 'foryou');
       }
     }
-  
-    setRecipesFollowing(allFollowingRecipes);
-    setLoading(false);
   };
-
-  const displayedRecipes = () => {
-    return feedType === "forYou" ? recipesForYou : recipesFollowing;
-  };
-
-  const getRecipes = () => {
-    setLoading(true);
-    if (feedType === "following") {
-      getRecipesFollowing();
-    } else {
-      let url = process.env.REACT_APP_API_URL + "/recipe/";
-      fetch(url)
-        .then((response) => response.json())
-        .then((allRecipes) => {
-          const filteredRecipes = allRecipes.filter(recipe => 
-            !myUserFollowing.includes(recipe.username)
-          );
-          setRecipesForYou(filteredRecipes);
-          setLoading(false);
-        })
-        .catch((error) => { 
-          console.error("Error al obtener recetas:", error); 
-          setLoading(false); 
-        });
-    }
-};
-
 
   return (
     <Container>
-      <Row></Row>
-      <div className="d-flex justify-content-center">
-      <ButtonGroup className="mt-5">
-        <Button 
-          style={feedType === "forYou" ? { backgroundColor: '#FFC1AC', borderColor: '#FFC1AC', color: '#000' } : null}
-          variant={feedType === "forYou" ? "light" : "light"} 
-          onClick={() => setFeedType("forYou")}
-        >
-          For You
-        </Button>
-        <Button 
-          style={feedType === "following" ? { backgroundColor: '#FFC1AC', borderColor: '#FFC1AC', color: '#000' } : null}
-          variant={feedType === "following" ? "light" : "light"} 
-          onClick={() => {
-            if(logged==false) {
-              setShowLoginRedirectModal(true);
-            }else{
-              setFeedType("following");
-            }
-          }}
-        >
-          Following
-        </Button>
-      </ButtonGroup>
+      <Row>
+        <Col sm={5}></Col>
+          <Col sm={4}>
+            <ButtonGroup className="mt-5">
+              <Button
+                style={feedType === "foryou" ? { backgroundColor: '#FFC1AC', borderColor: '#FFC1AC', color: '#000' } : null}
+                variant={feedType === "following" ? "light" : "light"} 
+                onClick={() => handleTabChange("foryou")}
+              >
+                For You
+              </Button>
+              <Button
+                style={feedType === "following" ? { backgroundColor: '#FFC1AC', borderColor: '#FFC1AC', color: '#000' } : null}
+                variant={feedType === "following" ? "light" : "light"} 
+                onClick={() => handleTabChange("following")}
+              >
+                Following
+              </Button>
+            </ButtonGroup>
+        </Col>
+        <Col sm={3}></Col>
+      </Row>
 
-      </div>
+      {isLogged() && (
+        <RecipeBrowser onSearch={(newFilters, newRecipeName) => {
+          setPage(0);
+          setFinished(false);
+          setFilters(newFilters);
+          setRecipeName(newRecipeName);
+          getRecipes(filters, recipeName, 0, numRecipes, true, feedType);
+        }}/>
+      )}
+
       {loading ? (
         <Container className="d-flex justify-content-center align-items-center min-vh-100">
           <Spinner animation="border" variant="secondary"/>
         </Container>
-      ) : ( 
-        <RecipeList recipes={displayedRecipes()} /> 
+      ) : (
+        <RecipeList
+          recipes={recipes}
+          onRequestLoadMore={() => {
+            setPage(page + 1);
+            if (feedType === "foryou") {
+              getRecipes(filters, recipeName, page, numRecipes, false, 'foryou');
+            } else {
+              getRecipes(filters, recipeName, page, numRecipes, false, 'following');
+            }
+          }}
+          finished={finished}
+        />
       )}
 
-    <Modal show={showLoginRedirectModal} onHide={() => setShowLoginRedirectModal(false)}>
-      <Modal.Header closeButton>
-        <Modal.Title>Required log in</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>You need to log in to view the recipes of the people you follow.</Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={() => setShowLoginRedirectModal(false)}>
-          Cancel
-        </Button>
-        <Button variant="primary" onClick={() => navigate("/login")}>
-          Log in
-        </Button>
-      </Modal.Footer>
-    </Modal>
-
+      <Modal show={showLoginRedirectModal} onHide={() => setShowLoginRedirectModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Required log in</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>You need to log in to view the recipes of the people you follow.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowLoginRedirectModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={() => navigate("/login")}>
+            Log in
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 }
