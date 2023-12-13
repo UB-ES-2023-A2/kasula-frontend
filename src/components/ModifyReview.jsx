@@ -10,7 +10,8 @@ import {
 const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct, reviewInfo }) => {
   const [newComment, setNewComment] = useState(reviewInfo.comment);
   const [newRating, setNewRating] = useState(reviewInfo.rating);
-  const [newImage, setNewImage] = useState(reviewInfo.file); // Para almacenar la nueva imagen
+  const [newImage, setNewImage] = useState(reviewInfo.file); 
+  const [characterCount, setCharacterCount] = useState(0);
   const { token } = useAuth();
 
   const handleUpdateReview = async () => {
@@ -96,47 +97,51 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct, 
     return stars;
   };
 
+  const handleReviewChange = (e) => {
+    const inputReview = e.target.value;
+    setNewComment(inputReview)
+    setCharacterCount(inputReview.length);
+  };
+
   const handleConfirmDelete = () => {
     handleDeleteReview();
   };
 
   return (
     <Modal show={show} onHide={onHide}>
-      <Modal.Header closeButton>
-        <Modal.Title>{funct === 'Edit' ? 'Modificar' : 'Eliminar'} revisión</Modal.Title>
+      <Modal.Header closeButton className="fw-bold" style={{ backgroundColor: "#ffb79fe0"}}>
+        <Modal.Title>{funct === 'Edit' ? 'Modify' : 'Delete'} review</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body style={{ backgroundColor: "#ffb79fe0"}}>
         {funct === 'Edit' ? (
           <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>New Comment</Form.Label>
+            <Form.Group className="mb-3 fw-bold">
+              <Form.Label>New Review</Form.Label>
               <Form.Control
                 as="textarea"
                 rows={3}
-                placeholder="Escribe tu nuevo comentario aquí"
+                placeholder="Write your new review here"
                 value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
+                onChange={handleReviewChange}
+                style={{ borderColor: characterCount > 80 ? 'red' : null }}
               />
+              {characterCount > 80 && (
+              <div className="text-danger">You exceeded 80 characters.</div>
+            )}
+            <div className="mt-2 text-muted">Num characters: {characterCount}</div>
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3 fw-bold">
               <Form.Label>New Rating</Form.Label>
-              <div>{renderStars(newRating)}</div>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>New Image</Form.Label>
-              <Form.Control
-                type="file"
-                onChange={(e) => setNewImage(e.target.files[0])}
-              />
+              <div className='bg-white pb-1'>{renderStars(newRating)}</div>
             </Form.Group>
           </Form>
         ) : (
-          <p>Are you sure delete review?</p>
+          <p className='fw-bold fs-4'>Are you sure delete review?</p>
         )}
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer style={{ backgroundColor: "#ffb79fe0"}}>
         {funct === 'Edit' ? (
-          <Button variant="primary" onClick={handleUpdateReview}>
+          <Button className='bg-danger fw-bold border-secondary text-white' variant="primary" onClick={handleUpdateReview} disabled={characterCount > 80}>
             Update
           </Button>
         ) : (
