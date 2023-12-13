@@ -12,12 +12,13 @@ import chefIcon from "../assets/icons/chef.png";
 import logo from "../assets/logo.png";
 
 // Bootstrap
-import { StarFill, Pencil, ExclamationTriangleFill, X} from "react-bootstrap-icons";
+import { StarFill, Pencil, ExclamationTriangleFill, X, GearFill} from "react-bootstrap-icons";
 import { Container, Row, Col, Card, Button, Form, Image, Modal, Dropdown, ListGroup } from "react-bootstrap";
 
 // CSS
 import "../css/common.css";
 import "../css/UserProfile.css";
+import PrivacySettings from "./PrivacySettings";
 
 const UserProfile = () => {
   const { token, logout, isLogged } = useAuth();
@@ -49,13 +50,15 @@ const UserProfile = () => {
   const [isFollowing, setIsFollowing] = useState(null);
   const [followerDetails, setFollowerDetails] = useState([]);
   const [followingDetails, setFollowingDetails] = useState([]);
+  const [imPrivate, setImPrivate] = useState(true); 
+  const [userIsPrivate, setUserIsPrivate] = useState(true); 
 
 
   const [adminMode, setadminMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showDropdown2, setShowDropdown2] = useState(false);
+  const [showPrivacySettings, setShowPrivacySettings] = useState(false);
   const [showRemoveQuestion, setRemoveQuestion] = useState(false);
   const [showRemoveRecipeModal, setShowRemoveRecipeModal] = useState(false);
   const [selectedRecipeId, setSelectedRecipeId] = useState(null);
@@ -107,6 +110,7 @@ const UserProfile = () => {
       const data = await response.json();
       setMyUserId(data._id)
       setMyUserName(data.username)
+      setImPrivate(data.is_private)
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -139,6 +143,8 @@ const UserProfile = () => {
       setUserFollowing(data.following || []);
 
       setProfilePicture(data.profile_picture || '');
+
+      setUserIsPrivate(data.is_private);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -195,6 +201,14 @@ const UserProfile = () => {
     setShowRemoveRecipeModal(true);
 };
 
+  const handleOpenPrivacySettings = () => {
+    setShowPrivacySettings(true);
+  };
+
+  const handleClosePrivacySettings = () => {
+    setEditMode(false);
+  };
+
   const handleSaveProfile = async () => {
 
     if (!userNameAux) {
@@ -249,6 +263,38 @@ const UserProfile = () => {
     setShowConfirmation(true);
     setOperationSuccess(true)
     setEditMode(false);
+};
+
+
+const handleVisibilityChange = async (newVisibility) => {
+  console.error(newVisibility)
+  setImPrivate(newVisibility);
+  const formData = new FormData();
+  const userProfile = {
+      is_private: newVisibility,
+  };
+  
+  // Convert the user profile object to a JSON string and append to FormData
+  formData.append('user', JSON.stringify(userProfile));
+
+  try {
+      const response = await fetch(process.env.REACT_APP_API_URL + `/user/${userId}`, {
+          method: 'PUT',
+          headers: {
+              'Authorization': `Bearer ${token}`
+          },
+          body: formData,
+      });
+
+      if (!response.ok) {
+          throw new Error('Failed to update user data');
+      }
+
+      const updatedData = await response.json();
+  } catch (error) {
+      console.error('Error updating user data:', error);
+      setConfirmationMessage("Failed to update profile");
+  }
 };
 
 
@@ -353,6 +399,8 @@ const UserProfile = () => {
     setUserNameAux(value);
     setUsernameValid(isUsernameValid(value)); 
     setUsernameValidated(true);
+    console.error(usernameValid==true)
+    console.error("hola")
   };
   
   const onEmailChange = (e) => {
@@ -573,14 +621,16 @@ const UserProfile = () => {
                 </Col>
                 <Col sm={6}>
                 <Row>
-                      <h3 style={profileTextStyle}>@{userName}</h3>
+                  <Col sm={6}>
+                    <h3 style={profileTextStyle}>@{userName}</h3>
+                  </Col>
                       <div style={bioBoxStyle}>{userBio}</div>
                 </Row>
                 <Col sm={5} className="d-flex justify-content-around align-items-center rounded-3 p-2 mb-2"
                     style={{ backgroundColor: '#ffffff' }}>
                     
                     {/* Followers Section */}
-                    <div className="text-center hover-effect" onClick={handleShowFollowersModal}>
+                    <div className={`text-center hover-effect ${userIsPrivate && !adminMode ? 'disabled-element' : ''}`} onClick={userIsPrivate && !adminMode ? null : handleShowFollowersModal}>
                       <p className="small text-muted mb-1">Followers</p>
                       <p className="mb-0">{userFollowers.length}</p>
                     </div>
@@ -589,7 +639,7 @@ const UserProfile = () => {
                     <div style={{ borderLeft: '1px solid #dee2e6', height: '30px', alignSelf: 'center' }}></div>
 
                     {/* Following Section */}
-                    <div className="text-center hover-effect" onClick={handleShowFollowingModal}>
+                    <div className={`text-center hover-effect ${userIsPrivate && !adminMode ? 'disabled-element' : ''}`} onClick={userIsPrivate && !adminMode ? null : handleShowFollowingModal}>
                       <p className="small text-muted mb-1">Following</p>
                       <p className="mb-0">{userFollowing.length}</p>
                     </div>
@@ -622,48 +672,54 @@ const UserProfile = () => {
                 </Col>
             </Row>
             <Row>
-              {recipes && recipes.length > 0 ? (
+            {!userIsPrivate || adminMode ? 
+              (
+                recipes && recipes.length > 0 ? (
                   recipes.map((recipe) => (
-                      <Col sm={12} md={6} xl={4} key={recipe._id}>
-                          <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-                          
-                              <Card className="mt-5 shadow" id="recipes-list">
-                              <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="text-decoration-none">
-                                  <Card.Img className="object-fit-cover" variant="top" src={recipe.main_image} alt={recipe.name} height={100}/>
-                                  </Link>
-                                  <Card.Body>
-                                      <Card.Title className="overflow-hidden text-nowrap">{recipe.name}</Card.Title>
-                                      <h5>
-                                          <Image src={chefIcon} style={{height: '24px', width: '24px'}} fluid/> 
-                                          {Array(recipe.difficulty || 0).fill().map((_, index) => (
-                                              <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
-                                          ))}
-                                      </h5>
-                                      {adminMode && (
-                                        <div className="card-buttons">
-                                            <Button variant="outline-primary" size="sm" className="me-2" onClick={() => {
-                                                setSelectedRecipeId(recipe._id)
-                                                setShowRemoveRecipeModal(true)
-                                            }}>
-                                                <Pencil />
-                                            </Button>
-                                            <Button variant="outline-danger" size="sm" onClick={() => {
-                                                setSelectedRecipeId(recipe._id)
-                                                setShowRemoveRecipeModal(true)
-                                            }}>
-                                                <X />
-                                            </Button>
-                                        </div>
-                                      )}
-                                  </Card.Body>
-                              </Card>
-                              
-                          </CSSTransition>
-                      </Col>
+                    <Col sm={12} md={6} xl={4} key={recipe._id}>
+                      <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+                        <Card className="mt-5 shadow" id="recipes-list">
+                          <Link key={recipe._id} to={`/RecipeDetail/${recipe._id}`} className="text-decoration-none">
+                            <Card.Img className="object-fit-cover" variant="top" src={recipe.main_image} alt={recipe.name} height={100}/>
+                          </Link>
+                          <Card.Body>
+                            <Card.Title className="overflow-hidden text-nowrap">{recipe.name}</Card.Title>
+                            <h5>
+                              <Image src={chefIcon} style={{height: '24px', width: '24px'}} fluid/> 
+                              {Array(recipe.difficulty || 0).fill().map((_, index) => (
+                                <span key={index} className="fs-5 ms-1 text-center"><StarFill style={{color: 'gold'}}></StarFill></span>
+                              ))}
+                            </h5>
+                            {adminMode && (
+                              <div className="card-buttons">
+                                <Button variant="outline-primary" size="sm" className="me-2" onClick={() => {
+                                    setSelectedRecipeId(recipe._id)
+                                    setShowRemoveRecipeModal(true)
+                                }}>
+                                    <Pencil />
+                                </Button>
+                                <Button variant="outline-danger" size="sm" onClick={() => {
+                                    setSelectedRecipeId(recipe._id)
+                                    setShowRemoveRecipeModal(true)
+                                }}>
+                                    <X />
+                                </Button>
+                              </div>
+                            )}
+                          </Card.Body>
+                        </Card>
+                      </CSSTransition>
+                    </Col>
                   ))
-              ) : ( 
+                ) : ( 
                   <div className="alert alert-warning" role="alert">There are currently no Recipes</div> 
-              )}
+                )
+              ) : (
+                <div className="alert alert-warning" role="alert">The user has a private profile</div> 
+              )
+            }
+
+
           </Row>
           <Row className="my-2"> 
             {}
@@ -710,62 +766,6 @@ const UserProfile = () => {
             Close
           </Button>
         </Modal.Footer>
-      </Modal>
-
-
-      <Modal show={editMode} onHide={handleCancelEdit}>
-          <Modal.Header closeButton>
-              <Modal.Title>Edit Profile</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-              <Form>
-              <Form.Group className="mb-3">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={userNameAux}
-                  onChange={(e) => onUsernameChange(e)}
-                  isInvalid={usernameValidated && !usernameValid}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {usernameValidationMessage}
-                </Form.Control.Feedback>
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>Email</Form.Label>
-                <Form.Control
-                  type="email"
-                  value={userMailAux}
-                  onChange={(e) => onEmailChange(e)}
-                  isInvalid={emailValidated && !emailValid}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {emailValidationMessage}
-                </Form.Control.Feedback>
-              </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Biography</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={userBioAux}
-                    onChange={(e) => setUserBioAux(e.target.value)}
-                  />
-                </Form.Group>
-              </Form>
-          </Modal.Body>
-          <Modal.Footer>
-              <Button variant="secondary" onClick={handleCancelEdit}>
-                  Cancel
-              </Button>
-              <Button 
-                  variant="primary" 
-                  onClick={handleSaveProfile}
-                  disabled={!usernameValid || !emailValid} 
-              >
-                  Save Changes
-              </Button>
-          </Modal.Footer>
       </Modal>
 
       <Modal show={showConfirmation} onHide={handleConfirmationClose}>
@@ -875,6 +875,32 @@ const UserProfile = () => {
           Log in
         </Button>
       </Modal.Footer>
+    </Modal>
+
+    <Modal show={editMode} size="lg" onHide={handleClosePrivacySettings}>
+        <Modal.Header closeButton className="bg-normal">
+          <Modal.Title className="fs-3 fw-semi-bold">Profile Settings</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+          <PrivacySettings
+            onClose={handleClosePrivacySettings}
+            handleSaveProfile={handleSaveProfile}
+            handleVisibilityChange={handleVisibilityChange}
+            imPrivate={imPrivate}
+            usernameValidationMessage={usernameValidationMessage}
+            emailValidationMessage={emailValidationMessage}
+            userNameAux={userNameAux}
+            userMailAux={userMailAux}
+            userBioAux={userBioAux}
+            usernameValid={usernameValid}
+            usernameValidated={usernameValidated}
+            emailValidated={emailValidated}
+            emailValid={emailValid}
+            onUsernameChange={onUsernameChange}
+            onEmailChange={onEmailChange}
+            setUserBioAux = {setUserBioAux}
+          ></PrivacySettings>
+        </Modal.Body>
     </Modal>
 
 
