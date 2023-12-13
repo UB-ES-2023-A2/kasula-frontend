@@ -307,8 +307,8 @@ function RecipeDetail() {
                             {recipe.energy ?? "No info of"} kcal
                           </span>
                         </div>
-                        <Button className="mt-3" onClick={handleToggleReviews}>
-                          Toggle Reviews
+                        <Button className="mt-3 bg-danger fw-bold border-secondary text-white" onClick={handleToggleReviews}>
+                          Reviews
                         </Button>
                       </div>
                     </Col>
@@ -431,7 +431,7 @@ function RecipeDetail() {
           <Offcanvas.Title className="fs-2 mt-3">Reviews</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body style={{ backgroundColor: "#ffb79fe0" }}>
-          <Reviews id={id} reloadReviews={reloadReviewsFunction} />
+          <Reviews id={id} reloadReviews={reloadReviewsFunction} owner={recipe.username}/>
         </Offcanvas.Body>
       </Offcanvas>
       <Modal
