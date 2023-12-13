@@ -124,10 +124,10 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
               placeholder="Write your review here"
               value={review}
               onChange={handleReviewChange}
-              style={{ borderColor: characterCount > 80 ? 'red' : null }}
+              style={{ borderColor: characterCount > 120 ? 'red' : null }}
             />
-            {characterCount > 80 && (
-              <div className="text-danger">You exceeded 80 characters.</div>
+            {characterCount > 120 && (
+              <div className="text-danger">You exceeded 120 characters.</div>
             )}
             <div className="mt-2 text-muted">Num characters: {characterCount}</div>
           </Form.Group>
@@ -150,7 +150,7 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
         className='bg-danger fw-bold border-secondary text-white'
           variant="primary"
           onClick={handlePostReview}
-          disabled={characterCount > 80}
+          disabled={characterCount > 120}
         >
           Post Review
         </Button>
