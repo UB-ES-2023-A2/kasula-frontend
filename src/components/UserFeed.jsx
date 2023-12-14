@@ -32,7 +32,7 @@ function UserFeed() {
       setFilters(loggedOutFilters);
       setRecipeName(null);
       console.error("hola")
-      getRecipes(loggedOutFilters, null, 0, 9, true, feedType);
+      getRecipesLogout(loggedOutFilters, null, 0, 9, true, feedType);
     }
     fetchMyUserData()
   }, [isLogged]);
@@ -57,6 +57,34 @@ function UserFeed() {
       setMyFollowing(data.following)
     } catch (error) {
       console.error('Error fetching user data:', error);
+    }
+  };
+
+  const getRecipesLogout = async (filters, recipeName, page, numRecipes, reset, feedType) => {
+    setLoading(true);
+    let url = buildRequestUrl(filters, recipeName, page, numRecipes, feedType);
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+      });
+      if (!response.ok) {
+        if (response.status === 400) {
+          setPage(page - 1);
+          setFinished(true);
+        }
+        throw new Error('Failed to fetch recipes');
+      }
+      const data = await response.json();
+      console.log(data)
+      if (reset) {
+        setRecipes(data)
+      } else {
+        setRecipes(recipes.concat(data));
+      }
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -122,6 +150,7 @@ function UserFeed() {
     localStorage.setItem('feedType', tab);
     if (!isLogged() && tab === "following") {
       setShowLoginRedirectModal(true);
+      setFeedType('foryou');
       return;
     }
     getRecipes(filters, recipeName, 0, numRecipes, true, tab);
