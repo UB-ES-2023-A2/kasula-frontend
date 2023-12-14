@@ -74,7 +74,8 @@ function LikesReview({ reviewUsername, recipeId, reviewId, initialLikes, likedBy
         <FontAwesomeIcon
           icon={faHeart}
           onClick={handleLikeClick}
-          style={cursorStyle}
+          style={{ color: 'red', cursorStyle }}
+
         />
       </Col>
       <Col sm={8}>
