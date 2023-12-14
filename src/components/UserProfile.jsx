@@ -29,6 +29,7 @@ const UserProfile = () => {
 
 
   const { userId } = useParams();
+  const [updateCount, setUpdateCount] = useState(0);
   const [myUserId, setMyUserId] = useState('');
   const [myUserName, setMyUserName] = useState('');
   const [userName, setUserName] = useState('');
@@ -36,6 +37,7 @@ const UserProfile = () => {
   const [userBio, setUserBio] = useState('');
   const [userFollowers, setUserFollowers] = useState([]);
   const [userFollowing, setUserFollowing] = useState([]);
+  const [myFollowing, setMyFollowing] = useState([]);
   const [userNameAux, setUserNameAux] = useState('');
   const [userMailAux, setUserMailAux] = useState('');
   const [userBioAux, setUserBioAux] = useState('');
@@ -112,9 +114,14 @@ const UserProfile = () => {
       const data = await response.json();
       setMyUserId(data._id)
       setMyUserName(data.username)
+      setMyFollowing(data.following)
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
+  };
+
+  const isFollowed = (follower) => {
+    return myFollowing.includes(follower.username);
   };
 
   const fetchUserData = async () => {
@@ -197,10 +204,11 @@ const UserProfile = () => {
     if (userName) {
       getRecipes();
     }
-  }, [userName]);
+  }, [userName, updateCount]);
 
   useEffect(() => {
     fetchUserDetails(userFollowers, setFollowerDetails);
+    console.error(followerDetails)
   }, [userFollowers]);
   
   useEffect(() => {
@@ -219,10 +227,12 @@ const UserProfile = () => {
 
   const handleCloseEditRecipeModal = () => {
     setShowEditRecipe(false);
+    setUpdateCount(prevCount => prevCount + 1);
   };
 
   const handleCloseEditRecipeSuccessfulModal = () => {
     setShowEditRecipe(false);
+    setUpdateCount(prevCount => prevCount + 1);
   };
 
   const handleShowRemoveRecipeModal = () => {
@@ -520,6 +530,41 @@ const UserProfile = () => {
   useEffect(() => {
     setIsFollowing(userFollowers.includes(myUserName));
   }, [userFollowers]);
+
+  const checkIfFollowed = (username) => {
+    // Verifica si el usuario actual está siguiendo a 'username'
+    return userFollowing.includes(username);
+  };
+
+  const handleFollowUnfollow = async (username, isCurrentlyFollowed) => {
+    const url = process.env.REACT_APP_API_URL + `/user/${isCurrentlyFollowed ? 'unfollow' : 'follow'}/${username}`;
+    const method = 'POST';
+  
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to ${isCurrentlyFollowed ? 'unfollow' : 'follow'} user`);
+      }
+  
+      // Actualizar el estado local
+      setMyFollowing(prevFollowing => {
+        return isCurrentlyFollowed 
+          ? prevFollowing.filter(user => user !== username) 
+          : [...prevFollowing, username];
+      });
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  
+  
 
   const handleFollow = async () => {
     if (token==null) {
@@ -834,8 +879,21 @@ const UserProfile = () => {
                         style={{ width: '30px', marginRight: '10px' }} 
                       />
                     </Col>
-                    <Col>
+                    <Col sm={6}>
                       <Card.Title style={{ cursor: 'pointer' }}>{follower.username}</Card.Title>
+                    </Col>
+                    <Col sm={2}>
+                    {follower.username !== myUserName && (
+                    <Button
+                      variant={isFollowed(follower) ? 'info' : 'primary'}
+                      onClick={(e) => {
+                        handleFollowUnfollow(follower.username, isFollowed(follower));
+                        e.stopPropagation();
+                      }}
+                    >
+                      {isFollowed(follower) ? 'Following' : 'Follow'}
+                    </Button>
+                  )}
                     </Col>
                   </Row>
                 </Card.Body>
@@ -859,7 +917,7 @@ const UserProfile = () => {
           <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
               <Card className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(following._id)}>
                 <Card.Body>
-                  <Row>
+                <Row>
                     <Col sm={2}>
                       <Image 
                         src={following.profile_picture ? following.profile_picture : defaultProfile} 
@@ -867,8 +925,21 @@ const UserProfile = () => {
                         style={{ width: '30px', marginRight: '10px' }} 
                       />
                     </Col>
-                    <Col>
+                    <Col sm={6}>
                       <Card.Title style={{ cursor: 'pointer' }}>{following.username}</Card.Title>
+                    </Col>
+                    <Col sm={2}>
+                    {following.username !== myUserName && (
+                    <Button
+                      variant={isFollowed(following) ? 'info' : 'primary'}
+                      onClick={(e) => {
+                        handleFollowUnfollow(following.username, isFollowed(following));
+                        e.stopPropagation();
+                      }}
+                    >
+                      {isFollowed(following) ? 'Following' : 'Follow'}
+                    </Button>
+                  )}
                     </Col>
                   </Row>
                 </Card.Body>

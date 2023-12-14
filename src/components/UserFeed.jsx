@@ -31,7 +31,7 @@ function UserFeed() {
       setRecipeName(null);
       getRecipes(loggedOutFilters, null, 0, 9, true, feedType);
     }
-  }, [isLogged, feedType]);
+  }, [isLogged]);
 
   useEffect(() => {
     getRecipes(filters, recipeName, page, numRecipes, true, feedType);
@@ -95,20 +95,13 @@ function UserFeed() {
     setPage(0);
     setFeedType(tab);
     setFinished(false);
-    localStorage.setItem('feedType', tab)
-    if (tab === "following") {
-      if(!isLogged()){
-        setShowLoginRedirectModal(true);
-      }else{
-        getRecipes(filters, recipeName, 0, numRecipes, true, 'following');
-      }
-    }else{
-      if(!isLogged()){
-        getRecipes(loggedOutFilters, null, 0, 9, true);
-      }else{
-        getRecipes(filters, recipeName, 0, numRecipes, true, 'foryou');
-      }
+    setRecipes([]); 
+    localStorage.setItem('feedType', tab);
+    if (!isLogged() && tab === "following") {
+      setShowLoginRedirectModal(true);
+      return;
     }
+    getRecipes(filters, recipeName, 0, numRecipes, true, tab);
   };
 
   return (
@@ -156,9 +149,9 @@ function UserFeed() {
           onRequestLoadMore={() => {
             setPage(page + 1);
             if (feedType === "foryou") {
-              getRecipes(filters, recipeName, page, numRecipes, false, 'foryou');
+              getRecipes(filters, recipeName, page+1, numRecipes, false, 'foryou');
             } else {
-              getRecipes(filters, recipeName, page, numRecipes, false, 'following');
+              getRecipes(filters, recipeName, page+1, numRecipes, false, 'following');
             }
           }}
           finished={finished}
