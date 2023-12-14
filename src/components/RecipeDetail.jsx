@@ -434,7 +434,7 @@ function RecipeDetail() {
               <Container className="mt-5 pb-3 text-center box-rounded shadow bg-lightest">
                 <Row>
                   <Col sm={12}>
-                    <h2 className="py-4 mt-1">Similar Recipes</h2>
+                    <h1 className="py-4 mt-1">Similar Recipes</h1>
                   </Col>
                   {similarRecipes.length > 0 ? similarRecipes?.map((recipe) => (
                     <Col key={recipe._id} sm={4} className="mb-4">
