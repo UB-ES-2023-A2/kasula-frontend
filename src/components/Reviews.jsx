@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Image } from "react-bootstrap";
 import PostReview from "./PostReview";
 import { StarFill, PatchCheck, PencilSquare, Trash } from 'react-bootstrap-icons';
+import { useNavigate } from "react-router-dom";
 import LikesReview from "./LikesReview";
 import ImageModal from "./ImageModal";
 import ModifyReview from "./ModifyReview";
-
 
 function Reviews(props) {
   const { id, reloadReviews, owner } = props;
@@ -18,6 +18,7 @@ function Reviews(props) {
   const [selectedFunct, setSelectedFunct] = useState(null);
   const isLogged = window.localStorage.getItem("logged");
   const currentUser = localStorage.getItem('currentUser');
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -60,6 +61,10 @@ function Reviews(props) {
     setSelectedFunct(null);
   };
 
+  const handleNavigate = (userId) => {
+    navigate(`/UserProfile/${userId}`);
+  };
+
   return (
     <Container className="flex-column justify-content-between align-items-center">
       {isLogged === 'true' ? 
@@ -85,8 +90,10 @@ function Reviews(props) {
                 <li key={index} className="mb-3 p-2 fs-6 bg-light box-shadow">
                   {review.image ? 
                   <Row>
-                    <Col sm={12} className="fw-bold">
-                      {review.username}:{" "}
+                    <Col sm={12}>
+                    <div className="fw-bold" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(review.username)}>
+                        {review.username}:{" "}
+                      </div>
                     </Col>
                     <Col sm={12}>{review.comment}</Col>
                     <Col sm={5} className="mt-2">
@@ -156,8 +163,10 @@ function Reviews(props) {
                   </Row> 
                   : 
                   <Row>
-                    <Col sm={12} className="fw-bold">
-                      {review.username}:{" "}
+                    <Col sm={12}>
+                      <div className="fw-bold" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(review.username)}>
+                        {review.username}:{" "}
+                      </div>
                     </Col>
                     <Col sm={5} className="mt-1" style={{ wordWrap: "break-word" }}>{review.comment}</Col>
                     <Col sm={7}>
