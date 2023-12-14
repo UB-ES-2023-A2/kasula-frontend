@@ -19,6 +19,9 @@ import { Container, Row, Col, Card, Button, Form, Image, Modal, Dropdown, ListGr
 import "../css/common.css";
 import "../css/UserProfile.css";
 
+//Components
+import PostRecipe from "./PostRecipe";
+
 const UserProfile = () => {
   const { token, logout, isLogged } = useAuth();
   const navigate = useNavigate();
@@ -26,6 +29,7 @@ const UserProfile = () => {
 
 
   const { userId } = useParams();
+  const [updateCount, setUpdateCount] = useState(0);
   const [myUserId, setMyUserId] = useState('');
   const [myUserName, setMyUserName] = useState('');
   const [userName, setUserName] = useState('');
@@ -33,6 +37,7 @@ const UserProfile = () => {
   const [userBio, setUserBio] = useState('');
   const [userFollowers, setUserFollowers] = useState([]);
   const [userFollowing, setUserFollowing] = useState([]);
+  const [myFollowing, setMyFollowing] = useState([]);
   const [userNameAux, setUserNameAux] = useState('');
   const [userMailAux, setUserMailAux] = useState('');
   const [userBioAux, setUserBioAux] = useState('');
@@ -49,12 +54,14 @@ const UserProfile = () => {
   const [isFollowing, setIsFollowing] = useState(null);
   const [followerDetails, setFollowerDetails] = useState([]);
   const [followingDetails, setFollowingDetails] = useState([]);
+  const [suggestedUsers, setSuggestedUsers] = useState([]);
 
 
   const [adminMode, setadminMode] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showEditRecipe, setShowEditRecipe] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const [showRemoveQuestion, setRemoveQuestion] = useState(false);
   const [showRemoveRecipeModal, setShowRemoveRecipeModal] = useState(false);
@@ -107,9 +114,14 @@ const UserProfile = () => {
       const data = await response.json();
       setMyUserId(data._id)
       setMyUserName(data.username)
+      setMyFollowing(data.following)
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
+  };
+
+  const isFollowed = (follower) => {
+    return myFollowing.includes(follower.username);
   };
 
   const fetchUserData = async () => {
@@ -154,13 +166,34 @@ const UserProfile = () => {
     setUserDetails(userDetails);
   };
 
-  useEffect(() => {
-    if (isLogged) {
-      fetchMyUserData();
+  const fetchSuggestedUsers = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_API_URL + `/user/new/discover`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch suggested users');
+      }
+      const data = await response.json();
+      setSuggestedUsers(data);
+    } catch (error) {
+      console.error('Error fetching suggested users:', error);
     }
-  }, [token, navigate]);
+  };
 
   useEffect(() => {
+    if (token!=null) {
+      fetchMyUserData();
+      fetchSuggestedUsers();
+    }
+  }, [token]);
+
+  useEffect(() => {
+    
     if(myUserId == userId){
       setadminMode(true);
     }
@@ -171,10 +204,11 @@ const UserProfile = () => {
     if (userName) {
       getRecipes();
     }
-  }, [userName]);
+  }, [userName, updateCount]);
 
   useEffect(() => {
     fetchUserDetails(userFollowers, setFollowerDetails);
+    console.error(followerDetails)
   }, [userFollowers]);
   
   useEffect(() => {
@@ -189,6 +223,16 @@ const UserProfile = () => {
     fetchMyUserData();
     fetchUserData();
     setEditMode(false);
+  };
+
+  const handleCloseEditRecipeModal = () => {
+    setShowEditRecipe(false);
+    setUpdateCount(prevCount => prevCount + 1);
+  };
+
+  const handleCloseEditRecipeSuccessfulModal = () => {
+    setShowEditRecipe(false);
+    setUpdateCount(prevCount => prevCount + 1);
   };
 
   const handleShowRemoveRecipeModal = () => {
@@ -239,15 +283,16 @@ const UserProfile = () => {
         setUserName(updatedData.username);
         setUserMail(updatedData.email);
         setUserBio(updatedData.bio || '');
+        setOperationSuccess(true)
 
         setConfirmationMessage("Profile updated successfully");
     } catch (error) {
         console.error('Error updating user data:', error);
-        setConfirmationMessage("Failed to update profile");
+        setOperationSuccess(false)
+        setConfirmationMessage("Oops! Something went wrong.");
     }
 
     setShowConfirmation(true);
-    setOperationSuccess(true)
     setEditMode(false);
 };
 
@@ -277,14 +322,14 @@ const UserProfile = () => {
           });
   
           if (!response.ok) {
-            throw new Error('Failed to update user data');
+            throw new Error('Oops! Something went wrong.');
           }
   
           const data = await response.json();
           setConfirmationMessage("Profile updated successfully");
         } catch (error) {
           console.error('Error updating user data:', error);
-          setConfirmationMessage("Failed to update profile");
+          setConfirmationMessage("Oops! Something went wrong.");
         }
         setShowConfirmation(true);
       }
@@ -484,11 +529,51 @@ const UserProfile = () => {
 
   useEffect(() => {
     setIsFollowing(userFollowers.includes(myUserName));
-    console.error(userFollowers)
   }, [userFollowers]);
 
+  const checkIfFollowed = (username) => {
+    return userFollowing.includes(username);
+  };
+
+  const handleFollowUnfollow = async (username, isCurrentlyFollowed) => {
+    const url = process.env.REACT_APP_API_URL + `/user/${isCurrentlyFollowed ? 'unfollow' : 'follow'}/${username}`;
+    const method = 'POST';
+  
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to ${isCurrentlyFollowed ? 'unfollow' : 'follow'} user`);
+      }
+  
+      setMyFollowing(prevFollowing => {
+        return isCurrentlyFollowed 
+          ? prevFollowing.filter(user => user !== username) 
+          : [...prevFollowing, username];
+      });
+
+      if(myUserName===userName){
+        setUserFollowing(prevFollowing => {
+          return isCurrentlyFollowed 
+            ? prevFollowing.filter(user => user !== username) 
+            : [...prevFollowing, username];
+        })
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  
+  
+
   const handleFollow = async () => {
-    if (isLogged) {
+    if (token==null) {
       setShowLoginRedirectModal(true);
       return;
     }
@@ -643,7 +728,7 @@ const UserProfile = () => {
                                         <div className="card-buttons">
                                             <Button variant="outline-primary" size="sm" className="me-2" onClick={() => {
                                                 setSelectedRecipeId(recipe._id)
-                                                setShowRemoveRecipeModal(true)
+                                                setShowEditRecipe(true)
                                             }}>
                                                 <Pencil />
                                             </Button>
@@ -675,10 +760,10 @@ const UserProfile = () => {
         </Container>
 
       <Modal show={showRemoveRecipeModal} size="sm" onHide={() => setShowRemoveRecipeModal(false)}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-normal">
           <Modal.Title>Remove recipe</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="bg-lightest">
           <Row>
             <Col className="text-center mb-4">
               <ExclamationTriangleFill className="text-warning" size={100} />
@@ -690,7 +775,7 @@ const UserProfile = () => {
             </Col>
           </Row>
         </Modal.Body>
-        <Modal.Footer className="justify-content-center">
+        <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}} className="justify-content-center">
         <Button variant="danger" onClick={handleRecipeRemove}>
           Remove
         </Button>
@@ -701,11 +786,11 @@ const UserProfile = () => {
         show={showConfirmation}
         onHide={handleConfirmationClose}
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-normal">
           <Modal.Title>Profile Update</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{confirmationMessage}</Modal.Body>
-        <Modal.Footer>
+        <Modal.Body className="bg-lightest">{confirmationMessage}</Modal.Body>
+        <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
           <Button variant="secondary" onClick={handleConfirmationClose}>
             Close
           </Button>
@@ -754,7 +839,7 @@ const UserProfile = () => {
                 </Form.Group>
               </Form>
           </Modal.Body>
-          <Modal.Footer>
+          <Modal.Footer >
               <Button variant="secondary" onClick={handleCancelEdit}>
                   Cancel
               </Button>
@@ -769,11 +854,11 @@ const UserProfile = () => {
       </Modal>
 
       <Modal show={showConfirmation} onHide={handleConfirmationClose}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-normal">
             <Modal.Title>{operationSuccess ? 'Success' : 'Error'}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{confirmationMessage}</Modal.Body>
-        <Modal.Footer>
+        <Modal.Body className="bg-lightest">{confirmationMessage}</Modal.Body>
+        <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
             <Button variant="secondary" onClick={handleConfirmationClose}>
                 Close
             </Button>
@@ -781,12 +866,12 @@ const UserProfile = () => {
     </Modal>
 
     <Modal show={showFollowersModal} onHide={handleCloseFollowersModal}>
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="bg-normal">
         <Modal.Title>
           Followers
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="bg-lightest">
         {followerDetails.length > 0 ? (
           followerDetails.map((follower, index) => (
             <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
@@ -800,8 +885,22 @@ const UserProfile = () => {
                         style={{ width: '30px', marginRight: '10px' }} 
                       />
                     </Col>
-                    <Col>
+                    <Col sm={6}>
                       <Card.Title style={{ cursor: 'pointer' }}>{follower.username}</Card.Title>
+                    </Col>
+                    <Col sm={2}>
+                    {(token !== null) && (follower.username !== myUserName) && (
+                      <Button
+                        variant={isFollowed(follower) ? 'info' : 'primary'}
+                        onClick={(e) => {
+                          handleFollowUnfollow(follower.username, isFollowed(follower));
+                          e.stopPropagation();
+                        }}
+                      >
+                        {isFollowed(follower) ? 'Following' : 'Follow'}
+                      </Button>
+                    )}
+
                     </Col>
                   </Row>
                 </Card.Body>
@@ -816,43 +915,87 @@ const UserProfile = () => {
 
 
     <Modal show={showFollowingModal} onHide={handleCloseFollowingModal}>
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="bg-normal">
         <Modal.Title>Following</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        {followingDetails.length > 0 ? (
-          followingDetails.map((follower, index) => (
-            <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
-              <Card className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(follower._id)}>
+      <Modal.Body className="bg-lightest">
+        {userFollowing.length > 0 ? (
+        followingDetails.map((following, index) => (
+          <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
+              <Card className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(following._id)}>
                 <Card.Body>
-                  <Row>
+                <Row>
                     <Col sm={2}>
                       <Image 
-                        src={follower.profile_picture ? follower.profile_picture : defaultProfile} 
+                        src={following.profile_picture ? following.profile_picture : defaultProfile} 
                         roundedCircle 
                         style={{ width: '30px', marginRight: '10px' }} 
                       />
                     </Col>
-                    <Col>
-                      <Card.Title style={{ cursor: 'pointer' }}>{follower.username}</Card.Title>
+                    <Col sm={6}>
+                      <Card.Title style={{ cursor: 'pointer' }}>{following.username}</Card.Title>
+                    </Col>
+                    <Col sm={2}>
+                    {(token !== null) && (following.username !== myUserName) && (
+                      <Button
+                        variant={isFollowed(following) ? 'info' : 'primary'}
+                        onClick={(e) => {
+                          handleFollowUnfollow(following.username, isFollowed(following));
+                          e.stopPropagation();
+                        }}
+                      >
+                        {isFollowed(following) ? 'Following' : 'Follow'}
+                      </Button>
+                    )}
                     </Col>
                   </Row>
                 </Card.Body>
               </Card>
             </CSSTransition>
-          ))
+        ))
+      ) : (
+        adminMode ? (
+          <>
+            <p>You're not following anyone. Discover creators that match your taste!</p>
+            {suggestedUsers.length > 0 ? (
+              suggestedUsers.slice(0, 5).map((user, index) => (
+                <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
+                  <Card className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(user._id)}>
+                    <Card.Body>
+                      <Row>
+                        <Col sm={2}>
+                          <Image 
+                            src={user.profile_picture ? user.profile_picture : defaultProfile} 
+                            roundedCircle 
+                            style={{ width: '30px', marginRight: '10px' }} 
+                          />
+                        </Col>
+                        <Col>
+                          <Card.Title style={{ cursor: 'pointer' }}>{user.username}</Card.Title>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                </CSSTransition>
+              ))
+            ) : (
+              <p>Loading...</p> 
+            )}
+
+          </>
         ) : (
-          <p>There are no users to display.</p>
-        )}
+          <p>You are not following anyone yet.</p>
+        )
+      )}
       </Modal.Body>
     </Modal>
 
     <Modal show={showUnfollowModal} onHide={() => setShowUnfollowModal(false)}>
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="fw-bold bg-normal">
         <Modal.Title>Unfollow User</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Do you want to unfollow this user?</Modal.Body>
-      <Modal.Footer>
+      <Modal.Body className="bg-lightest">Do you want to unfollow this user?</Modal.Body>
+      <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
         <Button variant="secondary" onClick={() => setShowUnfollowModal(false)}>
           Cancel
         </Button>
@@ -867,7 +1010,7 @@ const UserProfile = () => {
         <Modal.Title>Required log in</Modal.Title>
       </Modal.Header>
       <Modal.Body>You need to log in to follow this user.</Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
         <Button variant="secondary" onClick={() => setShowLoginRedirectModal(false)}>
           Cancel
         </Button>
@@ -876,6 +1019,23 @@ const UserProfile = () => {
         </Button>
       </Modal.Footer>
     </Modal>
+
+    <Modal
+        show={showEditRecipe}
+        size="lg"
+        onHide={handleCloseEditRecipeModal}
+      >
+        <Modal.Header closeButton className="bg-normal">
+          <Modal.Title className="fs-3 fw-semi-bold">Edit Recipe</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+          <PostRecipe
+            onClose={handleCloseEditRecipeSuccessfulModal}
+            edit={true}
+            id={selectedRecipeId}
+          ></PostRecipe>
+        </Modal.Body>
+      </Modal>
 
 
     </div>

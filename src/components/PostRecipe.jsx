@@ -28,7 +28,7 @@ import {
   Table,
 } from "react-bootstrap";
 
-const RecipePost = ({ onClose }) => {
+const RecipePost = ({onClose, edit, id}) => {
   const { token } = useAuth();
 
   const Unit = {
@@ -75,6 +75,42 @@ const RecipePost = ({ onClose }) => {
       navigate("/login");
     }
   }, [localStorage.getItem("logged"), navigate]);
+
+  useEffect(() => {
+    if(edit){
+      fetchRecipeData();
+    }
+  }, []);
+
+  const fetchRecipeData = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/recipe/${id}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error fetching recipe data');
+      }
+  
+      const data = await response.json();
+  
+      setRecipeName(data.name);
+      setIngredients(data.ingredients);
+      setPreparation(data.instructions); 
+      setTime(data.cooking_time);
+      setEnergy(data.energy);
+      setDifficulty(data.difficulty);
+      setImagePreviewUrl(data.main_image)
+  
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+  
 
   const renderStars = (amount) => {
     let stars = [];
@@ -228,34 +264,61 @@ const RecipePost = ({ onClose }) => {
     formData.append("recipe", JSON.stringify(recipeData));
     if (image) {
       formData.append("files", image);
-      console.log(formData);
+      
+    }
+    console.log(formData["recipe"]);
+    if(edit){
+      try {
+        const response = await fetch(process.env.REACT_APP_API_URL + "/recipe/" + id, {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          setSubmitMessage("Updated correctly!", data);
+          setPostRecipeSuccess(true);
+          //onClose();
+        } else {
+          setSubmitMessage("Error updating recipe: " + JSON.stringify(data));
+        }
+      } catch (error) {
+        setSubmitMessage(JSON.stringify(error));
+        setPostRecipeSuccess(false);
+      } finally {
+        setShowPostRecipeConfirmation(true);
+      }
+    }else{
+      try {
+        const response = await fetch(process.env.REACT_APP_API_URL + "/recipe/", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        });
+  
+        const data = await response.json();
+  
+        if (response.ok) {
+          setSubmitMessage("Posted correctly!", data);
+          setPostRecipeSuccess(true);
+          //onClose();
+        } else {
+          setSubmitMessage("Error posting recipe: " + JSON.stringify(data));
+        }
+      } catch (error) {
+        setSubmitMessage(JSON.stringify(error));
+        setPostRecipeSuccess(false);
+      } finally {
+        setShowPostRecipeConfirmation(true);
+      }
     }
     
-
-    try {
-      const response = await fetch(process.env.REACT_APP_API_URL + "/recipe/", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setSubmitMessage("Recipe posted successfully", data);
-        setPostRecipeSuccess(true);
-        //onClose();
-      } else {
-        setSubmitMessage("Error posting recipe: " + JSON.stringify(data));
-      }
-    } catch (error) {
-      setSubmitMessage(JSON.stringify(error));
-      setPostRecipeSuccess(false);
-    } finally {
-      setShowPostRecipeConfirmation(true);
-    }
   };
 
   const handleImageUpload = (event) => {
@@ -268,7 +331,7 @@ const RecipePost = ({ onClose }) => {
   const handlePostRecipeConfirmationClose = () => {
     setShowPostRecipeConfirmation(false);
     if (postSuccess) {
-      navigate("/");
+      onClose();
     }
   };
 
@@ -661,7 +724,7 @@ const RecipePost = ({ onClose }) => {
             variant={postSuccess ? "success" : "secondary"}
             onClick={handlePostRecipeConfirmationClose}
           >
-            {postSuccess ? "Go to recipes" : "Close"}
+            {postSuccess ? "Okay" : "Close"}
           </Button>
         </Modal.Footer>
       </Modal>
