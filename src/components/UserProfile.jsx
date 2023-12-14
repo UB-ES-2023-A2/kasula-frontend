@@ -883,7 +883,7 @@ const UserProfile = () => {
                       <Card.Title style={{ cursor: 'pointer' }}>{follower.username}</Card.Title>
                     </Col>
                     <Col sm={2}>
-                    {follower.username !== myUserName && (
+                    {follower.username !== myUserName && !token==null && (
                     <Button
                       variant={isFollowed(follower) ? 'info' : 'primary'}
                       onClick={(e) => {
@@ -929,7 +929,7 @@ const UserProfile = () => {
                       <Card.Title style={{ cursor: 'pointer' }}>{following.username}</Card.Title>
                     </Col>
                     <Col sm={2}>
-                    {following.username !== myUserName && (
+                    {following.username !== myUserName && !token==null && (
                     <Button
                       variant={isFollowed(following) ? 'info' : 'primary'}
                       onClick={(e) => {
