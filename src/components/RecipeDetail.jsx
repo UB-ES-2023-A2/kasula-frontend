@@ -8,6 +8,7 @@ import defaultProfile from "../assets/defaultProfile.png";
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { FaWhatsapp, FaLinkedin, FaTwitter, FaCopy } from 'react-icons/fa';
 import {
   Container,
   Row,
@@ -28,6 +29,7 @@ import {
   FolderSymlinkFill,
   Heart,
   HeartFill,
+  Share
 } from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
 import Reviews from "./Reviews";
@@ -207,6 +209,131 @@ function RecipeDetail() {
     </div>
   ));
 
+  const handleFollow = async () => {
+    if (!isLogged()) {
+      setShowLoginRedirectModal(true);
+      return;
+    }
+  
+    try {
+      const response = await fetch(process.env.REACT_APP_API_URL + `/user/follow/${userName}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+  
+      if (response.ok) {
+        setConfirmationMessage(`You're now following ${userName}.`);
+        setIsFollowing(true);
+        setToastData({
+          message: `You're now following ${userName}.`,
+          variant: 'success', 
+          show: true,
+        });
+      } else {
+        throw new Error('There was an error following the user.');
+      }
+    } catch (error) {
+      console.error('Error following user:', error);
+      setConfirmationMessage(error.toString());
+      setShowConfirmation(true);
+    }
+  };  
+  
+  const handleUnfollow = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_API_URL + `/user/unfollow/${userName}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+  
+      if (response.ok) {
+        setConfirmationMessage("You have unfollowed the user.");
+        setIsFollowing(false)
+        setToastData({
+          message: `You' have unfollowed ${userName}.`,
+          variant: 'secondary', 
+          show: true,
+        });
+      } else {
+        throw new Error('There was an error unfollowing the user.');
+      }
+    } catch (error) {
+      console.error('Error unfollowing user:', error);
+      setConfirmationMessage(error.toString());
+      setShowConfirmation(true);
+    }
+    setShowUnfollowModal(false);
+  };
+
+  const createShareLink = (socialNetwork) => {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent("Hola, check out this awesome recipe I found!");
+    switch (socialNetwork) {
+      case "twitter":
+        return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+      case "twitter":
+        return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+      case "facebook":
+        return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+      case "linkedin":
+        return `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
+      default:
+        return "";
+    }
+  };
+
+  const copyToClipboard = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      setToastData({
+        message: "Link copied to clipboard!",
+        variant: "success",
+        show: true,
+      });
+    }, (err) => {
+      console.error('Could not copy text: ', err);
+    });
+  };
+
+  const handleShare = async () => {
+    console.error('hola')
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Check out this recipe!',
+          text: 'Hola, check out this awesome recipe I found!',
+          url: window.location.href,
+        });
+        console.log('Content shared successfully');
+      } catch (error) {
+        console.error('Error sharing content:', error);
+      }
+    } else {
+      console.log('Web Share API is not supported in your browser.');
+    }
+  };
+
+  const recipeUrl = `www.kasula.live/RecipeDetail/${id}`;
+  const message = encodeURIComponent('Check this amazing recipe that I found in Kasulà! ' + recipeUrl);
+
+  const shareOnWhatsApp = () => {
+    window.open(`https://wa.me/?text=${message}`, '_blank');
+  };
+
+  const shareOnLinkedIn = () => {
+    window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${recipeUrl}&title=${encodeURIComponent('Mira esta receta que chula!')}`, '_blank');
+  };
+
+  const shareOnTwitter = () => {
+    window.open(`https://twitter.com/intent/tweet?text=${message}`, '_blank');
+  };
+
   return (
     <Container fluid className="min-vh-100">
       <ImageModal
@@ -315,7 +442,41 @@ function RecipeDetail() {
                   </Col>
                   <Col xs={12} md={6} className="p-4">
                     <Row>
-                      <Col xs={12} className="d-flex mb-4">
+                      <Col xs={5} className="d-flex mb-4">
+                          <div className="mb-3 py-2" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(null, recipe.user_id)}>
+                              <Row>
+                              <Col sm={3}>
+                                <Image 
+                                  src={userImage ? userImage : defaultProfile} 
+                                  roundedCircle 
+                                  style={{ 
+                                    width: '40px', 
+                                    height: '40px', 
+                                    marginRight: '10px',
+                                    objectFit: 'cover' 
+                                  }} 
+                                />
+                              </Col>
+                                <Col sm={5}>
+                                  <h3 style={{ cursor: 'pointer' }}>{userName}</h3>
+                                </Col>
+                                <Col sm={4} className="d-flex align-items-center">
+                                  {!adminMode && (
+                                    <Button
+                                      variant={isFollowing ? 'info' : 'light'}
+                                      onClick={(e) => {
+                                        isFollowing ? setShowUnfollowModal(true) : handleFollow();
+                                        e.stopPropagation();
+                                      }}
+                                    >
+                                      {isFollowing ? 'Following' : 'Follow'}
+                                    </Button>
+                                  )}
+                                </Col>
+                              </Row>
+                          </div>
+                        </Col>
+                        <Col xs={7} className="d-flex mb-4">
                         <div className="ms-auto d-flex">
                           <Dropdown>
                             <Dropdown.Toggle
@@ -378,6 +539,26 @@ function RecipeDetail() {
                               )}
                             </span>
                           </div>
+                              <Dropdown>
+                                <Dropdown.Toggle variant="" id="dropdown-basic">
+                                  <Share />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                  <Dropdown.Item onClick={shareOnWhatsApp}>
+                                    <FaWhatsapp /> WhatsApp
+                                  </Dropdown.Item>
+                                  <Dropdown.Item onClick={shareOnLinkedIn}>
+                                    <FaLinkedin /> LinkedIn
+                                  </Dropdown.Item>
+                                  <Dropdown.Item onClick={shareOnTwitter}>
+                                    <FaTwitter /> Twitter
+                                  </Dropdown.Item>
+                                  <Dropdown.Item onClick={copyToClipboard}>
+                                    <FaCopy /> Copy Link
+                                  </Dropdown.Item>
+                                </Dropdown.Menu>
+                              </Dropdown>
                         </div>
                       </Col>
                       <Col xs={12}>
