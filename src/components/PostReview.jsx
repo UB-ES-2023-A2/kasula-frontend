@@ -17,6 +17,8 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
   const { token } = useAuth();
   const [error, setError] = useState(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [characterCount, setCharacterCount] = useState(0);
+
 
 
   useEffect(() => {
@@ -37,6 +39,12 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
   const handleFileChange = (event) => {
     const selectedImage= event.target.files[0];
     setImage(selectedImage);
+  };
+
+  const handleReviewChange = (e) => {
+    const inputReview = e.target.value;
+    setReview(inputReview);
+    setCharacterCount(inputReview.length);
   };
 
   const handlePostReview = async () => {
@@ -103,38 +111,47 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
 
   return (<>
     <Modal show={show} onHide={onHide}>
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="fw-bold bg-normal"> 
         <Modal.Title>Post a review</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="bg-lightest">
         <Form>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 fw-bold">
             <Form.Label>Review</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
               placeholder="Write your review here"
               value={review}
-              onChange={(e) => setReview(e.target.value)}
+              onChange={handleReviewChange}
+              style={{ borderColor: characterCount > 80 ? 'red' : null }}
             />
+            {characterCount > 80 && (
+              <div className="text-danger">You exceeded 80 characters.</div>
+            )}
+            <div className="mt-2 text-muted">Num characters: {characterCount}</div>
           </Form.Group>
-
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 fw-bold">
             <Form.Label>Rating</Form.Label>
             <div>{renderStars(difficulty)}</div>
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 fw-bold">
             <Form.Label>Select Image</Form.Label>
             <Form.Control type="file" onChange={handleFileChange} />
           </Form.Group>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
         <Button variant="secondary" onClick={onHide}>
           Close
         </Button>
-        <Button variant="primary" onClick={handlePostReview}>
+        <Button
+        className='bg-danger fw-bold border-secondary text-white'
+          variant="primary"
+          onClick={handlePostReview}
+          disabled={characterCount > 80}
+        >
           Post Review
         </Button>
       </Modal.Footer>
@@ -149,7 +166,7 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
        </Alert>
      </Modal.Body>
      <Modal.Footer>
-       <Button variant="primary" onClick={() => setShowErrorModal(false)}>
+       <Button variant="secondary" onClick={() => setShowErrorModal(false)}>
          Close
        </Button>
      </Modal.Footer>
