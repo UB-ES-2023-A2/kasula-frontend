@@ -43,8 +43,9 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
 
   const handleReviewChange = (e) => {
     const inputReview = e.target.value;
+    const remainingCharacters = 120 - inputReview.length;
     setReview(inputReview);
-    setCharacterCount(inputReview.length);
+    setCharacterCount(remainingCharacters);
   };
 
   const handlePostReview = async () => {
@@ -124,12 +125,14 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
               placeholder="Write your review here"
               value={review}
               onChange={handleReviewChange}
-              style={{ borderColor: characterCount > 120 ? 'red' : null }}
+              style={{ borderColor: characterCount < 0 ? 'red' : null }}
             />
-            {characterCount > 120 && (
-              <div className="text-danger">You exceeded 120 characters.</div>
+
+            {characterCount < 0 && (
+              <div className="text-danger">You exceeded the character limit.</div>
             )}
-            <div className="mt-2 text-muted">Num characters: {characterCount}</div>
+
+            <div className="mt-2 text-muted">Characters remaining: {characterCount}</div>
           </Form.Group>
           <Form.Group className="mb-3 fw-bold">
             <Form.Label>Rating</Form.Label>
@@ -150,7 +153,7 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
         className='bg-danger fw-bold border-secondary text-white'
           variant="primary"
           onClick={handlePostReview}
-          disabled={characterCount > 120}
+          disabled={characterCount < 0}
         >
           Post review
         </Button>
