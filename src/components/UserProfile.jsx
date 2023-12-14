@@ -754,10 +754,10 @@ const UserProfile = () => {
         </Container>
 
       <Modal show={showRemoveRecipeModal} size="sm" onHide={() => setShowRemoveRecipeModal(false)}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-normal">
           <Modal.Title>Remove recipe</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body className="bg-lightest">
           <Row>
             <Col className="text-center mb-4">
               <ExclamationTriangleFill className="text-warning" size={100} />
@@ -780,10 +780,10 @@ const UserProfile = () => {
         show={showConfirmation}
         onHide={handleConfirmationClose}
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-normal">
           <Modal.Title>Profile Update</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{confirmationMessage}</Modal.Body>
+        <Modal.Body className="bg-lightest">{confirmationMessage}</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleConfirmationClose}>
             Close
@@ -848,10 +848,10 @@ const UserProfile = () => {
       </Modal>
 
       <Modal show={showConfirmation} onHide={handleConfirmationClose}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-normal">
             <Modal.Title>{operationSuccess ? 'Success' : 'Error'}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{confirmationMessage}</Modal.Body>
+        <Modal.Body className="bg-lightest">{confirmationMessage}</Modal.Body>
         <Modal.Footer>
             <Button variant="secondary" onClick={handleConfirmationClose}>
                 Close
@@ -860,12 +860,12 @@ const UserProfile = () => {
     </Modal>
 
     <Modal show={showFollowersModal} onHide={handleCloseFollowersModal}>
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="bg-normal">
         <Modal.Title>
           Followers
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="bg-lightest">
         {followerDetails.length > 0 ? (
           followerDetails.map((follower, index) => (
             <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
@@ -883,17 +883,18 @@ const UserProfile = () => {
                       <Card.Title style={{ cursor: 'pointer' }}>{follower.username}</Card.Title>
                     </Col>
                     <Col sm={2}>
-                    {follower.username !== myUserName && !token==null && (
-                    <Button
-                      variant={isFollowed(follower) ? 'info' : 'primary'}
-                      onClick={(e) => {
-                        handleFollowUnfollow(follower.username, isFollowed(follower));
-                        e.stopPropagation();
-                      }}
-                    >
-                      {isFollowed(follower) ? 'Following' : 'Follow'}
-                    </Button>
-                  )}
+                    {(token !== null) && (follower.username !== myUserName) && (
+                      <Button
+                        variant={isFollowed(follower) ? 'info' : 'primary'}
+                        onClick={(e) => {
+                          handleFollowUnfollow(follower.username, isFollowed(follower));
+                          e.stopPropagation();
+                        }}
+                      >
+                        {isFollowed(follower) ? 'Following' : 'Follow'}
+                      </Button>
+                    )}
+
                     </Col>
                   </Row>
                 </Card.Body>
@@ -908,10 +909,10 @@ const UserProfile = () => {
 
 
     <Modal show={showFollowingModal} onHide={handleCloseFollowingModal}>
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="bg-normal">
         <Modal.Title>Following</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="bg-lightest">
         {userFollowing.length > 0 ? (
         followingDetails.map((following, index) => (
           <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
@@ -929,17 +930,17 @@ const UserProfile = () => {
                       <Card.Title style={{ cursor: 'pointer' }}>{following.username}</Card.Title>
                     </Col>
                     <Col sm={2}>
-                    {following.username !== myUserName && !token==null && (
-                    <Button
-                      variant={isFollowed(following) ? 'info' : 'primary'}
-                      onClick={(e) => {
-                        handleFollowUnfollow(following.username, isFollowed(following));
-                        e.stopPropagation();
-                      }}
-                    >
-                      {isFollowed(following) ? 'Following' : 'Follow'}
-                    </Button>
-                  )}
+                    {(token !== null) && (following.username !== myUserName) && (
+                      <Button
+                        variant={isFollowed(following) ? 'info' : 'primary'}
+                        onClick={(e) => {
+                          handleFollowUnfollow(following.username, isFollowed(following));
+                          e.stopPropagation();
+                        }}
+                      >
+                        {isFollowed(following) ? 'Following' : 'Follow'}
+                      </Button>
+                    )}
                     </Col>
                   </Row>
                 </Card.Body>
@@ -951,29 +952,30 @@ const UserProfile = () => {
           <>
             <p>You're not following anyone. Discover creators that match your taste!</p>
             {suggestedUsers.length > 0 ? (
-              suggestedUsers.map((user, index) => (
-              <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
-              <Card className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(user._id)}>
-                <Card.Body>
-                  <Row>
-                    <Col sm={2}>
-                      <Image 
-                        src={user.profile_picture ? user.profile_picture : defaultProfile} 
-                        roundedCircle 
-                        style={{ width: '30px', marginRight: '10px' }} 
-                      />
-                    </Col>
-                    <Col>
-                      <Card.Title style={{ cursor: 'pointer' }}>{user.username}</Card.Title>
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
-            </CSSTransition>
+              suggestedUsers.slice(0, 5).map((user, index) => (
+                <CSSTransition in={true} timeout={500} classNames="slideUp" appear key={index}>
+                  <Card className="mb-0 shadow" id="followers-list" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(user._id)}>
+                    <Card.Body>
+                      <Row>
+                        <Col sm={2}>
+                          <Image 
+                            src={user.profile_picture ? user.profile_picture : defaultProfile} 
+                            roundedCircle 
+                            style={{ width: '30px', marginRight: '10px' }} 
+                          />
+                        </Col>
+                        <Col>
+                          <Card.Title style={{ cursor: 'pointer' }}>{user.username}</Card.Title>
+                        </Col>
+                      </Row>
+                    </Card.Body>
+                  </Card>
+                </CSSTransition>
               ))
             ) : (
               <p>Loading...</p> 
             )}
+
           </>
         ) : (
           <p>You are not following anyone yet.</p>
@@ -983,11 +985,11 @@ const UserProfile = () => {
     </Modal>
 
     <Modal show={showUnfollowModal} onHide={() => setShowUnfollowModal(false)}>
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="fw-bold bg-normal">
         <Modal.Title>Unfollow User</Modal.Title>
       </Modal.Header>
-      <Modal.Body>Do you want to unfollow this user?</Modal.Body>
-      <Modal.Footer>
+      <Modal.Body className="bg-lightest">Do you want to unfollow this user?</Modal.Body>
+      <Modal.Footer className="bg-lightest">
         <Button variant="secondary" onClick={() => setShowUnfollowModal(false)}>
           Cancel
         </Button>

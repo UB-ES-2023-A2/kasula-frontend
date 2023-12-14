@@ -13,6 +13,8 @@ function UserFeed() {
   const [loading, setLoading] = useState(true);
   const [feedType, setFeedType] = useState(localStorage.getItem('feedType') || 'foryou');
   const [showLoginRedirectModal, setShowLoginRedirectModal] = useState(false);
+  const [myFollowing, setMyFollowing] = useState(0);
+  const hasFollowings = myFollowing.length > 0;
 
   const loggedOutFilters = {
     sortBy: "average_rating",
@@ -29,13 +31,34 @@ function UserFeed() {
       setPage(0);
       setFilters(loggedOutFilters);
       setRecipeName(null);
+      console.error("hola")
       getRecipes(loggedOutFilters, null, 0, 9, true, feedType);
     }
+    fetchMyUserData()
   }, [isLogged]);
 
   useEffect(() => {
     getRecipes(filters, recipeName, page, numRecipes, true, feedType);
   }, [feedType]);
+
+  const fetchMyUserData = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_API_URL + '/user/me', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch user data');
+      }
+      const data = await response.json();
+      setMyFollowing(data.following)
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
 
   const getRecipes = async (filters, recipeName, page, numRecipes, reset, feedType) => {
     setLoading(true);
@@ -139,30 +162,47 @@ function UserFeed() {
         }}/>
       )}
 
-      {loading && recipes.length === 0 ? (
-        <Container className="d-flex justify-content-center align-items-center min-vh-100">
-          <Spinner animation="border" variant="secondary"/>
-        </Container>
-      ) : (
-        <RecipeList
-          recipes={recipes}
-          onRequestLoadMore={() => {
-            setPage(page + 1);
-            if (feedType === "foryou") {
-              getRecipes(filters, recipeName, page+1, numRecipes, false, 'foryou');
-            } else {
-              getRecipes(filters, recipeName, page+1, numRecipes, false, 'following');
-            }
-          }}
-          finished={finished}
-        />
+      {
+        feedType === 'foryou' || (feedType === "following" && hasFollowings) ? (
+          loading && recipes.length === 0 ? (
+            <Container className="d-flex justify-content-center align-items-center min-vh-100">
+              <Spinner animation="border" variant="secondary"/>
+            </Container>
+          ) : (
+            isLogged && (
+              <RecipeList
+                recipes={recipes}
+                onRequestLoadMore={() => {
+                  setPage(page + 1);
+                  if (feedType === "foryou") {
+                    getRecipes(filters, recipeName, page+1, numRecipes, false, 'foryou');
+                  } else {
+                    getRecipes(filters, recipeName, page+1, numRecipes, false, 'following');
+                  }
+                }}
+                finished={finished}
+              />
+            )
+          )
+        ) : (
+          <div className="alert alert-warning" role="alert">
+            You still don't follow anyone!
+          </div>
+        )
+      }
+
+      {!isLogged() && (
+        <div className="alert alert-warning b-4" role="alert">
+            This is as far as you can go. Please, <a href="/login">login</a> or <a href="/signup">register</a> to see more recipes.
+        </div>
       )}
 
+
       <Modal show={showLoginRedirectModal} onHide={() => setShowLoginRedirectModal(false)}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-normal">
           <Modal.Title>Required log in</Modal.Title>
         </Modal.Header>
-        <Modal.Body>You need to log in to view the recipes of the people you follow.</Modal.Body>
+        <Modal.Body className="bg-lightest">You need to log in to view the recipes of the people you follow.</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowLoginRedirectModal(false)}>
             Cancel
