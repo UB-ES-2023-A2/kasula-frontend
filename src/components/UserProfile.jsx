@@ -532,7 +532,6 @@ const UserProfile = () => {
   }, [userFollowers]);
 
   const checkIfFollowed = (username) => {
-    // Verifica si el usuario actual está siguiendo a 'username'
     return userFollowing.includes(username);
   };
 
@@ -553,12 +552,19 @@ const UserProfile = () => {
         throw new Error(`Failed to ${isCurrentlyFollowed ? 'unfollow' : 'follow'} user`);
       }
   
-      // Actualizar el estado local
       setMyFollowing(prevFollowing => {
         return isCurrentlyFollowed 
           ? prevFollowing.filter(user => user !== username) 
           : [...prevFollowing, username];
       });
+
+      if(myUserName===userName){
+        setUserFollowing(prevFollowing => {
+          return isCurrentlyFollowed 
+            ? prevFollowing.filter(user => user !== username) 
+            : [...prevFollowing, username];
+        })
+      }
     } catch (error) {
       console.error('Error:', error);
     }
