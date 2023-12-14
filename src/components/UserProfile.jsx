@@ -783,7 +783,7 @@ const handleVisibilityChange = async (newVisibility) => {
                               <div className="card-buttons">
                                 <Button variant="outline-primary" size="sm" className="me-2" onClick={() => {
                                     setSelectedRecipeId(recipe._id)
-                                    setShowRemoveRecipeModal(true)
+                                    setShowEditRecipe(true)
                                 }}>
                                     <Pencil />
                                 </Button>
@@ -1050,10 +1050,26 @@ const handleVisibilityChange = async (newVisibility) => {
         </Modal.Body>
     </Modal>
 
+    <Modal
+        show={showEditRecipe}
+        size="lg"
+        onHide={handleCloseEditRecipeModal}
+      >
+        <Modal.Header closeButton className="bg-normal">
+          <Modal.Title className="fs-3 fw-semi-bold">Edit Recipe</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+          <PostRecipe
+            onClose={handleCloseEditRecipeSuccessfulModal}
+            edit={true}
+            id={selectedRecipeId}
+          ></PostRecipe>
+        </Modal.Body>
+      </Modal>
+
 
     </div>
   );
 };
 
 export default UserProfile;
-
