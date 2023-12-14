@@ -6,7 +6,7 @@ import RecipeBrowser from "./RecipeBrowser";
 import { Container, Spinner, ButtonGroup, Button, Modal, Row, Col } from "react-bootstrap";
 
 function UserFeed() {
-  const {isLogged } = useAuth();
+  const {token, isLogged } = useAuth();
   const navigate = useNavigate();
   const numRecipes = isLogged() ? 24 : 9;
   const [recipes, setRecipes] = useState([]);
@@ -31,17 +31,23 @@ function UserFeed() {
       setRecipeName(null);
       getRecipes(loggedOutFilters, null, 0, 9, true, feedType);
     }
-  }, [isLogged]);
+  }, [isLogged, feedType]);
 
   useEffect(() => {
     getRecipes(filters, recipeName, page, numRecipes, true, feedType);
-  }, []);
+  }, [feedType]);
 
   const getRecipes = async (filters, recipeName, page, numRecipes, reset, feedType) => {
     setLoading(true);
     let url = buildRequestUrl(filters, recipeName, page, numRecipes, feedType);
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
       if (!response.ok) {
         if (response.status === 400) {
           setPage(page - 1);
@@ -50,6 +56,7 @@ function UserFeed() {
         throw new Error('Failed to fetch recipes');
       }
       const data = await response.json();
+      console.log(data)
       if (reset) {
         setRecipes(data)
       } else {
@@ -135,11 +142,11 @@ function UserFeed() {
           setFinished(false);
           setFilters(newFilters);
           setRecipeName(newRecipeName);
-          getRecipes(filters, recipeName, 0, numRecipes, true, feedType);
+          getRecipes(newFilters, newRecipeName, 0, numRecipes, true, feedType);
         }}/>
       )}
 
-      {loading ? (
+      {loading && recipes.length === 0 ? (
         <Container className="d-flex justify-content-center align-items-center min-vh-100">
           <Spinner animation="border" variant="secondary"/>
         </Container>

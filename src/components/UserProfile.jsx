@@ -19,6 +19,9 @@ import { Container, Row, Col, Card, Button, Form, Image, Modal, Dropdown, ListGr
 import "../css/common.css";
 import "../css/UserProfile.css";
 
+//Components
+import PostRecipe from "./PostRecipe";
+
 const UserProfile = () => {
   const { token, logout, isLogged } = useAuth();
   const navigate = useNavigate();
@@ -56,6 +59,7 @@ const UserProfile = () => {
   const [editMode, setEditMode] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showEditRecipe, setShowEditRecipe] = useState(false);
   const [showDropdown2, setShowDropdown2] = useState(false);
   const [showRemoveQuestion, setRemoveQuestion] = useState(false);
   const [showRemoveRecipeModal, setShowRemoveRecipeModal] = useState(false);
@@ -211,6 +215,14 @@ const UserProfile = () => {
     fetchMyUserData();
     fetchUserData();
     setEditMode(false);
+  };
+
+  const handleCloseEditRecipeModal = () => {
+    setShowEditRecipe(false);
+  };
+
+  const handleCloseEditRecipeSuccessfulModal = () => {
+    setShowEditRecipe(false);
   };
 
   const handleShowRemoveRecipeModal = () => {
@@ -665,7 +677,7 @@ const UserProfile = () => {
                                         <div className="card-buttons">
                                             <Button variant="outline-primary" size="sm" className="me-2" onClick={() => {
                                                 setSelectedRecipeId(recipe._id)
-                                                setShowRemoveRecipeModal(true)
+                                                setShowEditRecipe(true)
                                             }}>
                                                 <Pencil />
                                             </Button>
@@ -928,6 +940,23 @@ const UserProfile = () => {
         </Button>
       </Modal.Footer>
     </Modal>
+
+    <Modal
+        show={showEditRecipe}
+        size="lg"
+        onHide={handleCloseEditRecipeModal}
+      >
+        <Modal.Header closeButton className="bg-normal">
+          <Modal.Title className="fs-3 fw-semi-bold">Edit Recipe</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="p-0">
+          <PostRecipe
+            onClose={handleCloseEditRecipeSuccessfulModal}
+            edit={true}
+            id={selectedRecipeId}
+          ></PostRecipe>
+        </Modal.Body>
+      </Modal>
 
 
     </div>
