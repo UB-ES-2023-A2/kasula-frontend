@@ -5,9 +5,6 @@ import {
   StarFill,
   Star
 } from "react-bootstrap-icons";
-
-
-
 const PostReview = ({ id, show, onHide, reloadReviews }) => {
   const [username, setUsername] = useState('');
   const [review, setReview] = useState('');
@@ -18,8 +15,6 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
   const [error, setError] = useState(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [characterCount, setCharacterCount] = useState(0);
-
-
 
   useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + "/user/me", {
@@ -69,8 +64,6 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
          },
          body: formData,
        });
-      // 403 owner  
-      // 400 ya review
        const data = await response.json();
        if (response.ok) {
          console.log(">>>Post hecho: ", data)
@@ -79,7 +72,6 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
         setShowErrorModal(true);
       }
      } catch (error) {
-      //  alert("HA FALLADO EL POST")
        setError(error);
        setShowErrorModal(true);
      }
@@ -160,15 +152,15 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
       </Modal.Footer>
     </Modal>
      <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)}>
-     <Modal.Header closeButton>
-       <Modal.Title>Error</Modal.Title>
+     <Modal.Header closeButton className="bg-normal">
+       <Modal.Title className='fw-bold'>Not allowed</Modal.Title>
      </Modal.Header>
-     <Modal.Body>
-       <Alert variant="danger">
+     <Modal.Body className="bg-lightest">
+       <Alert variant="danger" className='fw-bold'>
          {error && <p>{error}</p>}
        </Alert>
      </Modal.Body>
-     <Modal.Footer>
+     <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
        <Button variant="secondary" onClick={() => setShowErrorModal(false)}>
          Close
        </Button>
