@@ -7,6 +7,14 @@ import { Container, Row, Col } from "react-bootstrap"
 import NotificationCard from "./NotificationCard"
 import Dropdown from 'react-bootstrap/Dropdown';
 import { BellFill } from 'react-bootstrap-icons';
+import styled from 'styled-components';
+
+
+const CustomToggle = styled(Dropdown.Toggle)`
+  &::after {
+    display: none;
+  }
+`;
 
 
 export default function Notifications() {
@@ -59,10 +67,10 @@ export default function Notifications() {
     <h1>Notifications</h1>
 
     <Dropdown>
-      <Dropdown.Toggle variant="success" id="dropdown-basic">
+      <CustomToggle variant="success" id="dropdown-basic" >
       <BellFill />
     <span className="badge rounded-pill badge-notification bg-danger">{notifications.length}</span>
-      </Dropdown.Toggle>
+      </CustomToggle>
 
       <Dropdown.Menu>
         {notifications.map(notification => (
