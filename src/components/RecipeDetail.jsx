@@ -8,7 +8,6 @@ import defaultProfile from "../assets/defaultProfile.png";
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaWhatsapp, FaLinkedin, FaTwitter, FaCopy } from 'react-icons/fa';
 import {
   Container,
   Row,
@@ -29,7 +28,6 @@ import {
   FolderSymlinkFill,
   Heart,
   HeartFill,
-  Share
 } from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
 import Reviews from "./Reviews";
@@ -38,7 +36,8 @@ import AddRecipeToCollection from "./AddRecipeToCollection";
 
 function RecipeDetail() {
   const { token, isLogged } = useAuth();
-  const [username, setUsername] = useState(localStorage.getItem("currentUser"));
+  const [myUserId, setMyUserId] = useState('');
+  const [myUserName, setMyUserName] = useState(localStorage.getItem("currentUser"));
   const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [userImage, setUserImage] = useState('');
@@ -48,6 +47,13 @@ function RecipeDetail() {
   const [recipe, setRecipe] = useState({ images: [] });
   const [showReviews, setShowReviews] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [adminMode, setadminMode] = useState(false);
+  const [showUnfollowModal, setShowUnfollowModal] = useState(false);
+  const [showLoginRedirectModal, setShowLoginRedirectModal] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(null);
+  const [userFollowers, setUserFollowers] = useState([]);
 
   const [imageModal, setImageModal] = useState({
     show: false,
@@ -76,9 +82,17 @@ function RecipeDetail() {
   useEffect(() => {
     getRecipe();
     if (isLogged()) {
-      getIsLiked(username);
+      getIsLiked(userName);
     }
   }, [id, reloadReviews]);
+
+  useEffect(() => {
+    if(myUserName == userName){
+      setadminMode(true);
+    }else{
+      setIsFollowing(userFollowers.includes(myUserName));
+    }
+  }, [userName, userFollowers]);
 
   const getRecipe = () => {
     fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
@@ -108,12 +122,16 @@ function RecipeDetail() {
       setUserId(data.user_id);
       setUserName(data.username);
       setUserImage(data.profile_picture || '');
+      setUserFollowers(data.followers || []);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
 
-  const handleNavigate = (userId) => {
+  const handleNavigate = (event, userId) => {
+    if (event) {
+      event.stopPropagation();
+    }
     navigate(`/UserProfile/${userId}`);
   };
 
@@ -271,69 +289,6 @@ function RecipeDetail() {
     setShowUnfollowModal(false);
   };
 
-  const createShareLink = (socialNetwork) => {
-    const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent("Hola, check out this awesome recipe I found!");
-    switch (socialNetwork) {
-      case "twitter":
-        return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-      case "twitter":
-        return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-      case "facebook":
-        return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-      case "linkedin":
-        return `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${text}`;
-      default:
-        return "";
-    }
-  };
-
-  const copyToClipboard = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
-      setToastData({
-        message: "Link copied to clipboard!",
-        variant: "success",
-        show: true,
-      });
-    }, (err) => {
-      console.error('Could not copy text: ', err);
-    });
-  };
-
-  const handleShare = async () => {
-    console.error('hola')
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Check out this recipe!',
-          text: 'Hola, check out this awesome recipe I found!',
-          url: window.location.href,
-        });
-        console.log('Content shared successfully');
-      } catch (error) {
-        console.error('Error sharing content:', error);
-      }
-    } else {
-      console.log('Web Share API is not supported in your browser.');
-    }
-  };
-
-  const recipeUrl = `www.kasula.live/RecipeDetail/${id}`;
-  const message = encodeURIComponent('Check this amazing recipe that I found in Kasulà! ' + recipeUrl);
-
-  const shareOnWhatsApp = () => {
-    window.open(`https://wa.me/?text=${message}`, '_blank');
-  };
-
-  const shareOnLinkedIn = () => {
-    window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${recipeUrl}&title=${encodeURIComponent('Mira esta receta que chula!')}`, '_blank');
-  };
-
-  const shareOnTwitter = () => {
-    window.open(`https://twitter.com/intent/tweet?text=${message}`, '_blank');
-  };
-
   return (
     <Container fluid className="min-vh-100">
       <ImageModal
@@ -367,25 +322,6 @@ function RecipeDetail() {
                         fluid
                       />
                       <h2 style={{ marginBottom: "1rem" }}>{recipe.name}</h2>
-                    </Col>
-                    <Col md={12}>
-                      <div className="mb-3 py-2 bg-light box-shadow" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(recipe.user_id)}>
-                          <Row>
-                          <Col sm={4}>
-                            <Card.Title style={{ cursor: 'pointer' }}>{'Author:'}</Card.Title>
-                            </Col>
-                            <Col sm={2}>
-                              <Image 
-                                src={userImage ? userImage : defaultProfile} 
-                                roundedCircle 
-                                style={{ width: '30px', marginRight: '10px' }} 
-                              />
-                            </Col>
-                            <Col sm={2}>
-                              <Card.Title style={{ cursor: 'pointer' }}>{userName}</Card.Title>
-                            </Col>
-                          </Row>
-                      </div>
                     </Col>
                     <Col xs={12}>
                       <div className="mt-5 pb-3 pt-2 bg-light box-shadow">
@@ -442,7 +378,7 @@ function RecipeDetail() {
                   </Col>
                   <Col xs={12} md={6} className="p-4">
                     <Row>
-                      <Col xs={5} className="d-flex mb-4">
+                      <Col xs={6} className="d-flex mb-4">
                           <div className="mb-3 py-2" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(null, recipe.user_id)}>
                               <Row>
                               <Col sm={3}>
@@ -476,7 +412,7 @@ function RecipeDetail() {
                               </Row>
                           </div>
                         </Col>
-                        <Col xs={7} className="d-flex mb-4">
+                        <Col xs={6} className="d-flex mb-4">
                         <div className="ms-auto d-flex">
                           <Dropdown>
                             <Dropdown.Toggle
@@ -539,26 +475,6 @@ function RecipeDetail() {
                               )}
                             </span>
                           </div>
-                              <Dropdown>
-                                <Dropdown.Toggle variant="" id="dropdown-basic">
-                                  <Share />
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                  <Dropdown.Item onClick={shareOnWhatsApp}>
-                                    <FaWhatsapp /> WhatsApp
-                                  </Dropdown.Item>
-                                  <Dropdown.Item onClick={shareOnLinkedIn}>
-                                    <FaLinkedin /> LinkedIn
-                                  </Dropdown.Item>
-                                  <Dropdown.Item onClick={shareOnTwitter}>
-                                    <FaTwitter /> Twitter
-                                  </Dropdown.Item>
-                                  <Dropdown.Item onClick={copyToClipboard}>
-                                    <FaCopy /> Copy Link
-                                  </Dropdown.Item>
-                                </Dropdown.Menu>
-                              </Dropdown>
                         </div>
                       </Col>
                       <Col xs={12}>
@@ -683,6 +599,37 @@ function RecipeDetail() {
       >
         <Toast.Body>{toastData.message}</Toast.Body>
       </Toast>
+
+      <Modal show={showUnfollowModal} onHide={() => setShowUnfollowModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Unfollow User</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>Do you want to unfollow this user?</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowUnfollowModal(false)}>
+          Cancel
+        </Button>
+        <Button variant="danger" onClick={handleUnfollow}>
+          Unfollow
+        </Button>
+      </Modal.Footer>
+    </Modal>
+
+    <Modal show={showLoginRedirectModal} onHide={() => setShowLoginRedirectModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Required log in</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>You need to log in to follow this user.</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowLoginRedirectModal(false)}>
+          Cancel
+        </Button>
+        <Button variant="primary" onClick={() => navigate("/login")}>
+          Log in
+        </Button>
+      </Modal.Footer>
+    </Modal>
+
     </Container>
   );
 }

@@ -1,5 +1,6 @@
 //React
 import { CSSTransition } from "react-transition-group";
+import { useRef, useEffect } from "react";
 
 //Bootstrap
 import { Link } from "react-router-dom";
@@ -11,21 +12,39 @@ import RecipeCard from "./RecipeCard";
 
 //CSS
 import "../css/Transitions.css";
+import { wait } from "@testing-library/user-event/dist/utils";
 
-function recipeList({ recipes, canDelete, onDeleteRecipe, id, token }) {
+function RecipeList({ recipes, canDelete, onDeleteRecipe, onRequestLoadMore, id, token, finished }) {
+  const myRef = useRef();
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !finished) {
+        onRequestLoadMore();
+        observer.unobserve(entries[0].target);
+      }
+    });
+    if (myRef.current) {
+      observer.observe(myRef.current);
+    }
+    return () => {
+      if (myRef.current) {
+        observer.unobserve(myRef.current);
+      }
+    };
+  }, [myRef, recipes]);
   return (
     <Container className="pb-5 pt-3">
       <Row>
         {recipes && recipes.length > 0 ? (
-          recipes.map((recipe) => (
-            <Col sm={12} md={6} xl={4}>
+          recipes.map((recipe, index) => (
+            <Col key={recipe._id} sm={12} md={6} xl={4}>
               <CSSTransition
                 in={true}
                 timeout={500}
                 classNames="slideUp"
                 appear
               >
-                <div className="position-relative transition-03s">
+                <div ref={(index === recipes.length - 6 ) ? myRef : null} className="position-relative transition-03s">
                   <Link
                     key={recipe._id}
                     to={`/RecipeDetail/${recipe._id}`}
@@ -67,7 +86,7 @@ function recipeList({ recipes, canDelete, onDeleteRecipe, id, token }) {
           ))
         ) : (
           <div className="alert alert-warning" role="alert">
-            There are currently no recipes
+            {canDelete ? "There are currently no recipes" : "There are no recipes matching the search or filters"}
           </div>
         )}
       </Row>
@@ -75,4 +94,4 @@ function recipeList({ recipes, canDelete, onDeleteRecipe, id, token }) {
   );
 }
 
-export default recipeList;
+export default RecipeList;
