@@ -9,6 +9,7 @@ import defaultProfile from "../assets/defaultProfile.png";
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { FaWhatsapp, FaLinkedin, FaTwitter, FaCopy } from 'react-icons/fa';
 import {
   Container,
   Row,
@@ -29,6 +30,7 @@ import {
   FolderSymlinkFill,
   Heart,
   HeartFill,
+  Share
 } from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
 import Reviews from "./Reviews";
@@ -301,6 +303,34 @@ function RecipeDetail() {
     setShowUnfollowModal(false);
   };
 
+  const recipeUrl = `www.kasula.live/RecipeDetail/${id}`;
+  const message = encodeURIComponent('Check this amazing recipe that I found in Kasulà! ' + recipeUrl);
+
+  const shareOnWhatsApp = () => {
+    window.open(`https://wa.me/?text=${message}`, '_blank');
+  };
+
+  const shareOnLinkedIn = () => {
+    window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${recipeUrl}&title=${encodeURIComponent('Mira esta receta que chula!')}`, '_blank');
+  };
+
+  const shareOnTwitter = () => {
+    window.open(`https://twitter.com/intent/tweet?text=${message}`, '_blank');
+  };
+
+  const copyToClipboard = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      setToastData({
+        message: "Link copied to clipboard!",
+        variant: "success",
+        show: true,
+      });
+    }, (err) => {
+      console.error('Could not copy text: ', err);
+    });
+  };
+
   return (
     <Container fluid className="min-vh-100">
       <ImageModal
@@ -487,6 +517,26 @@ function RecipeDetail() {
                               )}
                             </span>
                           </div>
+                              <Dropdown>
+                                <Dropdown.Toggle variant="" id="dropdown-basic">
+                                  <Share />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                  <Dropdown.Item onClick={shareOnWhatsApp}>
+                                    <FaWhatsapp /> WhatsApp
+                                  </Dropdown.Item>
+                                  <Dropdown.Item onClick={shareOnLinkedIn}>
+                                    <FaLinkedin /> LinkedIn
+                                  </Dropdown.Item>
+                                  <Dropdown.Item onClick={shareOnTwitter}>
+                                    <FaTwitter /> Twitter
+                                  </Dropdown.Item>
+                                  <Dropdown.Item onClick={copyToClipboard}>
+                                    <FaCopy /> Copy
+                                  </Dropdown.Item>
+                                </Dropdown.Menu>
+                              </Dropdown>
                         </div>
                       </Col>
                       <Col xs={12}>
