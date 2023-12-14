@@ -146,7 +146,9 @@ function UserFeed() {
     setPage(0);
     setFeedType(tab);
     setFinished(false);
-    setRecipes([]); 
+    if(isLogged()){
+      setRecipes([]); 
+    }
     localStorage.setItem('feedType', tab);
     if (!isLogged() && tab === "following") {
       setShowLoginRedirectModal(true);
@@ -232,7 +234,7 @@ function UserFeed() {
           <Modal.Title>Required log in</Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-lightest">You need to log in to view the recipes of the people you follow.</Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
           <Button variant="secondary" onClick={() => setShowLoginRedirectModal(false)}>
             Cancel
           </Button>

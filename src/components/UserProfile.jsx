@@ -769,7 +769,7 @@ const UserProfile = () => {
             </Col>
           </Row>
         </Modal.Body>
-        <Modal.Footer className="justify-content-center">
+        <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}} className="justify-content-center">
         <Button variant="danger" onClick={handleRecipeRemove}>
           Remove
         </Button>
@@ -784,7 +784,7 @@ const UserProfile = () => {
           <Modal.Title>Profile Update</Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-lightest">{confirmationMessage}</Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
           <Button variant="secondary" onClick={handleConfirmationClose}>
             Close
           </Button>
@@ -833,7 +833,7 @@ const UserProfile = () => {
                 </Form.Group>
               </Form>
           </Modal.Body>
-          <Modal.Footer>
+          <Modal.Footer >
               <Button variant="secondary" onClick={handleCancelEdit}>
                   Cancel
               </Button>
@@ -852,7 +852,7 @@ const UserProfile = () => {
             <Modal.Title>{operationSuccess ? 'Success' : 'Error'}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="bg-lightest">{confirmationMessage}</Modal.Body>
-        <Modal.Footer>
+        <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
             <Button variant="secondary" onClick={handleConfirmationClose}>
                 Close
             </Button>
@@ -989,7 +989,7 @@ const UserProfile = () => {
         <Modal.Title>Unfollow User</Modal.Title>
       </Modal.Header>
       <Modal.Body className="bg-lightest">Do you want to unfollow this user?</Modal.Body>
-      <Modal.Footer className="bg-lightest">
+      <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
         <Button variant="secondary" onClick={() => setShowUnfollowModal(false)}>
           Cancel
         </Button>
@@ -1004,7 +1004,7 @@ const UserProfile = () => {
         <Modal.Title>Required log in</Modal.Title>
       </Modal.Header>
       <Modal.Body>You need to log in to follow this user.</Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
         <Button variant="secondary" onClick={() => setShowLoginRedirectModal(false)}>
           Cancel
         </Button>
