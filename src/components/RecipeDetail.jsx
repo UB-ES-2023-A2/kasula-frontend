@@ -431,13 +431,13 @@ function RecipeDetail() {
               </Container>
             </CSSTransition>
             <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
-              <Container className="mt-5 pb-3 text-center box-rounded shadow">
+              <Container className="mt-5 pb-3 text-center box-rounded shadow bg-lightest">
                 <Row>
                   <Col sm={12}>
-                    <h4 className="py-4 bg-normal">Similar Recipes</h4>
+                    <h2 className="py-4 mt-1">Similar Recipes</h2>
                   </Col>
                   {similarRecipes.length > 0 ? similarRecipes?.map((recipe) => (
-                    <Col key={recipe._id} sm={4} className="mb-4 bg-lightest">
+                    <Col key={recipe._id} sm={4} className="mb-4">
                       <Link
                         to={`/RecipeDetail/${recipe._id}`}
                         className="text-decoration-none"
