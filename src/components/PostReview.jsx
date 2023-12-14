@@ -152,7 +152,7 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
           onClick={handlePostReview}
           disabled={characterCount > 120}
         >
-          Post Review
+          Post review
         </Button>
       </Modal.Footer>
     </Modal>
