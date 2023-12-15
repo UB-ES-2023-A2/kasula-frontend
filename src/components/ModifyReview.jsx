@@ -123,10 +123,10 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct, 
                 placeholder="Write your new review here"
                 value={newComment}
                 onChange={handleReviewChange}
-                style={{ borderColor: characterCount > 80 ? 'red' : null }}
+                style={{ borderColor: characterCount > 120 ? 'red' : null }}
               />
-              {characterCount > 80 && (
-              <div className="text-danger">You exceeded 80 characters.</div>
+              {characterCount > 120 && (
+              <div className="text-danger">You exceeded 120 characters.</div>
             )}
             <div className="mt-2 text-muted">Num characters: {characterCount}</div>
             </Form.Group>
@@ -141,7 +141,7 @@ const ModifyReview = ({ show, reviewId, recipeId, onHide, reloadReviews, funct, 
       </Modal.Body>
       <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
         {funct === 'Edit' ? (
-          <Button className='bg-danger fw-bold border-secondary text-white' variant="primary" onClick={handleUpdateReview} disabled={characterCount > 80}>
+          <Button className='bg-danger fw-bold border-secondary text-white' variant="primary" onClick={handleUpdateReview} disabled={characterCount > 120}>
             Update
           </Button>
         ) : (
