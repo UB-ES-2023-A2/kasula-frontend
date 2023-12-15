@@ -29,6 +29,10 @@
         "allowedRoles": ["authenticated"]
       },
       {
+        "route": "/notifications",
+        "allowedRoles": ["authenticated"]
+      },
+      {
         "route": "/*",
         "serve": "/index.html",
         "statusCode": 200
