@@ -120,3 +120,7 @@
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
 }
+
+.my-dropdown-item:hover {
+    background-color: transparent !important;
+  }

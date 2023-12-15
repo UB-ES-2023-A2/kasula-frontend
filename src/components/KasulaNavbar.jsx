@@ -20,6 +20,7 @@ import { ExclamationTriangleFill, PlusLg } from "react-bootstrap-icons";
 
 //Components
 import PostRecipe from "./PostRecipe";
+import NotificationBell from "./NotificationBell";
 
 //Assets
 import logo from "../assets/logo.png";
@@ -115,7 +116,8 @@ function KasulaNavbar() {
             <Nav className="me-auto fs-5">
               <Nav.Link href="/">Feed</Nav.Link>
               <Nav.Link href="/collections">Collections</Nav.Link>
-              <Nav.Link href="/notifications">Notifications</Nav.Link>
+              <NotificationBell />
+              {/* <Nav.Link href="/notifications">Notifications</Nav.Link> */}
             </Nav>
             {isLogged() && (
               <>
