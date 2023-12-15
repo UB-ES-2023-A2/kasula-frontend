@@ -68,7 +68,8 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
        if (response.ok) {
          console.log(">>>Post hecho: ", data)
        } else{
-        setError(data.detail);
+        setError("You have already reviewed this recipe!")
+        // setError(data.detail);
         setShowErrorModal(true);
       }
      } catch (error) {
