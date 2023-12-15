@@ -3,6 +3,7 @@ import { useAuth } from "./AuthContext";
 import "../css/common.css";
 import "../css/Transitions.css";
 import RecipeCard from "./RecipeCard";
+import SimilarRecipes from "./SimilarRecipes";
 import chefIcon from "../assets/icons/chef.png"
 import { useParams, useNavigate, Link } from "react-router-dom";
 import defaultProfile from "../assets/defaultProfile.png";
@@ -589,7 +590,7 @@ function RecipeDetail() {
                         to={`/RecipeDetail/${recipe._id}`}
                         className="text-decoration-none"
                       >
-                        <RecipeCard recipe={recipe} />
+                        <SimilarRecipes recipe={recipe} />
                       </Link>
                     </Col>
                   )): null}
