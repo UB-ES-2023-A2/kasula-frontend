@@ -1,18 +1,11 @@
-//React
+
 import { CSSTransition } from "react-transition-group";
 import { useRef, useEffect } from "react";
-
-//Bootstrap
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import { X } from "react-bootstrap-icons";
-
-//Components
 import RecipeCard from "./RecipeCard";
-
-//CSS
 import "../css/Transitions.css";
-import { wait } from "@testing-library/user-event/dist/utils";
 
 function RecipeList({ recipes, canDelete, onDeleteRecipe, onRequestLoadMore, id, token, finished }) {
   const myRef = useRef();
