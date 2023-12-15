@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col } from "react-bootstrap"
 import NotificationCard from "./NotificationCard"
+import { useAuth } from "./AuthContext";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 //Call the method every x seconds (will be used for checking new notifications on the backend)
 function Timer({ method, seconds=30 }) {
@@ -21,12 +23,14 @@ function Timer({ method, seconds=30 }) {
 
 export default function Notifications() {
 
+  const { isLogged } = useAuth();
+
   const [notifications, setNotifications] = useState([])
 
   const currentUserUsername = localStorage.getItem('currentUser')
 
   const handleStatusChange = (id, newStatus) => {
-    setNotifications(notifications?.map(notification => 
+    setNotifications(notifications.map(notification => 
       notification.id === id ? { ...notification, status: newStatus } : notification
     ));
   };
@@ -47,8 +51,15 @@ export default function Notifications() {
       });
   };
 
+  const navigate = useNavigate();
+
   useEffect(() => {
-    getRecipes()
+    if (isLogged()) {
+      getRecipes();
+    }
+    else {
+      navigate("/login");
+    }
   }, [])
 
   return (
@@ -57,7 +68,7 @@ export default function Notifications() {
     <Timer method={getRecipes} />
     
     <Container>
-        {notifications?.map(notification => (
+        {notifications.map(notification => (
             <Row key={notification.id}>
                 <Col xs={12}>
                     <NotificationCard 

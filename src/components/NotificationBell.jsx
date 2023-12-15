@@ -6,6 +6,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import { BellFill } from 'react-bootstrap-icons';
 import styled from 'styled-components';
 import "../css/common.css";
+import { useAuth } from "./AuthContext";
+import { useLocation } from 'react-router-dom';
 
 
 const CustomToggle = styled(Dropdown.Toggle)`
@@ -31,23 +33,32 @@ function Timer({ method, seconds=30 }) {
 
 export default function NotificationBell() {
 
+  console.log("Rendering NotificationBell...")
+
   const [notifications, setNotifications] = useState([])
 
   const [isFocused, setIsFocused] = useState(false);
 
+  const [notificationsLoaded, setNotificationsLoaded] = useState(false);
+
+  const { isLogged } = useAuth();
+
   const currentUserUsername = localStorage.getItem('currentUser')
 
+  const location = useLocation();
+  const isNotificationsRoute = location.pathname === '/notifications';
+
   const handleStatusChange = (id, newStatus) => {
-    if (notifications === null) {
+    if (!isLogged() || isNotificationsRoute || notificationsLoaded === false) {
       return;
     }
-    setNotifications(notifications?.map(notification => 
+    setNotifications(notifications.map(notification => 
       notification.id === id ? { ...notification, status: newStatus } : notification
     ));
   };
 
   const getUnreadNotifications = () => {
-    if (notifications === null || notifications.length === 0 || !Array.isArray(notifications)) {
+    if (!isLogged() || isNotificationsRoute || notificationsLoaded === false || !Array.isArray(notifications)) {
       return 0;
     }
     return notifications?.filter(notification => notification.status === "unread").length;
@@ -59,23 +70,27 @@ export default function NotificationBell() {
       .then((response) => response.json())
       .then((data) => {
         setNotifications(data)
+        setNotificationsLoaded(true);
+        console.log("Notifications have been loaded")
       })
       .catch((error) => { 
+        setNotificationsLoaded(false);
+        setNotifications([]);
         console.error("Error al obtenir notificacions:", error)
-        setNotifications([])
       });
   };
 
   useEffect(() => {
-    getRecipes()
-  }, [])
+    if (isLogged()) {
+      getRecipes()
+    }
+  }, [notifications])
 
-  if (currentUserUsername === null || notifications === null || notifications.length === 0) {
+  if (!isLogged() || isNotificationsRoute || notificationsLoaded === false || !Array.isArray(notifications)) { 
     return null;
   }
   return (
     <>
-
     <Timer method={getRecipes} />
 
     <Dropdown>
@@ -85,7 +100,7 @@ export default function NotificationBell() {
       </CustomToggle>
 
       <Dropdown.Menu style={{ maxHeight: '50vh', overflowY: 'auto', overflowX: 'hidden', backgroundColor: '#ffe7df' }}>
-        {notifications.length > 0 && notifications?.map(notification => (
+        {notifications.map(notification => (
             <Dropdown.Item
             className="my-dropdown-item"
             onClick={(e) => e.stopPropagation()}
