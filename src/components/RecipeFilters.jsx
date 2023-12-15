@@ -33,34 +33,37 @@ function RecipeFilters({ onClose, inValues }) {
         <Form.Group>
           <Form.Label>Sort By</Form.Label>
           <div className="d-flex">
-            <Form.Select className="me-3" defaultValue={filters.sortBy}>
-              {sortOptions.fields.map((option) => (
-                <option
-                  key={option.id}
-                  value={option.name}
-                  onClick={() => {
-                    setFilters({
+              <Form.Select 
+              className="me-3" 
+              value={filters.sortBy}
+              onChange={(e) => {
+                  setFilters({
                       ...filters,
-                      sortBy: option.name,
-                    });
-                  }}
-                >
-                  {option.displayName}
-                </option>
+                      sortBy: e.target.value,
+                  });
+              }}
+          >
+              {sortOptions.fields.map((option) => (
+                  <option
+                      key={option.id}
+                      value={option.name}
+                  >
+                      {option.displayName}
+                  </option>
               ))}
-            </Form.Select>
-            <span
+          </Form.Select>
+          <span
               className="fs-4 colorless-span-button"
               role="button"
               onClick={() => {
-                setFilters({
-                  ...filters,
-                  sortAscending: !filters.sortAscending,
-                });
+                  setFilters({
+                      ...filters,
+                      sortAscending: !filters.sortAscending,
+                  });
               }}
-            >
+          >
               {filters.sortAscending ? <SortUp /> : <SortDown />}
-            </span>
+          </span>
           </div>
         </Form.Group>
         <Form.Group className="mt-4">
