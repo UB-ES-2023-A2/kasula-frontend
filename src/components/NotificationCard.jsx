@@ -29,9 +29,9 @@ export default function NotificationCard({ notification, username, onStatusChang
             <Card.Img variant="top" src={notification.image} />
           </div>
           <div className="col-md-8">
-            <Card.Title>Card title</Card.Title>
+            <Card.Title>{notification.type}</Card.Title>
             <Card.Text>
-              <Link to={`/users/${notification.username}`}>{notification.username}</Link> ha fet {notification.text}
+              <Link to={`/users/${notification.username}`}>{notification.username}</Link> {notification.text}
             </Card.Text>
             <Card.Text>
               <small className="text-muted">{moment.utc(notification.date).fromNow()}</small>

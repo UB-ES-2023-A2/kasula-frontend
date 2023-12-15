@@ -26,14 +26,14 @@ export default function Notifications() {
   const currentUserUsername = localStorage.getItem('currentUser')
 
   const handleStatusChange = (id, newStatus) => {
-    setNotifications(notifications.map(notification => 
+    setNotifications(notifications?.map(notification => 
       notification.id === id ? { ...notification, status: newStatus } : notification
     ));
   };
 
-  // const getUnreadNotifications = () => {
-  //   return notifications.filter(notification => notification.status === "unread").length;
-  // }
+  const getUnreadNotifications = () => {
+    return notifications.filter(notification => notification.status === "unread").length;
+  }
 
   const getRecipes = () => {
     console.log("Fetching notifications...");
@@ -57,7 +57,7 @@ export default function Notifications() {
     <Timer method={getRecipes} />
     
     <Container>
-        {notifications.map(notification => (
+        {notifications?.map(notification => (
             <Row key={notification.id}>
                 <Col xs={12}>
                     <NotificationCard 

@@ -1,7 +1,6 @@
 //He de fer un fetch a les notificacions de l'usuari i mostrar-les en NotificationsCard cadascuna
 //React
 import React, { useState, useEffect } from 'react'
-import { Container, Row, Col } from "react-bootstrap"
 import NotificationCard from "./NotificationCard"
 import Dropdown from 'react-bootstrap/Dropdown';
 import { BellFill } from 'react-bootstrap-icons';
@@ -39,13 +38,19 @@ export default function NotificationBell() {
   const currentUserUsername = localStorage.getItem('currentUser')
 
   const handleStatusChange = (id, newStatus) => {
-    setNotifications(notifications.map(notification => 
+    if (notifications === null) {
+      return;
+    }
+    setNotifications(notifications?.map(notification => 
       notification.id === id ? { ...notification, status: newStatus } : notification
     ));
   };
 
   const getUnreadNotifications = () => {
-    return notifications.filter(notification => notification.status === "unread").length;
+    if (notifications === null || notifications.length === 0 || !Array.isArray(notifications)) {
+      return 0;
+    }
+    return notifications?.filter(notification => notification.status === "unread").length;
   }
 
   const getRecipes = () => {
@@ -57,6 +62,7 @@ export default function NotificationBell() {
       })
       .catch((error) => { 
         console.error("Error al obtenir notificacions:", error)
+        setNotifications([])
       });
   };
 
@@ -64,6 +70,9 @@ export default function NotificationBell() {
     getRecipes()
   }, [])
 
+  if (currentUserUsername === null || notifications === null || notifications.length === 0) {
+    return null;
+  }
   return (
     <>
 
@@ -76,7 +85,7 @@ export default function NotificationBell() {
       </CustomToggle>
 
       <Dropdown.Menu style={{ maxHeight: '50vh', overflowY: 'auto', overflowX: 'hidden', backgroundColor: '#ffe7df' }}>
-        {notifications.map(notification => (
+        {notifications.length > 0 && notifications?.map(notification => (
             <Dropdown.Item
             className="my-dropdown-item"
             onClick={(e) => e.stopPropagation()}
