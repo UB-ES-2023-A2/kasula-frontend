@@ -30,7 +30,7 @@
       },
       {
         "route": "/notifications",
-        "allowedRoles": ["authenticated"]
+        "allowedRoles": ["anonymous"]
       },
       {
         "route": "/*",
