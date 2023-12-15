@@ -124,3 +124,50 @@
 .my-dropdown-item:hover {
     background-color: transparent !important;
   }
+#search-bar {
+    border-right: none;
+    transition: none;
+}
+
+#search-bar-clear {
+    background-color: white;
+    border-left: none;
+    cursor: text;
+    transition: none;
+}
+
+#search-bar-container:focus-within #search-bar {
+    border-color: #80bdff;
+}
+
+#search-bar-container:focus-within #search-bar-clear {
+    border-color: #80bdff;
+}
+
+.rating-star.active {
+    color: #e0b700;
+}
+
+.rating-star.active:hover {
+    color: rgb(151, 124, 43);
+}
+
+.rating-star.active.hovered {
+    color: rgb(151, 124, 43);
+}
+
+.rating-star.active.above-hovered {
+    color: #7c7c7c;
+}
+
+.rating-star.inactive {
+    color: #a7a7a7;
+}
+
+.rating-star.inactive:hover {
+    color: #7c7c7c;
+}
+
+.rating-star.inactive.hovered {
+    color: rgb(151, 124, 43);
+}

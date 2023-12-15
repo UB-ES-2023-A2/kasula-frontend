@@ -5,9 +5,6 @@ import {
   StarFill,
   Star
 } from "react-bootstrap-icons";
-
-
-
 const PostReview = ({ id, show, onHide, reloadReviews }) => {
   const [username, setUsername] = useState('');
   const [review, setReview] = useState('');
@@ -17,7 +14,7 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
   const { token } = useAuth();
   const [error, setError] = useState(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
-
+  const [characterCount, setCharacterCount] = useState(0);
 
   useEffect(() => {
     fetch(process.env.REACT_APP_API_URL + "/user/me", {
@@ -37,6 +34,13 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
   const handleFileChange = (event) => {
     const selectedImage= event.target.files[0];
     setImage(selectedImage);
+  };
+
+  const handleReviewChange = (e) => {
+    const inputReview = e.target.value;
+    const remainingCharacters = 120 - inputReview.length;
+    setReview(inputReview);
+    setCharacterCount(remainingCharacters);
   };
 
   const handlePostReview = async () => {
@@ -60,17 +64,15 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
          },
          body: formData,
        });
-      // 403 owner  
-      // 400 ya review
        const data = await response.json();
        if (response.ok) {
          console.log(">>>Post hecho: ", data)
        } else{
-        setError(data.detail);
+        setError("You have already reviewed this recipe!")
+        // setError(data.detail);
         setShowErrorModal(true);
       }
      } catch (error) {
-      //  alert("HA FALLADO EL POST")
        setError(error);
        setShowErrorModal(true);
      }
@@ -103,53 +105,64 @@ const PostReview = ({ id, show, onHide, reloadReviews }) => {
 
   return (<>
     <Modal show={show} onHide={onHide}>
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="fw-bold bg-normal"> 
         <Modal.Title>Post a review</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="bg-lightest">
         <Form>
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 fw-bold">
             <Form.Label>Review</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
               placeholder="Write your review here"
               value={review}
-              onChange={(e) => setReview(e.target.value)}
+              onChange={handleReviewChange}
+              style={{ borderColor: characterCount < 0 ? 'red' : null }}
             />
-          </Form.Group>
 
-          <Form.Group className="mb-3">
+            {characterCount < 0 && (
+              <div className="text-danger">You exceeded the character limit.</div>
+            )}
+
+            <div className="mt-2 text-muted">Characters remaining: {characterCount}</div>
+          </Form.Group>
+          <Form.Group className="mb-3 fw-bold">
             <Form.Label>Rating</Form.Label>
             <div>{renderStars(difficulty)}</div>
           </Form.Group>
 
-          <Form.Group className="mb-3">
+          <Form.Group className="mb-3 fw-bold">
             <Form.Label>Select Image</Form.Label>
             <Form.Control type="file" onChange={handleFileChange} />
           </Form.Group>
         </Form>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
         <Button variant="secondary" onClick={onHide}>
           Close
         </Button>
-        <Button variant="primary" onClick={handlePostReview}>
-          Post Review
+        <Button
+        className='bg-danger fw-bold border-secondary text-white'
+          variant="primary"
+          onClick={handlePostReview}
+          disabled={characterCount < 0}
+        >
+          Post review
         </Button>
       </Modal.Footer>
     </Modal>
      <Modal show={showErrorModal} onHide={() => setShowErrorModal(false)}>
-     <Modal.Header closeButton>
-       <Modal.Title>Error</Modal.Title>
+     <Modal.Header closeButton className="bg-normal">
+       <Modal.Title className='fw-bold'>Not allowed</Modal.Title>
      </Modal.Header>
-     <Modal.Body>
-       <Alert variant="danger">
+     <Modal.Body className="bg-lightest">
+       <Alert variant="danger" className='fw-bold'>
          {error && <p>{error}</p>}
        </Alert>
      </Modal.Body>
-     <Modal.Footer>
-       <Button variant="primary" onClick={() => setShowErrorModal(false)}>
+     <Modal.Footer style={{ backgroundColor: "#ffe7dfe0"}}>
+       <Button variant="secondary" onClick={() => setShowErrorModal(false)}>
          Close
        </Button>
      </Modal.Footer>

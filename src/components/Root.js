@@ -22,6 +22,7 @@ import Notifications from "./Notifications";
 import "../css/Transitions.css";
 import "../css/Root.css";
 import "../css/common.css";
+import "../css/slider.css";
 
 function Root() {
   return (

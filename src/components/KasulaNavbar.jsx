@@ -1,6 +1,6 @@
 //React
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "../css/common.css";
 
@@ -28,6 +28,7 @@ import chef from "../assets/chef.png";
 
 function KasulaNavbar() {
   const { token, logout, isLogged } = useAuth();
+  const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showPostRecipe, setShowPostRecipe] = useState(false);
@@ -69,13 +70,13 @@ function KasulaNavbar() {
 
   const handleClosePostRecipeSuccessfulModal = () => {
     setShowPostRecipe(false);
-    //window.location.reload();
   };
 
   const handleLogout = () => {
     localStorage.setItem("logged", "false"); // This will update the localStorage
     handleCloseModal(); // This will close the modal
     logout(); // This will remove the token from the localStorage
+    window.location.reload(); 
   };
 
   const CustomToggle = React.forwardRef(({ onClick }, ref) => (
@@ -138,6 +139,13 @@ function KasulaNavbar() {
                     <Dropdown.Menu className="dropdown-menu-end">
                       <Dropdown.Item
                         eventKey={1}
+                        href={`/UserProfile/${user._id}`}
+                      >
+                        Profile
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item
+                        eventKey={2}
                         onClick={() => {
                           handleOpenModal();
                         }}
