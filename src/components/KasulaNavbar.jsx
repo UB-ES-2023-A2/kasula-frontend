@@ -1,6 +1,6 @@
 //React
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import "../css/common.css";
 
@@ -14,7 +14,7 @@ import {
   Modal,
   Nav,
   Navbar,
-  NavDropdown,
+  Dropdown,
 } from "react-bootstrap";
 import { ExclamationTriangleFill, PlusLg } from "react-bootstrap-icons";
 
@@ -27,6 +27,7 @@ import chef from "../assets/chef.png";
 
 function KasulaNavbar() {
   const { token, logout, isLogged } = useAuth();
+  const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [showPostRecipe, setShowPostRecipe] = useState(false);
@@ -47,7 +48,9 @@ function KasulaNavbar() {
       .then((response) => response.json())
       .then((data) => {
         setUser(data);
-        {window.localStorage.setItem("currentUser", data.username)}
+        {
+          window.localStorage.setItem("currentUser", data.username);
+        }
       })
       .catch((error) => console.error("Error al obtener recetas:", error));
   };
@@ -66,14 +69,29 @@ function KasulaNavbar() {
 
   const handleClosePostRecipeSuccessfulModal = () => {
     setShowPostRecipe(false);
-    //window.location.reload();
   };
 
   const handleLogout = () => {
     localStorage.setItem("logged", "false"); // This will update the localStorage
     handleCloseModal(); // This will close the modal
     logout(); // This will remove the token from the localStorage
+    window.location.reload(); 
   };
+
+  const CustomToggle = React.forwardRef(({ onClick }, ref) => (
+    <div
+      className="h-100 d-flex align-items-center px-4 user-nav"
+      role="button"
+      ref={ref}
+      id="user-dropdown"
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+    >
+      <span className="fs-5 me-2">{user.username}</span>
+    </div>
+  ));
 
   return (
     <>
@@ -95,60 +113,71 @@ function KasulaNavbar() {
             aria-controls="navbar-nav"
           />
           <Navbar.Collapse id="navbar-nav">
-                <Nav className="me-auto fs-5">
-                  <Nav.Link href="/">Feed</Nav.Link>
-                  <Nav.Link href="/collections">Collections</Nav.Link>
-                </Nav>
-                {isLogged() && (
-                  <>
-                  <Button
-                    className="me-4 fs-5 border-0"
-                    id="positiveButton"
-                    onClick={() => setShowPostRecipe(true)}
-                  >
-                    <PlusLg></PlusLg> Recipe
-                  </Button>
-                <Nav className="fs-5 me-4">
-                  <NavDropdown
-                    title={
-                      <>
-                        <Image
-                          className="me-2"
-                          src={isLogged && user.profile_picture ? user.profile_picture : chef}
-                          alt="User profile"
-                          roundedCircle
-                          width={40}
-                          height={50}
-                        />
-                        <span className="min-width-container">{user.username}</span>
-                      </>
-                    }
-                    id="basic-nav-dropdown"
-                  >
-                    <NavDropdown.Item href={`/UserProfile/${user._id}`}>
-                      My Information
-                    </NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item
-                      role="button"
-                      onClick={() => handleOpenModal()}
-                      href="#action/3.4"
+            <Nav className="me-auto fs-5">
+              <Nav.Link href="/">Feed</Nav.Link>
+              <Nav.Link href="/collections">Collections</Nav.Link>
+            </Nav>
+            {isLogged() && (
+              <>
+                <Button
+                  className="me-4 fs-5 border-0 positive-button"
+                  variant="light"
+                  onClick={() => setShowPostRecipe(true)}
+                >
+                  <PlusLg></PlusLg> Recipe
+                </Button>
+                <Nav className="fs-5 me-4 btn-normal user-nav user-nav-image">
+                  <Dropdown>
+                    <Dropdown.Toggle
+                      as={CustomToggle}
+                      variant="null"
+                      id="user-dropdown"
+                    />
+                    <Dropdown.Menu className="dropdown-menu-end">
+                      <Dropdown.Item
+                        eventKey={1}
+                        href={`/UserProfile/${user._id}`}
+                      >
+                        Profile
+                      </Dropdown.Item>
+                      <Dropdown.Divider />
+                      <Dropdown.Item
+                        eventKey={2}
+                        onClick={() => {
+                          handleOpenModal();
+                        }}
                       >
                         Logout
-                      </NavDropdown.Item>
-                    </NavDropdown>
-                  </Nav>
-                  </>
-                )}
-              {!isLogged() && (
-                <Link
-                  to="/login"
-                  className="btn ms-auto me-4 fs-5 border-0"
-                  id="mainButton"
-                >
-                  Log In
-                </Link>
-              )}
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <a
+                    className="rounded-circle"
+                    href={`/UserProfile/${user._id}`}
+                  >
+                    <Image
+                      className="object-fit-cover action-img rounded-circle"
+                      src={
+                        isLogged && user.profile_picture
+                          ? user.profile_picture
+                          : chef
+                      }
+                      width={50}
+                      height={50}
+                    />
+                  </a>
+                </Nav>
+              </>
+            )}
+            {!isLogged() && (
+              <Link
+                to="/login"
+                className="btn ms-auto me-4 fs-5 border-0"
+                id="mainButton"
+              >
+                Log In
+              </Link>
+            )}
           </Navbar.Collapse>
         </Container>
       </Navbar>

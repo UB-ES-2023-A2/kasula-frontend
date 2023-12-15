@@ -1,6 +1,6 @@
 # Kasulà - Frontend
   
-KASULÀ is a webpage where you can view and share recipes that mean the world to you.
+KASULÀ is a webpage where you can view and share recipes that mean the world to you...
 
 Release: https://happy-cliff-060e0fc03.4.azurestaticapps.net
 
@@ -35,3 +35,4 @@ npm install -g serve
 npm run build
 serve -s build
 ```
+

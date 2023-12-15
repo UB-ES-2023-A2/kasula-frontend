@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
 import "../css/common.css";
 import "../css/Transitions.css";
+import RecipeCard from "./RecipeCard";
+import SimilarRecipes from "./SimilarRecipes";
 import chefIcon from "../assets/icons/chef.png"
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import defaultProfile from "../assets/defaultProfile.png";
 import { CSSTransition } from "react-transition-group";
 import gyozas from '../assets/gyozas.jpg';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { FaWhatsapp, FaLinkedin, FaTwitter, FaCopy } from 'react-icons/fa';
 import {
   Container,
   Row,
@@ -28,6 +31,7 @@ import {
   FolderSymlinkFill,
   Heart,
   HeartFill,
+  Share
 } from "react-bootstrap-icons";
 import ImageModal from "./ImageModal";
 import Reviews from "./Reviews";
@@ -36,16 +40,23 @@ import AddRecipeToCollection from "./AddRecipeToCollection";
 
 function RecipeDetail() {
   const { token, isLogged } = useAuth();
-  const [username, setUsername] = useState(localStorage.getItem("currentUser"));
+  const [myUserId, setMyUserId] = useState('');
+  const [myUserName, setMyUserName] = useState(localStorage.getItem("currentUser"));
   const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [userImage, setUserImage] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [user, setUser] = useState({});
+  const [similarRecipes, setSimilarRecipes] = useState('');
   const { id } = useParams();
   const [recipe, setRecipe] = useState({ images: [] });
   const [showReviews, setShowReviews] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [adminMode, setadminMode] = useState(false);
+  const [showUnfollowModal, setShowUnfollowModal] = useState(false);
+  const [showLoginRedirectModal, setShowLoginRedirectModal] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(null);
+  const [userFollowers, setUserFollowers] = useState([]);
 
   const [imageModal, setImageModal] = useState({
     show: false,
@@ -73,10 +84,19 @@ function RecipeDetail() {
 
   useEffect(() => {
     getRecipe();
+    getSimilarRecipes();
     if (isLogged()) {
-      getIsLiked(username);
+      getIsLiked(userName);
     }
   }, [id, reloadReviews]);
+
+  useEffect(() => {
+    if(myUserName == userName){
+      setadminMode(true);
+    }else{
+      setIsFollowing(userFollowers.includes(myUserName));
+    }
+  }, [userName, userFollowers]);
 
   const getRecipe = () => {
     fetch(process.env.REACT_APP_API_URL + `/recipe/${id}`)
@@ -88,6 +108,17 @@ function RecipeDetail() {
       })
       .catch((error) => console.error("Error al obtener receta:", error));   
   };
+
+  const getSimilarRecipes = () => {
+    fetch(process.env.REACT_APP_API_URL + `/recipe/similar/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setSimilarRecipes(data)
+        console.log(">><data: ", data)
+      })
+      .catch((error) => console.error("Error al obtener recetas similares:", error));   
+  };
+
 
   const fetchUserData = async (userId) => {
     try {
@@ -106,12 +137,16 @@ function RecipeDetail() {
       setUserId(data.user_id);
       setUserName(data.username);
       setUserImage(data.profile_picture || '');
+      setUserFollowers(data.followers || []);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
 
-  const handleNavigate = (userId) => {
+  const handleNavigate = (event, userId) => {
+    if (event) {
+      event.stopPropagation();
+    }
     navigate(`/UserProfile/${userId}`);
   };
 
@@ -207,6 +242,96 @@ function RecipeDetail() {
     </div>
   ));
 
+  const handleFollow = async () => {
+    if (!isLogged()) {
+      setShowLoginRedirectModal(true);
+      return;
+    }
+  
+    try {
+      const response = await fetch(process.env.REACT_APP_API_URL + `/user/follow/${userName}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+  
+      if (response.ok) {
+        setConfirmationMessage(`You're now following ${userName}.`);
+        setIsFollowing(true);
+        setToastData({
+          message: `You're now following ${userName}.`,
+          variant: 'success', 
+          show: true,
+        });
+      } else {
+        throw new Error('There was an error following the user.');
+      }
+    } catch (error) {
+      console.error('Error following user:', error);
+      setConfirmationMessage(error.toString());
+      setShowConfirmation(true);
+    }
+  };  
+  
+  const handleUnfollow = async () => {
+    try {
+      const response = await fetch(process.env.REACT_APP_API_URL + `/user/unfollow/${userName}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+  
+      if (response.ok) {
+        setConfirmationMessage("You have unfollowed the user.");
+        setIsFollowing(false)
+        setToastData({
+          message: `You' have unfollowed ${userName}.`,
+          variant: 'secondary', 
+          show: true,
+        });
+      } else {
+        throw new Error('There was an error unfollowing the user.');
+      }
+    } catch (error) {
+      console.error('Error unfollowing user:', error);
+      setConfirmationMessage(error.toString());
+      setShowConfirmation(true);
+    }
+    setShowUnfollowModal(false);
+  };
+
+  const recipeUrl = `www.kasula.live/RecipeDetail/${id}`;
+  const message = encodeURIComponent('Check this amazing recipe that I found in Kasulà! ' + recipeUrl);
+
+  const shareOnWhatsApp = () => {
+    window.open(`https://wa.me/?text=${message}`, '_blank');
+  };
+
+  const shareOnLinkedIn = () => {
+    window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${recipeUrl}&title=${encodeURIComponent('Mira esta receta que chula!')}`, '_blank');
+  };
+
+  const shareOnTwitter = () => {
+    window.open(`https://twitter.com/intent/tweet?text=${message}`, '_blank');
+  };
+
+  const copyToClipboard = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      setToastData({
+        message: "Link copied to clipboard!",
+        variant: "success",
+        show: true,
+      });
+    }, (err) => {
+      console.error('Could not copy text: ', err);
+    });
+  };
+
   return (
     <Container fluid className="min-vh-100">
       <ImageModal
@@ -240,25 +365,6 @@ function RecipeDetail() {
                         fluid
                       />
                       <h2 style={{ marginBottom: "1rem" }}>{recipe.name}</h2>
-                    </Col>
-                    <Col md={12}>
-                      <div className="mb-3 py-2 bg-light box-shadow" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(recipe.user_id)}>
-                          <Row>
-                          <Col sm={4}>
-                            <Card.Title style={{ cursor: 'pointer' }}>{'Author:'}</Card.Title>
-                            </Col>
-                            <Col sm={2}>
-                              <Image 
-                                src={userImage ? userImage : defaultProfile} 
-                                roundedCircle 
-                                style={{ width: '30px', marginRight: '10px' }} 
-                              />
-                            </Col>
-                            <Col sm={2}>
-                              <Card.Title style={{ cursor: 'pointer' }}>{userName}</Card.Title>
-                            </Col>
-                          </Row>
-                      </div>
                     </Col>
                     <Col xs={12}>
                       <div className="mt-5 pb-3 pt-2 bg-light box-shadow">
@@ -307,15 +413,49 @@ function RecipeDetail() {
                             {recipe.energy ?? "No info of"} kcal
                           </span>
                         </div>
-                        <Button className="mt-3" onClick={handleToggleReviews}>
-                          Toggle Reviews
+                        <Button className="mt-3 bg-danger fw-bold border-secondary text-white" onClick={handleToggleReviews}>
+                          Reviews
                         </Button>
                       </div>
                     </Col>
                   </Col>
                   <Col xs={12} md={6} className="p-4">
                     <Row>
-                      <Col xs={12} className="d-flex mb-4">
+                      <Col xs={6} className="d-flex mb-4">
+                          <div className="mb-3 py-2" style={{ cursor: 'pointer' }} onClick={() => handleNavigate(null, recipe.user_id)}>
+                              <Row>
+                              <Col sm={3}>
+                                <Image 
+                                  src={userImage ? userImage : defaultProfile} 
+                                  roundedCircle 
+                                  style={{ 
+                                    width: '40px', 
+                                    height: '40px', 
+                                    marginRight: '10px',
+                                    objectFit: 'cover' 
+                                  }} 
+                                />
+                              </Col>
+                                <Col sm={5}>
+                                  <h3 style={{ cursor: 'pointer' }}>{userName}</h3>
+                                </Col>
+                                <Col sm={4} className="d-flex align-items-center">
+                                  {!adminMode && (
+                                    <Button
+                                      variant={isFollowing ? 'info' : 'light'}
+                                      onClick={(e) => {
+                                        isFollowing ? setShowUnfollowModal(true) : handleFollow();
+                                        e.stopPropagation();
+                                      }}
+                                    >
+                                      {isFollowing ? 'Following' : 'Follow'}
+                                    </Button>
+                                  )}
+                                </Col>
+                              </Row>
+                          </div>
+                        </Col>
+                        <Col xs={6} className="d-flex mb-4">
                         <div className="ms-auto d-flex">
                           <Dropdown>
                             <Dropdown.Toggle
@@ -378,6 +518,26 @@ function RecipeDetail() {
                               )}
                             </span>
                           </div>
+                              <Dropdown>
+                                <Dropdown.Toggle variant="" id="dropdown-basic">
+                                  <Share />
+                                </Dropdown.Toggle>
+
+                                <Dropdown.Menu>
+                                  <Dropdown.Item onClick={shareOnWhatsApp}>
+                                    <FaWhatsapp /> WhatsApp
+                                  </Dropdown.Item>
+                                  <Dropdown.Item onClick={shareOnLinkedIn}>
+                                    <FaLinkedin /> LinkedIn
+                                  </Dropdown.Item>
+                                  <Dropdown.Item onClick={shareOnTwitter}>
+                                    <FaTwitter /> Twitter
+                                  </Dropdown.Item>
+                                  <Dropdown.Item onClick={copyToClipboard}>
+                                    <FaCopy /> Copy
+                                  </Dropdown.Item>
+                                </Dropdown.Menu>
+                              </Dropdown>
                         </div>
                       </Col>
                       <Col xs={12}>
@@ -418,10 +578,31 @@ function RecipeDetail() {
                 </Row>
               </Container>
             </CSSTransition>
+            <CSSTransition in={true} timeout={500} classNames="slideUp" appear>
+              <Container className="mt-5 pb-3 text-center box-rounded shadow bg-lightest">
+                <Row>
+                  <Col sm={12}>
+                    <h1 className="py-4 mt-1">Similar Recipes</h1>
+                  </Col>
+                  {similarRecipes.length > 0 ? similarRecipes?.map((recipe) => (
+                    <Col key={recipe._id} sm={4} className="mb-4">
+                      <Link
+                        to={`/RecipeDetail/${recipe._id}`}
+                        className="text-decoration-none"
+                      >
+                        <SimilarRecipes recipe={recipe} />
+                      </Link>
+                    </Col>
+                  )): null}
+                </Row>
+              </Container>
+            </CSSTransition>   
           </Col>
         </Row>
       </Container>
-      {/* Offcanvas para mostrar los comentarios */}
+
+ 
+
       <Offcanvas
         show={showReviews}
         onHide={() => setShowReviews(false)}
@@ -431,7 +612,7 @@ function RecipeDetail() {
           <Offcanvas.Title className="fs-2 mt-3">Reviews</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body style={{ backgroundColor: "#ffb79fe0" }}>
-          <Reviews id={id} reloadReviews={reloadReviewsFunction} />
+          <Reviews id={id} reloadReviews={reloadReviewsFunction} owner={recipe.username}/>
         </Offcanvas.Body>
       </Offcanvas>
       <Modal
@@ -502,6 +683,37 @@ function RecipeDetail() {
       >
         <Toast.Body>{toastData.message}</Toast.Body>
       </Toast>
+
+      <Modal show={showUnfollowModal} onHide={() => setShowUnfollowModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Unfollow User</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>Do you want to unfollow this user?</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowUnfollowModal(false)}>
+          Cancel
+        </Button>
+        <Button variant="danger" onClick={handleUnfollow}>
+          Unfollow
+        </Button>
+      </Modal.Footer>
+    </Modal>
+
+    <Modal show={showLoginRedirectModal} onHide={() => setShowLoginRedirectModal(false)}>
+      <Modal.Header closeButton>
+        <Modal.Title>Required log in</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>You need to log in to follow this user.</Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={() => setShowLoginRedirectModal(false)}>
+          Cancel
+        </Button>
+        <Button variant="primary" onClick={() => navigate("/login")}>
+          Log in
+        </Button>
+      </Modal.Footer>
+    </Modal>
+
     </Container>
   );
 }

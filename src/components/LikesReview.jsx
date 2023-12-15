@@ -2,9 +2,9 @@
 import React, { useState } from "react";
 import {Row, Col } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as heartSolid } from '@fortawesome/free-solid-svg-icons'; // Icono sólido
+import { faHeart as heartRegular } from '@fortawesome/free-regular-svg-icons'; // Icono regular
 import { useAuth } from "./AuthContext";
-
 
 function LikesReview({ reviewUsername, recipeId, reviewId, initialLikes, likedBy, reloadReviews }) {
   const [likes, setLikes] = useState(initialLikes);
@@ -43,7 +43,6 @@ function LikesReview({ reviewUsername, recipeId, reviewId, initialLikes, likedBy
           setLikes(likes + 1);
           setHasLiked(true);
           setHasLikedByUser(true);    
-        // Realiza la lógica para enviar el like a la base de datos
         try {
           const response = await fetch(
             `${process.env.REACT_APP_API_URL}/review/like/${recipeId}/${reviewId}`,
@@ -68,13 +67,15 @@ function LikesReview({ reviewUsername, recipeId, reviewId, initialLikes, likedBy
 
   const cursorStyle = isLogged === 'true' && !isOwnerReview ? { cursor: "pointer" } : { cursor: "not-allowed" };
 
+  const iconoLike = hasLikedByUser ? heartSolid : heartRegular;
+
   return (
     <Row>
       <Col sm={3}>
         <FontAwesomeIcon
-          icon={faHeart}
+          icon={iconoLike}
           onClick={handleLikeClick}
-          style={cursorStyle}
+          style={{ color: 'red', ...cursorStyle }}
         />
       </Col>
       <Col sm={8}>
@@ -82,7 +83,7 @@ function LikesReview({ reviewUsername, recipeId, reviewId, initialLikes, likedBy
       </Col>
       <Col sm={1}></Col>
     </Row>  
-       );
+  );
 }
 
 export default LikesReview;
